@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Easy Trip Planner</string>
+    <string name="mail">Mail</string>
+    <string name="pass">Password</string>
+    <string name="login">login</string>
+    <string name="repass">Enter Password Again</string>
+    <string name="signup">Sign Up</string>
+    <string name="username">User Name</string>
+    <string name="create_new">Create New Account</string>
+    <string name="title_activity_home">Home</string>
+</resources>
