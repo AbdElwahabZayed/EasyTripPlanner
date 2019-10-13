@@ -92,8 +92,9 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
         mSource.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                if(place != null) {
+                if(place != null && place.getLatLng() != null ) {
                     Log.e(TAG, "Place: " + place.getName());
+                    mSource.setText(place.getName());
                     sourceData = new String[3];
                     sourceData[0] = place.getName();
                     sourceData[1] = String.valueOf(place.getLatLng().latitude);
@@ -112,11 +113,14 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                Log.e(TAG, "Place: " + place.getName());
-                destData = new String[3];
-                destData[0] = place.getName();
-                destData[1] = String.valueOf(place.getLatLng().latitude);
-                destData[2] = String.valueOf(place.getLatLng().longitude);
+                if(place != null && place.getLatLng() != null ) {
+                    Log.e(TAG, "Place: " + place.getName());
+                    destData = new String[3];
+                    destData[0] = place.getName();
+                    mDestination.setText(place.getName());
+                    destData[1] = String.valueOf(place.getLatLng().latitude);
+                    destData[2] = String.valueOf(place.getLatLng().longitude);
+                }
             }
 
             @Override
