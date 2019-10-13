@@ -8,4 +8,22 @@
     <string name="username">User Name</string>
     <string name="create_new">Create New Account</string>
     <string name="title_activity_home">Home</string>
+    <string name="source">Source</string>
+    <string name="destination">Destination</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="save">Save</string>
+    <string name="error_title">Please Provide Title for the Trip</string>
+    <string name="error_date">Please Provide Valid Date</string>
+    <string name="error_source">No Source Location Data found</string>
+    <string name="error_destination">No Destination Location Data foud\\</string>
+    <string name="authintication_failed">Server Authintication Faileed</string>
+    <string name="error_empty_date">Date Filed is Empty</string>
+    <string name="trip_saved">Your Trip Saved Successfully</string>
+    <string name="trip_type_title">Trip Type</string>
+    <string name="radio_one">One Way</string>
+    <string name="radio_round">Round</string>
+    <string name="add_notes">Add Notes</string>
+    <string name="notes_limit">Only 10 Notes Allowed</string>
+    <string name="google_maps_key">AIzaSyA_G6hydCdqIIrUzwv1GWf-fJWMuDvk-BY</string>
 </resources>

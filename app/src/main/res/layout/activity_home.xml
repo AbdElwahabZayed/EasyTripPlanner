@@ -33,5 +33,4 @@
         android:elevation="25dp"
         android:contentDescription="addNewTrip"/>
 
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
