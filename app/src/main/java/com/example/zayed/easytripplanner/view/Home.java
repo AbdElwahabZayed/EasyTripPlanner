@@ -42,6 +42,12 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     protected void onPause() {
         super.onPause();
 
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)) {
             startService(new Intent(Home.this, FloatingWidgetService.class).putExtra("activity_background", true));
             finish();

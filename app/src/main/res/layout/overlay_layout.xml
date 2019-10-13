@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:orientation="vertical"
-    android:visibility="visible">
+    android:visibility="visible"
+    >
 
 
     <com.andremion.counterfab.CounterFab

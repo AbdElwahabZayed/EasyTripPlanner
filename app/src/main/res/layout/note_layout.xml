@@ -6,14 +6,19 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:layout_margin="5dp"
-    android:background="@color/colorAccent"
+    android:alpha="0.9"
+    android:background="@drawable/login_gradiant"
     android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <EditText
         android:id="@+id/note_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"/>
+        android:layout_weight="10"
+        android:textColor="@android:color/white"
+        android:scrollbars = "vertical"
+        android:inputType="textMultiLine"
+        />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/remove"
@@ -22,5 +27,4 @@
         android:background="@android:color/transparent"
         app:srcCompat="@drawable/cross"
         android:layout_weight="1"/>
-
 </androidx.appcompat.widget.LinearLayoutCompat>

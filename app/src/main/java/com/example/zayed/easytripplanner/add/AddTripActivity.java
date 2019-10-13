@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -15,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 import com.example.zayed.easytripplanner.R;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
@@ -37,7 +39,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 
 public class AddTripActivity extends AppCompatActivity implements AddTripContract.IAddTripView{
 
-    private AppCompatEditText mTripTitle, mDate;
+    private AppCompatEditText mTripTitle, mDate,mnote;
     private AutocompleteSupportFragment mSource, mDestination;
     private AppCompatButton mSave;
     private RadioGroup mTripGroup;
@@ -64,6 +66,7 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
 
     @Override
     public void initComponent() {
+        mnote=findViewById(R.id.note_data);
         addTripPresenter = new AddTripPresenter(this);
         ///Added By Abdelwahab did not work with me without adding these two lines
         ///{
@@ -92,10 +95,10 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
         mSource.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                if(place != null && place.getLatLng() != null ) {
+                if(place != null &&place.getLatLng()!=null) {
                     Log.e(TAG, "Place: " + place.getName());
-                    mSource.setText(place.getName());
                     sourceData = new String[3];
+                    mSource.setText(place.getName());
                     sourceData[0] = place.getName();
                     sourceData[1] = String.valueOf(place.getLatLng().latitude);
                     sourceData[2] = String.valueOf(place.getLatLng().longitude);
@@ -113,11 +116,10 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                if(place != null && place.getLatLng() != null ) {
-                    Log.e(TAG, "Place: " + place.getName());
+                Log.e(TAG, "Place: " + place.getName());
+                if(place != null &&place.getLatLng()!=null) {
                     destData = new String[3];
                     destData[0] = place.getName();
-                    mDestination.setText(place.getName());
                     destData[1] = String.valueOf(place.getLatLng().latitude);
                     destData[2] = String.valueOf(place.getLatLng().longitude);
                 }
@@ -187,7 +189,21 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
 
                     AppCompatImageButton mRemove = inflatedView.findViewById(R.id.remove);
                     final AppCompatEditText mNote = inflatedView.findViewById(R.id.note_data);
-
+                    mNote.setMaxHeight(300);
+                    mNote.setOnTouchListener(new View.OnTouchListener() {
+                        public boolean onTouch(View view, MotionEvent event) {
+                            // TODO Auto-generated method stub
+                            if (view.getId() ==R.id.note_data) {
+                                view.getParent().requestDisallowInterceptTouchEvent(true);
+                                switch (event.getAction()&MotionEvent.ACTION_MASK){
+                                    case MotionEvent.ACTION_UP:
+                                        view.getParent().requestDisallowInterceptTouchEvent(false);
+                                        break;
+                                }
+                            }
+                            return false;
+                        }
+                    });
                     mNote.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -195,6 +211,9 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+
                         }
 
                         @Override
