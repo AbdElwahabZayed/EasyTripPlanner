@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -39,7 +40,8 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 
 public class AddTripActivity extends AppCompatActivity implements AddTripContract.IAddTripView{
 
-    private AppCompatEditText mTripTitle, mDate,mnote;
+    private AppCompatEditText mTripTitle, mDate;
+    private EditText mnote;
     private AutocompleteSupportFragment mSource, mDestination;
     private AppCompatButton mSave;
     private RadioGroup mTripGroup;
@@ -89,8 +91,8 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
         notes = new String[10];
         setUpViewStub();
 
-        mSource.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-        mDestination.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        mSource.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME));
+        mDestination.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME));
 
         mSource.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -119,6 +121,7 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
                 Log.e(TAG, "Place: " + place.getName());
                 if(place != null &&place.getLatLng()!=null) {
                     destData = new String[3];
+                    mDestination.setText(place.getName());
                     destData[0] = place.getName();
                     destData[1] = String.valueOf(place.getLatLng().latitude);
                     destData[2] = String.valueOf(place.getLatLng().longitude);

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/sync"
+        android:icon="@drawable/ic_syncronization"
+        android:title="Sync Data" />
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings" />
+    <item
+        android:id="@+id/log_out"
+        android:icon="@drawable/ic_exit"
+        android:title="Log out" />
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_info_2"
+        android:title="About!" />
+</menu>
