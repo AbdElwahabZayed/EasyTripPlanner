@@ -43,7 +43,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
         Trip trip=historytrips.get(position);
         holder.tripName.setText(trip.getTripTitle());
         holder.tripDate.setText(trip.getTripDate());
-        //holder.tripStatus.setText(trip.getStatus());
+        holder.tripStatus.setText(trip.getTripType());
         holder.tripSource.setText(trip.getTripSource());
         holder.tripDes.setText(trip.getTripDestination());
     }
