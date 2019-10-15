@@ -21,17 +21,18 @@
 
         <activity android:name="com.iti.mansoura.tot.easytripplanner.trip.add.AddTripActivity"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
+        <activity android:name="com.iti.mansoura.tot.easytripplanner.trip.show.ShowTripActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity android:name="com.iti.mansoura.tot.easytripplanner.signup.SignUp"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
 
         <activity android:name="com.iti.mansoura.tot.easytripplanner.home.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
 
         <activity android:name="com.iti.mansoura.tot.easytripplanner.login.Login"

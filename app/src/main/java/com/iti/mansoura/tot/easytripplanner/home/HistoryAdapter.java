@@ -2,8 +2,12 @@ package com.iti.mansoura.tot.easytripplanner.home;
 
 
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
@@ -26,15 +30,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyHolder(LayoutInflater.from(context).inflate(R.layout.C, parent, false));
+        return new MyHolder(LayoutInflater.from(context).inflate(R.layout.trip_item_card_layout, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-        Friend friend = friends.get(position);
-        holder.nameText.setText(friend.getName());
-        holder.phoneText.setText(friend.getPhone());
-        holder.emailText.setText(friend.getEmail());
+//        Friend friend = friends.get(position);
+//        holder.nameText.setText(friend.getName());
+//        holder.phoneText.setText(friend.getPhone());
+//        holder.emailText.setText(friend.getEmail());
     }
 
     @Override
@@ -42,9 +46,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
         return friends != null ? friends.size() : 0;
     }
 
-    public void setDataSource(List<Friend> friends) {
-        this.friends = friends;
-    }
+//    public void setDataSource(List<Friend> friends) {
+//        this.friends = friends;
+//    }
 
     class MyHolder extends RecyclerView.ViewHolder {
         TextView nameText, phoneText, emailText;

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class Trip implements Parcelable
 {
-    private String tripUID ,tripTitle , tripType , tripSource ,  tripDestination , tripDate , notes , userUID;
+    private String tripUID ,tripTitle , tripType , tripSource ,  tripDestination , tripTime , tripDate , notes , userUID;
     private double sourceLat , sourceLong , destinationLat , destinationLong;
     private int status; // 0 not-started (upcoming) , 1 started , 2 history(finished) , 3 soft deleted (hidden from user)
 
@@ -20,6 +20,7 @@ public class Trip implements Parcelable
         userUID = in.readString();
         tripDestination = in.readString();
         tripDate = in.readString();
+        tripTime = in.readString();
         sourceLat = in.readDouble();
         sourceLong = in.readDouble();
         destinationLat = in.readDouble();
@@ -39,6 +40,14 @@ public class Trip implements Parcelable
             return new Trip[size];
         }
     };
+
+    public String getTripTime() {
+        return tripTime;
+    }
+
+    public void setTripTime(String tripTime) {
+        this.tripTime = tripTime;
+    }
 
     public int getStatus() {
         return status;
@@ -175,6 +184,7 @@ public class Trip implements Parcelable
         dest.writeString(userUID);
         dest.writeString(tripDestination);
         dest.writeString(tripDate);
+        dest.writeString(tripTime);
         dest.writeDouble(sourceLat);
         dest.writeDouble(sourceLong);
         dest.writeDouble(destinationLat);

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/layout_bground">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:weightSum="8">
+
+        <TableRow android:weightSum="4"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/start_point"
+                android:fontFamily="casual"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/start_point"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="3"
+                android:background="@drawable/border_edittext" />
+        </TableRow>
+
+        <TableRow android:layout_weight="1">
+
+            <TextView
+
+                android:fontFamily="casual"
+                android:textSize="15sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/end_point" />
+
+            <TextView
+                android:id="@+id/end_point"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="3"
+                android:background="@drawable/border_edittext" />
+        </TableRow>
+
+        <TableRow
+            android:layout_weight="1">
+
+            <TextView
+                android:fontFamily="casual"
+                android:textSize="15sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/date" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="3"
+                android:background="@drawable/border_edittext"/>
+        </TableRow>
+
+        <TableRow android:layout_weight="1">
+
+            <TextView
+                android:fontFamily="casual"
+                android:textSize="15sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/time" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="3"
+                android:background="@drawable/border_edittext"/>
+        </TableRow>
+        <TableRow android:layout_weight="2">
+
+            <TextView
+
+                android:fontFamily="casual"
+                android:textSize="15sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/notes" />
+
+
+            <TextView
+                android:id="@+id/notes"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="3"
+                android:background="@drawable/border_edittext" />
+        </TableRow>
+        <TableRow android:layout_weight="1">
+
+            <TextView
+                android:fontFamily="casual"
+                android:textSize="15sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/trip_status" />
+
+            <TextView
+                android:id="@+id/trip_status"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="40dp"
+                android:background="@drawable/border_edittext"/>
+           </TableRow>
+
+        <TableRow android:layout_weight="1">
+           <androidx.appcompat.widget.AppCompatImageButton
+               android:id="@+id/map"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:background="@drawable/ic_start"/>
+        </TableRow>
+
+    </TableLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

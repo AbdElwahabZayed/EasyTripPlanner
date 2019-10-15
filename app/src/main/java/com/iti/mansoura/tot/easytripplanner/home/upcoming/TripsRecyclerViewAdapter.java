@@ -15,6 +15,7 @@ import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -27,14 +28,13 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public interface Callback {
         void onEmptyViewRetryClick();
 
-        void onItemRowClick(int position);
+        void onItemRowClick(int position, Trip trip);
 
         void onStartClick(int position ,Trip trip);
     }
 
-    public TripsRecyclerViewAdapter(ArrayList<Trip> dataSet , Callback mCallback)
+    public TripsRecyclerViewAdapter(Callback mCallback)
     {
-        this.dataSet = dataSet;
         this.mCallback = mCallback;
     }
 
@@ -74,11 +74,17 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             return 1;
     }
 
+    public void setDataSource(ArrayList<Trip> trips) {
+        this.dataSet = trips;
+        notifyDataSetChanged();
+    }
+
     public class NormalViewHolder extends BaseViewHolder {
 
         CardView container;
         AppCompatTextView mTripTitle , mTripSource , mTripDestination , mTripDate;
-        AppCompatImageButton mStart;
+        AppCompatImageButton  mCollapse;
+        AppCompatButton mStart;
 
         NormalViewHolder(View itemView) {
             super(itemView);
@@ -89,6 +95,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mTripDestination = itemView.findViewById(R.id.destination);
             mTripDate = itemView.findViewById(R.id.date);
             mStart = itemView.findViewById(R.id.start);
+            mCollapse = itemView.findViewById(R.id.collapse);
         }
 
         protected void clear() {
@@ -124,7 +131,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mCallback.onItemRowClick(getCurrentPosition());
+                    mCallback.onItemRowClick(getCurrentPosition(),mTrip);
                 }
             });
 
@@ -132,6 +139,13 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 @Override
                 public void onClick(View v) {
                     mCallback.onStartClick(getCurrentPosition(),mTrip);
+                }
+            });
+
+            mCollapse.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO Collapse Trip Layout
                 }
             });
         }

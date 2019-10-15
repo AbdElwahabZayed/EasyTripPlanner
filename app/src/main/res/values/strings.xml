@@ -29,10 +29,26 @@
     <string name="google_maps_key">AIzaSyA_G6hydCdqIIrUzwv1GWf-fJWMuDvk-BY</string>
     <string name="trip_title_hint">Trip Title</string>
     <string name="trip_notes">Trip Notes</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="start">Start</string>
     <string name="btn_start">Start Trip</string>
     <string name="end">End</string>
+    <string name="empty">No data Found</string>
+    <string name="retry">Retry</string>
+
+<!--    show activity-->
+    <string name="start_point">Start Point</string>
+    <string name="end_point">End Point</string>
+    <string name="time">Time </string>
+    <string name="trip_status">Trip Status</string>
+    <string name="notes">Notes</string>
+    <string name="start_trip_btn">Show Trip</string>
+    <string-array name="status_array">
+        <item>Upcoming</item>
+        <item>Done</item>
+        <item>Cancelled</item>
+    </string-array>
+    <string name="title_activity_trip_details_map">Map</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
