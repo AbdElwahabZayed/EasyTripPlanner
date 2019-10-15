@@ -31,16 +31,14 @@
         app:layout_constraintVertical_bias="0.304">
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tabs"
             android:layout_gravity="top"
-            app:tabTextColor="@color/colorPrimary"
+            android:elevation="10dp"
+            app:tabGravity="fill"
             app:tabMode="fixed"
-            app:tabGravity="fill">
-
-
-
+            app:tabTextColor="@color/colorPrimary">
 
 
         </com.google.android.material.tabs.TabLayout>

@@ -5,6 +5,22 @@ import android.os.Parcelable;
 
 public class Trip implements Parcelable
 {
+    public Trip(String tripUID, String tripTitle, String tripType, String tripSource, String tripDestination, String tripDate, String notes, String userUID, double sourceLat, double sourceLong, double destinationLat, double destinationLong, int status) {
+        this.tripUID = tripUID;
+        this.tripTitle = tripTitle;
+        this.tripType = tripType;
+        this.tripSource = tripSource;
+        this.tripDestination = tripDestination;
+        this.tripDate = tripDate;
+        this.notes = notes;
+        this.userUID = userUID;
+        this.sourceLat = sourceLat;
+        this.sourceLong = sourceLong;
+        this.destinationLat = destinationLat;
+        this.destinationLong = destinationLong;
+        this.status = status;
+    }
+
     private String tripUID ,tripTitle , tripType , tripSource ,  tripDestination , tripDate , notes , userUID;
     private double sourceLat , sourceLong , destinationLat , destinationLong;
     private int status; // 0 not-started (upcoming) , 1 started , 2 history(finished) , 3 soft deleted (hidden from user)
