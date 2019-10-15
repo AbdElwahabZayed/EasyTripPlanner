@@ -5,12 +5,11 @@ import android.graphics.Color;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.iti.mansoura.tot.easytripplanner.home.HomeActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.iti.mansoura.tot.easytripplanner.home.HomeActivity;
 
 import androidx.annotation.NonNull;
 
@@ -25,15 +24,6 @@ public class LoginPresenter implements LoginContract.ILoginPresenter {
     }
     @Override
     public void onStart() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser==null) {
-            // startActivity(new Intent(Login.this, Login.class));
-            loginActivity.showMsg("null");
-        }else{
-            loginActivity.showMsg("not null");
-            loginActivity.startActivity(new Intent(loginActivity, HomeActivity.class));
-            loginActivity.finish();
-        }
     }
 
     @Override
