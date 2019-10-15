@@ -1,5 +1,7 @@
 package com.iti.mansoura.tot.easytripplanner.home.upcoming;
 
+import android.transition.AutoTransition;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iti.mansoura.tot.easytripplanner.R;
@@ -24,6 +27,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
     private ArrayList<Trip> dataSet;
     private Callback mCallback;
+    private ViewGroup viewGroup;
 
     public interface Callback {
         void onEmptyViewRetryClick();
@@ -50,6 +54,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        viewGroup=parent;
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
                 return new NormalViewHolder(
@@ -82,9 +87,10 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public class NormalViewHolder extends BaseViewHolder {
 
         CardView container;
-        AppCompatTextView mTripTitle , mTripSource , mTripDestination , mTripDate;
+        AppCompatTextView mTripTitle , mTripSource , mTripDestination , mTripDate, mTripStatus;
         AppCompatImageButton  mCollapse;
         AppCompatButton mStart;
+        ConstraintLayout collapse;
 
         NormalViewHolder(View itemView) {
             super(itemView);
@@ -93,9 +99,11 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mTripTitle = itemView.findViewById(R.id.trip_title);
             mTripSource = itemView.findViewById(R.id.source);
             mTripDestination = itemView.findViewById(R.id.destination);
+            mTripStatus = itemView.findViewById(R.id.status);
             mTripDate = itemView.findViewById(R.id.date);
             mStart = itemView.findViewById(R.id.start);
             mCollapse = itemView.findViewById(R.id.collapse);
+            collapse=itemView.findViewById(R.id.collapsePart);
         }
 
         protected void clear() {
@@ -126,6 +134,10 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 mTripDate.setText(mTrip.getTripDate());
             }
 
+            if (mTrip.getStatus() == 0) {
+                mTripStatus.setText(String.valueOf(mTrip.getStatus()));
+            }
+
             // set Click Listeners here
 
             container.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +157,15 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mCollapse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO Collapse Trip Layout
+                    if(collapse.getVisibility()== View.GONE) {
+                        mCollapse.setImageResource(R.drawable.ic_arrow_up);
+                        TransitionManager.beginDelayedTransition(viewGroup, new AutoTransition());
+                        collapse.setVisibility(View.VISIBLE);
+                    }else{
+                        mCollapse.setImageResource(R.drawable.ic_arrow_down);
+                        TransitionManager.beginDelayedTransition(viewGroup, new AutoTransition());
+                        collapse.setVisibility(View.GONE);
+                    }
                 }
             });
         }
