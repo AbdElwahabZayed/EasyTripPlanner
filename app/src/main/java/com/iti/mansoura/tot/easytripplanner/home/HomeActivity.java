@@ -48,6 +48,8 @@ public class HomeActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initComponent();
+
+
     }
 
     private void initComponent() {
