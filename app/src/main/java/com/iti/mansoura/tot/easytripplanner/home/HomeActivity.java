@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.home.upcoming.UpComingFragment;
 import com.iti.mansoura.tot.easytripplanner.trip.add.AddTripActivity;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ public class HomeActivity extends AppCompatActivity  {
     private ViewPager pager;
     private TabLayout tabs;
     private FragmentManager fragmentManager;
-    private UpCommingFragment upCommingFragment;
+    private UpComingFragment upComingFragment;
     private HistoryFragment historyFragment;
     Fragment[] fragments;
     @Override
@@ -61,7 +62,7 @@ public class HomeActivity extends AppCompatActivity  {
         navigationView=findViewById(R.id.navi);
         header=findViewById(R.id.header);
         toolbar=findViewById(R.id.toolbar);
-        tabs= (TabLayout) findViewById(R.id.tabs);
+        tabs= findViewById(R.id.tabs);
         pager=findViewById(R.id.pager);
         tabs.setupWithViewPager(pager);
         tabs.addTab(tabs.newTab().setText("First"));
@@ -70,9 +71,9 @@ public class HomeActivity extends AppCompatActivity  {
         fragmentManager=getSupportFragmentManager();
         MyHomePagerAdapter myHomePagerAdapter=new MyHomePagerAdapter(fragmentManager);
         pager.setAdapter(myHomePagerAdapter);
-        upCommingFragment=new UpCommingFragment();
+        upComingFragment =new UpComingFragment();
         historyFragment=new HistoryFragment();
-        fragments=new Fragment[]{upCommingFragment,historyFragment};
+        fragments=new Fragment[]{upComingFragment,historyFragment};
         myHomePagerAdapter.setFragments(fragments);
         myHomePagerAdapter.notifyDataSetChanged();
         textViewImg=navigationView.getHeaderView(0).findViewById(R.id.txtViewImag);
@@ -82,12 +83,12 @@ public class HomeActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         setMenu();
         setListeners();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, 123);
             startService(new Intent(HomeActivity.this, FloatingWidgetService.class).putExtra("activity_background", true));
-
         }
     }
 

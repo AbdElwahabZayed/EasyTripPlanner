@@ -6,13 +6,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.iti.mansoura.tot.easytripplanner.home.upcoming.UpComingFragment;
+
 public class MyHomePagerAdapter extends FragmentPagerAdapter {
     static Fragment[] fragments;
     private String[] tabTitles =new String[]{"UpComming","History"};
     public MyHomePagerAdapter(@NonNull FragmentManager fm) {
         super(fm);
     }
-    public static void setFragments(Fragment[] Fragments){
+    public void setFragments(Fragment[] Fragments){
         fragments=Fragments;
     }
 
@@ -28,7 +30,7 @@ public class MyHomePagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return new UpCommingFragment();
+                return new UpComingFragment();
             case 1:
                 return new HistoryFragment();
 
