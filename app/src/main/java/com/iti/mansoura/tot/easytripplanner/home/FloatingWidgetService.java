@@ -113,6 +113,16 @@ public class FloatingWidgetService extends Service {
                         }
                     });
 
+                    counterFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(counterFab.getCount() < 10)
+                                counterFab.setCount(counterFab.getCount()+1);
+                            else
+                                stopSelf();
+                        }
+                    });
+
                     counterFab.setOnTouchListener(new View.OnTouchListener() {
                         private int initialX;
                         private int initialY;
@@ -191,10 +201,7 @@ public class FloatingWidgetService extends Service {
             }
         }
 
-
         return super.onStartCommand(intent, flags, startId);
-
-
     }
 
     @Override

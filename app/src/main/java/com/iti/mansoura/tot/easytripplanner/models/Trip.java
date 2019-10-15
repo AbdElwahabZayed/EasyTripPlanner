@@ -5,22 +5,26 @@ import android.os.Parcelable;
 
 public class Trip implements Parcelable
 {
-    private String tripTitle , tripType , tripSource ,  tripDestination , tripDate , notes;
+    private String tripUID ,tripTitle , tripType , tripSource ,  tripDestination , tripDate , notes , userUID;
     private double sourceLat , sourceLong , destinationLat , destinationLong;
+    private int status; // 0 not-started (upcoming) , 1 started , 2 history(finished) , 3 soft deleted (hidden from user)
 
     public Trip() {
     }
 
     public Trip(Parcel in) {
+        tripUID = in.readString();
         tripTitle = in.readString();
         tripType = in.readString();
         tripSource = in.readString();
+        userUID = in.readString();
         tripDestination = in.readString();
         tripDate = in.readString();
         sourceLat = in.readDouble();
         sourceLong = in.readDouble();
         destinationLat = in.readDouble();
         destinationLong = in.readDouble();
+        status = in.readInt();
         notes = in.readString();
     }
 
@@ -35,6 +39,30 @@ public class Trip implements Parcelable
             return new Trip[size];
         }
     };
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getTripUID() {
+        return tripUID;
+    }
+
+    public void setTripUID(String tripUID) {
+        this.tripUID = tripUID;
+    }
+
+    public String getUserUID() {
+        return userUID;
+    }
+
+    public void setUserUID(String userUID) {
+        this.userUID = userUID;
+    }
 
     public String getTripTitle() {
         return tripTitle;
@@ -140,9 +168,11 @@ public class Trip implements Parcelable
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(tripUID);
         dest.writeString(tripTitle);
         dest.writeString(tripType);
         dest.writeString(tripSource);
+        dest.writeString(userUID);
         dest.writeString(tripDestination);
         dest.writeString(tripDate);
         dest.writeDouble(sourceLat);
@@ -150,5 +180,6 @@ public class Trip implements Parcelable
         dest.writeDouble(destinationLat);
         dest.writeDouble(destinationLong);
         dest.writeString(notes);
+        dest.writeInt(status);
     }
 }
