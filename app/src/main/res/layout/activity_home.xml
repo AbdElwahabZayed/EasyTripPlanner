@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:elevation="10dp"
+            android:elevation="18dp"
             app:tabGravity="fill"
             app:tabMode="fixed"
             app:tabTextColor="@color/colorPrimary">
