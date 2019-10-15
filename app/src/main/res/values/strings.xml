@@ -24,9 +24,12 @@
     <string name="radio_round">Round</string>
     <string name="add_notes">Add Notes</string>
     <string name="notes_limit">Only 10 Notes Allowed</string>
-     <string name="add_trip">Add Trip</string>
+    <string name="add_trip">Add Trip</string>
     <string name="empty_step">(Empty)</string>
     <string name="google_maps_key">AIzaSyA_G6hydCdqIIrUzwv1GWf-fJWMuDvk-BY</string>
     <string name="trip_title_hint">Trip Title</string>
     <string name="trip_notes">Trip Notes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

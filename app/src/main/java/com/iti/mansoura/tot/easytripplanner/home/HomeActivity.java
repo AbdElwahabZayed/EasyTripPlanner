@@ -1,11 +1,5 @@
 package com.iti.mansoura.tot.easytripplanner.home;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -17,13 +11,22 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.google.android.material.navigation.NavigationView;
-import com.iti.mansoura.tot.easytripplanner.R;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.trip.add.AddTripActivity;
 
-public class HomeActivity extends AppCompatActivity {
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
+
+public class HomeActivity extends AppCompatActivity  {
 
     private FloatingActionButton mAddTrip;
     private FloatingWidgetService g;
@@ -33,25 +36,45 @@ public class HomeActivity extends AppCompatActivity {
     private TextView textViewImg;
     private TextView textViewEmail;
     private FrameLayout header;
-
+    private ViewPager pager;
+    private TabLayout tabs;
+    private FragmentManager fragmentManager;
+    private UpCommingFragment upCommingFragment;
+    private HistoryFragment historyFragment;
+    Fragment[] fragments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        initComponent();
+    }
 
+    private void initComponent() {
         mAddTrip = findViewById(R.id.add);
-
         mAddTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HomeActivity.this, AddTripActivity.class));
             }
         });
-
         drawerLayout=findViewById(R.id.drawerLayout);
         navigationView=findViewById(R.id.navi);
         header=findViewById(R.id.header);
         toolbar=findViewById(R.id.toolbar);
+        tabs= (TabLayout) findViewById(R.id.tabs);
+        pager=findViewById(R.id.pager);
+        tabs.setupWithViewPager(pager);
+        tabs.addTab(tabs.newTab().setText("First"));
+        tabs.addTab(tabs.newTab().setText("Second"));
+        tabs.setTabTextColors(Color.RED,Color.BLUE);
+        fragmentManager=getSupportFragmentManager();
+        MyHomePagerAdapter myHomePagerAdapter=new MyHomePagerAdapter(fragmentManager);
+        pager.setAdapter(myHomePagerAdapter);
+        upCommingFragment=new UpCommingFragment();
+        historyFragment=new HistoryFragment();
+        fragments=new Fragment[]{upCommingFragment,historyFragment};
+        myHomePagerAdapter.setFragments(fragments);
+        myHomePagerAdapter.notifyDataSetChanged();
         textViewImg=navigationView.getHeaderView(0).findViewById(R.id.txtViewImag);
         textViewEmail=navigationView.getHeaderView(0).findViewById(R.id.textViewEmail);
         textViewImg.setText("AZ");
@@ -67,6 +90,7 @@ public class HomeActivity extends AppCompatActivity {
 
         }
     }
+
 
     private void setMenu() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -126,4 +150,6 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         }*/
     }
+
+
 }
