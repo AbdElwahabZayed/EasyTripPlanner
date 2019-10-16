@@ -48,7 +48,7 @@
         <item>Cancelled</item>
     </string-array>
     <string name="title_activity_trip_details_map">Map</string>
-
+    <string name="title_activity_settings"></string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

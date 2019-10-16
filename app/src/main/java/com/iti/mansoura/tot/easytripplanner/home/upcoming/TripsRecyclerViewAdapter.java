@@ -1,24 +1,20 @@
 package com.iti.mansoura.tot.easytripplanner.home.upcoming;
 
-import android.transition.AutoTransition;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -88,7 +84,6 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         CardView container;
         AppCompatTextView mTripTitle , mTripSource , mTripDestination , mTripDate, mTripStatus;
-        AppCompatImageButton  mCollapse;
         AppCompatButton mStart;
         ConstraintLayout collapse;
 
@@ -102,7 +97,6 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mTripStatus = itemView.findViewById(R.id.status);
             mTripDate = itemView.findViewById(R.id.date);
             mStart = itemView.findViewById(R.id.start);
-            mCollapse = itemView.findViewById(R.id.collapse);
             collapse=itemView.findViewById(R.id.collapsePart);
         }
 
@@ -154,20 +148,6 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 }
             });
 
-            mCollapse.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(collapse.getVisibility()== View.GONE) {
-                        mCollapse.setImageResource(R.drawable.ic_arrow_up);
-                        TransitionManager.beginDelayedTransition(viewGroup, new AutoTransition());
-                        collapse.setVisibility(View.VISIBLE);
-                    }else{
-                        mCollapse.setImageResource(R.drawable.ic_arrow_down);
-                        TransitionManager.beginDelayedTransition(viewGroup, new AutoTransition());
-                        collapse.setVisibility(View.GONE);
-                    }
-                }
-            });
         }
     }
 
