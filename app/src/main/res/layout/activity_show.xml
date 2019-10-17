@@ -1,110 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/layout_bground">
+    android:background="@drawable/login_gradiant">
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:weightSum="8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:weightSum="8">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TableRow android:weightSum="4"
-            android:layout_weight="1">
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center"
+            android:weightSum="4">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/start_point"
                 android:fontFamily="casual"
-                android:textSize="15sp"/>
+                android:gravity="center"
+                android:text="@string/start_point"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/start_point"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="3"
-                android:background="@drawable/border_edittext" />
+                android:background="@drawable/border_edittext"
+                android:gravity="center" />
         </TableRow>
 
-        <TableRow android:layout_weight="1">
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
 
             <TextView
 
-                android:fontFamily="casual"
-                android:textSize="15sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/end_point" />
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:text="@string/end_point"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/end_point"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="3"
-                android:background="@drawable/border_edittext" />
+                android:background="@drawable/border_edittext"
+                android:gravity="center" />
         </TableRow>
 
         <TableRow
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center">
 
             <TextView
-                android:fontFamily="casual"
-                android:textSize="15sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/date" />
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:text="@string/date"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/date"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="3"
-                android:background="@drawable/border_edittext"/>
+                android:background="@drawable/border_edittext"
+                android:gravity="center" />
         </TableRow>
 
-        <TableRow android:layout_weight="1">
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
 
             <TextView
-                android:fontFamily="casual"
-                android:textSize="15sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/time" />
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:text="@string/time"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="3"
-                android:background="@drawable/border_edittext"/>
+                android:background="@drawable/border_edittext"
+                android:gravity="center" />
         </TableRow>
-        <TableRow android:layout_weight="2">
+
+        <TableRow
+            android:layout_weight="2"
+            android:gravity="center">
 
             <TextView
 
-                android:fontFamily="casual"
-                android:textSize="15sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/notes" />
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:text="@string/notes"
+                android:textSize="15sp" />
 
 
             <TextView
@@ -112,32 +128,39 @@
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_weight="3"
-                android:background="@drawable/border_edittext" />
+                android:background="@drawable/border_edittext"
+                android:gravity="center" />
         </TableRow>
-        <TableRow android:layout_weight="1">
+
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
 
             <TextView
-                android:fontFamily="casual"
-                android:textSize="15sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/trip_status" />
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:text="@string/trip_status"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/trip_status"
                 android:layout_width="0dp"
-                android:layout_weight="3"
                 android:layout_height="40dp"
-                android:background="@drawable/border_edittext"/>
-           </TableRow>
+                android:layout_weight="3"
+                android:background="@drawable/border_edittext"
+                android:gravity="center" />
+        </TableRow>
 
         <TableRow android:layout_weight="1">
-           <androidx.appcompat.widget.AppCompatImageButton
-               android:id="@+id/map"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:background="@drawable/ic_start"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_start" />
         </TableRow>
 
     </TableLayout>

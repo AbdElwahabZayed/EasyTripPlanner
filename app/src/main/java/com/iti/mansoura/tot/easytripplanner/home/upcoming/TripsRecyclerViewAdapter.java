@@ -89,8 +89,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public class NormalViewHolder extends BaseViewHolder {
 
         CardView container;
-        AppCompatTextView mTripTitle , mTripSource , mTripDestination , mTripDate, mTripStatus , mTripType;
-        AppCompatImageButton  mCollapse;
+        AppCompatTextView mTripTitle , mTripSource , mTripDestination , mTripDate, mTripStatus ;
         AppCompatButton mStart;
         ConstraintLayout collapse;
 
@@ -103,9 +102,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mTripDestination = itemView.findViewById(R.id.destination);
             mTripStatus = itemView.findViewById(R.id.status);
             mTripDate = itemView.findViewById(R.id.date);
-            mTripType = itemView.findViewById(R.id.type);
             mStart = itemView.findViewById(R.id.start);
-            mCollapse = itemView.findViewById(R.id.collapse);
             collapse=itemView.findViewById(R.id.collapsePart);
         }
 
@@ -113,7 +110,6 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mTripTitle.setText("");
             mTripStatus.setText("");
             mTripDate.setText("");
-            mTripType.setText("");
             mTripSource.setText("");
             mTripDestination.setText("");
         }
@@ -148,17 +144,6 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                     mTripStatus.setText(mStatusArray[1]);
                     break;
             }
-
-            switch (mTrip.getTripType())
-            {
-                case "1":
-                    mTripType.setText(mTypeArray[0]);
-                    break;
-                case "2":
-                    mTripType.setText(mTypeArray[1]);
-                    break;
-            }
-
             // set Click Listeners here
 
             container.setOnClickListener(new View.OnClickListener() {
@@ -172,21 +157,6 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 @Override
                 public void onClick(View v) {
                     mCallback.onStartClick(getCurrentPosition(),mTrip);
-                }
-            });
-
-            mCollapse.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(collapse.getVisibility()== View.GONE) {
-                        mCollapse.setImageResource(R.drawable.ic_arrow_up);
-                        TransitionManager.beginDelayedTransition(viewGroup, new AutoTransition());
-                        collapse.setVisibility(View.VISIBLE);
-                    }else{
-                        mCollapse.setImageResource(R.drawable.ic_arrow_down);
-                        TransitionManager.beginDelayedTransition(viewGroup, new AutoTransition());
-                        collapse.setVisibility(View.GONE);
-                    }
                 }
             });
         }

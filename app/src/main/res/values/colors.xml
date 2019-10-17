@@ -8,4 +8,5 @@
     <color name="card_heaaderText">#FFA700</color>
     <color name="card_details_back">#00AF6A</color>
     <color name="card_x2">#FFFFAE</color>
+    <color name="tab1">#673AB7</color>
 </resources>

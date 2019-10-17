@@ -18,31 +18,35 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="81dp"
+            android:layout_width="0dp"
             android:layout_height="43dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="64dp"
             android:src="@drawable/flight1"
+            app:layout_constraintEnd_toStartOf="@+id/imageView3"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="67dp"
+            android:layout_width="0dp"
             android:layout_height="46dp"
             android:layout_marginStart="55dp"
             android:layout_marginTop="64dp"
             android:src="@drawable/flight"
+            app:layout_constraintEnd_toStartOf="@+id/imageView2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="72dp"
+            android:layout_width="0dp"
             android:layout_height="44dp"
-            android:layout_marginStart="44dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="64dp"
+            android:layout_marginEnd="55dp"
             android:src="@drawable/hot_air_balloon"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,29 +54,36 @@
             android:id="@+id/imageView4"
             android:layout_width="57dp"
             android:layout_height="59dp"
-            android:layout_marginStart="58dp"
-            android:layout_marginTop="72dp"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="84dp"
+            android:layout_marginEnd="30dp"
             android:src="@drawable/conveyor_belt"
+            app:layout_constraintEnd_toStartOf="@+id/imageView5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
         <ImageView
             android:id="@+id/imageView6"
-            android:layout_width="52dp"
+            android:layout_width="0dp"
             android:layout_height="57dp"
-            android:layout_marginStart="68dp"
-            android:layout_marginTop="76dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="88dp"
+            android:layout_marginEnd="60dp"
             android:src="@drawable/flight2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imageView5"
             app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
         <ImageView
             android:id="@+id/imageView5"
-            android:layout_width="59dp"
+            android:layout_width="0dp"
             android:layout_height="63dp"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="72dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="84dp"
+            android:layout_marginEnd="40dp"
             android:src="@drawable/delivery_truck"
+            app:layout_constraintEnd_toStartOf="@+id/imageView6"
             app:layout_constraintStart_toEndOf="@+id/imageView4"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
@@ -88,7 +99,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
     </FrameLayout>
 
 

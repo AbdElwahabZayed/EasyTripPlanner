@@ -2,13 +2,10 @@ package com.iti.mansoura.tot.easytripplanner.home;
 
 
 import android.content.Context;
-import android.transition.AutoTransition;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.iti.mansoura.tot.easytripplanner.R;
@@ -41,7 +38,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         Trip trip=historytrips.get(position);
-        holder.tripName.setText(trip.getTripTitle());
+        holder.tripName.setText(trip.getTripTitle().toUpperCase());
         holder.tripDate.setText(trip.getTripDate());
         holder.tripStatus.setText(trip.getTripType());
         holder.tripSource.setText(trip.getTripSource());
@@ -65,7 +62,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
     class MyHolder extends RecyclerView.ViewHolder {
         TextView tripName, tripDate, tripStatus,tripDes,tripSource;
         Button btn_StartTrip;
-        ImageButton btn_Coll;
         ConstraintLayout collapse;
        public MyHolder(final View itemView) {
             super(itemView);
@@ -74,7 +70,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
             tripDate=itemView.findViewById(R.id.textView_Date);
             tripSource=itemView.findViewById(R.id.textView_Source);
             tripStatus=itemView.findViewById(R.id.textView_ٍStatus);
-            btn_Coll=itemView.findViewById(R.id.btn_Collapse);
             collapse=itemView.findViewById(R.id.collapsePart);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -86,20 +81,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
                     }
                 }
             });
-            btn_Coll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(collapse.getVisibility()== View.GONE) {
-                        btn_Coll.setImageResource(R.drawable.ic_arrow_up);
-                        TransitionManager.beginDelayedTransition(viewGroup, new AutoTransition());
-                        collapse.setVisibility(View.VISIBLE);
-                    }else{
-                        btn_Coll.setImageResource(R.drawable.ic_arrow_down);
-                        TransitionManager.beginDelayedTransition(viewGroup, new AutoTransition());
-                        collapse.setVisibility(View.GONE);
-                    }
-                }
-            });
+
 
         }
     }

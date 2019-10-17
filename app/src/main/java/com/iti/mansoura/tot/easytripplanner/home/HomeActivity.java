@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,7 @@ public class HomeActivity extends AppCompatActivity  {
     private Toolbar toolbar;
     private TextView textViewImg;
     private TextView textViewEmail;
-
+    private FrameLayout header;
     private ViewPager pager;
     private TabLayout tabs;
     private FragmentManager fragmentManager;
@@ -65,17 +66,18 @@ public class HomeActivity extends AppCompatActivity  {
         });
         drawerLayout=findViewById(R.id.drawerLayout);
         navigationView=findViewById(R.id.navi);
+        header=findViewById(R.id.header);
         toolbar=findViewById(R.id.toolbar);
         tabs= findViewById(R.id.tabs);
         pager=findViewById(R.id.pager);
         tabs.setupWithViewPager(pager);
         tabs.addTab(tabs.newTab().setText("First"));
         tabs.addTab(tabs.newTab().setText("Second"));
-        tabs.setTabTextColors(Color.RED,Color.BLUE);
+        //tabs.setTabTextColors(Color.RED,Color.BLUE);
         fragmentManager=getSupportFragmentManager();
         MyHomePagerAdapter myHomePagerAdapter=new MyHomePagerAdapter(fragmentManager);
         pager.setAdapter(myHomePagerAdapter);
-        upComingFragment=new UpComingFragment();
+        upComingFragment =new UpComingFragment();
         historyFragment=new HistoryFragment();
         fragments=new Fragment[]{upComingFragment,historyFragment};
         myHomePagerAdapter.setFragments(fragments);
@@ -87,12 +89,12 @@ public class HomeActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         setMenu();
         setListeners();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, 123);
             startService(new Intent(HomeActivity.this, FloatingWidgetService.class).putExtra("activity_background", true));
-
         }
     }
 
@@ -135,19 +137,11 @@ public class HomeActivity extends AppCompatActivity  {
     }
 
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
-                break;
-            case R.id.sync:
-
-                break;
-
-
                 //supportFinishAfterTransition();
         }
         return super.onOptionsItemSelected(item);

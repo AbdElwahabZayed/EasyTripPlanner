@@ -4,7 +4,7 @@
     <shape xmlns:android="http://schemas.android.com/apk/res/android"
         android:shape="rectangle" >
 
-        <solid android:color="#f46b42" />
+        <solid android:color="#FFFF" />
 <corners android:radius="20dp"/>
         <stroke
             android:width="3dp"

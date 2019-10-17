@@ -38,7 +38,8 @@
             android:elevation="18dp"
             app:tabGravity="fill"
             app:tabMode="fixed"
-            app:tabTextColor="@color/colorPrimary">
+            app:tabTextColor="@android:color/holo_blue_dark"
+            app:tabSelectedTextColor="@color/tab1">
 
 
         </com.google.android.material.tabs.TabLayout>
