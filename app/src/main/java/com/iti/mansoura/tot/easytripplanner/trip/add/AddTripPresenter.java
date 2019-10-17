@@ -3,6 +3,10 @@ package com.iti.mansoura.tot.easytripplanner.trip.add;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +24,9 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
     private FirebaseAuth mAuth;
     private AddTripActivity addTripActivity;
     private  FirebaseUser currentUser;
+    private WorkManager mWorkManager;
+    private OneTimeWorkRequest mWorkRequest;
+    private static final String WORKER_TAG = "worker";
 
     AddTripPresenter(AddTripActivity addTripActivity)
     {
@@ -50,6 +57,13 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
     private void doSave(final String[] data, final String[] source, final String[] dest , final String [] notes) {
 
         if(currentUser !=null) {
+            mWorkManager = WorkManager.getInstance(addTripActivity);
+            mWorkRequest = new OneTimeWorkRequest.Builder(TripSchedulingWorker.class)
+                    .addTag(WORKER_TAG)
+                    .build();
+
+            mWorkManager.enqueueUniqueWork(WORKER_TAG, ExistingWorkPolicy.REPLACE,mWorkRequest);
+
             final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             final String tripUID = UUID.randomUUID().toString();
             final Trip mTrip = new Trip();
@@ -58,7 +72,8 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
             mTrip.setUserUID(currentUser.getUid());
             mTrip.setTripTitle(data[0]);
             mTrip.setTripDate(data[1]);
-            mTrip.setTripType(data[2]);
+            mTrip.setTripTime(data[2]);
+            mTrip.setTripType(data[3]);
 
             mTrip.setTripSource(source[0]);
             mTrip.setSourceLat(Double.parseDouble(source[1]));
@@ -76,7 +91,7 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            if(data[2].equals("1")) {
+                            if(data[3].equals("1")) {
                                 addTripActivity.showMessage(addTripActivity.getResources().getString(R.string.trip_saved));
                                 addTripActivity.finish();
                             }
@@ -105,8 +120,8 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
         mTrip.setTripUID(tripUID);
         mTrip.setUserUID(currentUser.getUid());
         mTrip.setTripTitle(data[0]);
-        mTrip.setTripDate(data[1]);
-        mTrip.setTripType(data[2]);
+        mTrip.setTripTime(data[2]);
+        mTrip.setTripType(data[3]);
 
         mTrip.setTripSource(dest[0]);
         mTrip.setSourceLat(Double.parseDouble(dest[1]));

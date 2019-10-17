@@ -26,15 +26,22 @@
                 android:id="@+id/status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="176dp"
+                android:layout_marginStart="84dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="4dp"
+                android:text="@string/app_name"
                 android:textColor="@color/places_autocomplete_prediction_primary_text_highlight"
-                app:layout_constraintBottom_toTopOf="@+id/date"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.525"
                 app:layout_constraintStart_toEndOf="@+id/trip_title"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/app_name"
+                android:textColor="@color/places_autocomplete_prediction_primary_text_highlight"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/status"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -57,13 +64,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="176dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
                 android:textColor="@color/places_autocomplete_prediction_primary_text_highlight"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.525"
-                app:layout_constraintStart_toEndOf="@+id/trip_title" />
+                app:layout_constraintStart_toEndOf="@+id/trip_title"
+                app:layout_constraintTop_toBottomOf="@+id/type" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/collapse"

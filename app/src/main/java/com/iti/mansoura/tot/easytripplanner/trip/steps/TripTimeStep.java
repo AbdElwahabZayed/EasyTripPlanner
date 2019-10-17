@@ -1,13 +1,12 @@
 package com.iti.mansoura.tot.easytripplanner.trip.steps;
 
-import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
@@ -19,11 +18,11 @@ import java.util.Locale;
 
 import ernestoyaquello.com.verticalstepperform.Step;
 
-public class TripDateStep extends Step<String> {
+public class TripTimeStep extends Step<String> {
 
-    private AppCompatEditText tripDate;
+    private AppCompatEditText tripTime;
 
-    public TripDateStep(String title) {
+    public TripTimeStep(String title) {
         super(title);
     }
 
@@ -34,8 +33,8 @@ public class TripDateStep extends Step<String> {
      */
     @Override
     public String getStepData() {
-        Editable tripDate = this.tripDate.getText();
-        return tripDate != null ? tripDate.toString() : "";
+        Editable tripTime = this.tripTime.getText();
+        return tripTime != null ? tripTime.toString() : "";
     }
 
     /**
@@ -47,8 +46,8 @@ public class TripDateStep extends Step<String> {
      */
     @Override
     public String getStepDataAsHumanReadableString() {
-        String tripDate = getStepData();
-        return !tripDate.isEmpty() ? tripDate : getContext().getResources().getString(R.string.empty_step);
+        String tripTime = getStepData();
+        return !tripTime.isEmpty() ? tripTime : getContext().getResources().getString(R.string.empty_step);
     }
 
     /**
@@ -58,7 +57,7 @@ public class TripDateStep extends Step<String> {
      */
     @Override
     public void restoreStepData(String data) {
-        tripDate.setText(data);
+        tripTime.setText(data);
     }
 
     /**
@@ -70,10 +69,10 @@ public class TripDateStep extends Step<String> {
      */
     @Override
     protected IsDataValid isStepDataValid(String stepData) {
-        boolean isDateValid = stepData.length() > 0;
-        String errorMessage = !isDateValid ? getContext().getResources().getString(R.string.error_title) : "";
+        boolean isTimeValid = stepData.length() > 0;
+        String errorMessage = !isTimeValid ? getContext().getResources().getString(R.string.error_title) : "";
 
-        return new IsDataValid(isDateValid, errorMessage);
+        return new IsDataValid(isTimeValid, errorMessage);
     }
 
     /**
@@ -84,10 +83,10 @@ public class TripDateStep extends Step<String> {
     @Override
     protected View createStepContentLayout() {
         LayoutInflater inflater = (LayoutInflater)   getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.trip_date_layout, null);
-        tripDate = view.findViewById(R.id.date_value);
+        View view = inflater.inflate(R.layout.trip_time_layout, null);
+        tripTime = view.findViewById(R.id.time_value);
 
-        tripDate.addTextChangedListener(new TextWatcher() {
+        tripTime.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 if(!s.toString().trim().isEmpty())
@@ -112,26 +111,22 @@ public class TripDateStep extends Step<String> {
         });
 
         final Calendar myCalendar = Calendar.getInstance();
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        final TimePickerDialog.OnTimeSetListener time = new TimePickerDialog.OnTimeSetListener() {
 
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateDateValue(myCalendar);
+            public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+                myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                myCalendar.set(Calendar.MINUTE, selectedMinute);
+                updateTimeValue(myCalendar);
             }
         };
 
-        tripDate.setOnClickListener(new View.OnClickListener() {
+        tripTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog  = new DatePickerDialog(getContext(), date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.getDatePicker().setMinDate(myCalendar.getTime().getTime());
-                datePickerDialog.show();
+                TimePickerDialog timePickerDialog  = new TimePickerDialog(getContext(), time, myCalendar
+                        .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),true);
+                timePickerDialog.show();
             }
         });
 
@@ -183,9 +178,9 @@ public class TripDateStep extends Step<String> {
 
     }
 
-    private void updateDateValue(Calendar myCalendar) {
-        String myFormat = "MM/dd/yy"; //In which you need put here
+    private void updateTimeValue(Calendar myCalendar) {
+        String myFormat = "HH:mm"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
-        tripDate.setText(sdf.format(myCalendar.getTime()));
+        tripTime.setText(sdf.format(myCalendar.getTime()));
     }
 }

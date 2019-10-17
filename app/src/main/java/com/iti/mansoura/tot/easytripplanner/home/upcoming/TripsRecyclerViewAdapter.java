@@ -18,7 +18,6 @@ import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -28,6 +27,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private ArrayList<Trip> dataSet;
     private Callback mCallback;
     private ViewGroup viewGroup;
+    private String [] mStatusArray,mTypeArray;
 
     public interface Callback {
         void onEmptyViewRetryClick();
@@ -37,9 +37,11 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
         void onStartClick(int position ,Trip trip);
     }
 
-    public TripsRecyclerViewAdapter(Callback mCallback)
+    public TripsRecyclerViewAdapter(Callback mCallback ,String [] mStatusArray , String [] mTypeArray)
     {
         this.mCallback = mCallback;
+        this.mStatusArray = mStatusArray;
+        this.mTypeArray = mTypeArray;
     }
 
     @Override
@@ -87,7 +89,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public class NormalViewHolder extends BaseViewHolder {
 
         CardView container;
-        AppCompatTextView mTripTitle , mTripSource , mTripDestination , mTripDate, mTripStatus;
+        AppCompatTextView mTripTitle , mTripSource , mTripDestination , mTripDate, mTripStatus , mTripType;
         AppCompatImageButton  mCollapse;
         AppCompatButton mStart;
         ConstraintLayout collapse;
@@ -101,6 +103,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mTripDestination = itemView.findViewById(R.id.destination);
             mTripStatus = itemView.findViewById(R.id.status);
             mTripDate = itemView.findViewById(R.id.date);
+            mTripType = itemView.findViewById(R.id.type);
             mStart = itemView.findViewById(R.id.start);
             mCollapse = itemView.findViewById(R.id.collapse);
             collapse=itemView.findViewById(R.id.collapsePart);
@@ -108,9 +111,11 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
 
         protected void clear() {
             mTripTitle.setText("");
-            mTripTitle.setText("");
-            mTripTitle.setText("");
-            mTripTitle.setText("");
+            mTripStatus.setText("");
+            mTripDate.setText("");
+            mTripType.setText("");
+            mTripSource.setText("");
+            mTripDestination.setText("");
         }
 
         public void onBind(int position) {
@@ -134,8 +139,24 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
                 mTripDate.setText(mTrip.getTripDate());
             }
 
-            if (mTrip.getStatus() == 0) {
-                mTripStatus.setText(String.valueOf(mTrip.getStatus()));
+            switch (mTrip.getStatus())
+            {
+                case 0:
+                    mTripStatus.setText(mStatusArray[0]);
+                    break;
+                case 1:
+                    mTripStatus.setText(mStatusArray[1]);
+                    break;
+            }
+
+            switch (mTrip.getTripType())
+            {
+                case "1":
+                    mTripType.setText(mTypeArray[0]);
+                    break;
+                case "2":
+                    mTripType.setText(mTypeArray[1]);
+                    break;
             }
 
             // set Click Listeners here

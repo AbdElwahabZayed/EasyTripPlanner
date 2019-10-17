@@ -43,9 +43,14 @@
     <string name="notes">Notes</string>
     <string name="start_trip_btn">Show Trip</string>
     <string-array name="status_array">
-        <item>Upcoming</item>
+        <item>Up Coming</item>
+        <item>Started</item>
         <item>Done</item>
         <item>Cancelled</item>
+    </string-array>
+    <string-array name="type_array">
+        <item>One Way</item>
+        <item>Round</item>
     </string-array>
     <string name="title_activity_trip_details_map">Map</string>
 

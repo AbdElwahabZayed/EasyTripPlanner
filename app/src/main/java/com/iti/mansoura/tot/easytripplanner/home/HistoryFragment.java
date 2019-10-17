@@ -60,7 +60,8 @@ public class HistoryFragment extends Fragment {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 for (DataSnapshot child : children) {
                     Trip trip = child.getValue(Trip.class);
-                    trips.add(trip);
+                    if(trip.getUserUID().equals(mAuth.getCurrentUser().getUid()))
+                        trips.add(trip);
                 }
                 System.out.println(""+trips.size());
                 adapter.setDataSource(trips);

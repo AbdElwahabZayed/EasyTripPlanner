@@ -12,6 +12,7 @@ import com.iti.mansoura.tot.easytripplanner.trip.steps.TripDateStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripDestinationStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripNotesStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripSourceStep;
+import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTimeStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTitleStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTypeStep;
 
@@ -26,6 +27,7 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
     private TripTypeStep tripTypeStep;
     private TripSourceStep tripSourceStep;
     private TripDestinationStep tripDestinationStep;
+    private TripTimeStep tripTimeStep;
     private TripDateStep tripDateStep;
     private TripNotesStep tripNotesStep;
     private VerticalStepperFormView verticalStepperFormView;
@@ -52,6 +54,7 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
         tripSourceStep = new TripSourceStep(getResources().getString(R.string.source),getSupportFragmentManager());
         tripDestinationStep = new TripDestinationStep(getResources().getString(R.string.destination),getSupportFragmentManager());
         tripDateStep = new TripDateStep(getResources().getString(R.string.date));
+        tripTimeStep = new TripTimeStep(getResources().getString(R.string.time));
         tripNotesStep = new TripNotesStep(getResources().getString(R.string.trip_notes),getSupportFragmentManager());
         verticalStepperFormView = findViewById(R.id.stepper_form);
         verticalStepperFormView
@@ -59,6 +62,7 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
                         tripTitleStep,
                         tripTypeStep,
                         tripDateStep,
+                        tripTimeStep,
                         tripNotesStep,
                         tripSourceStep,
                         tripDestinationStep)
@@ -80,13 +84,14 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
      */
     @Override
     public void onCompletedForm() {
-        String [] data = new String[3];
+        String [] data = new String[4];
         data[0] = tripTitleStep.getStepDataAsHumanReadableString();
         data[1] = tripDateStep.getStepData();
+        data[2] = tripTimeStep.getStepData();
         if(tripTypeStep.getStepData().equals(getResources().getString(R.string.radio_round)))
-            data[2] = "2";
+            data[3] = "2";
         else
-            data[2] = "1";
+            data[3] = "1";
 
         String [] sourceData = tripSourceStep.getStepData().split(" , ");
         String [] destData = tripDestinationStep.getStepData().split(" , ");

@@ -75,18 +75,19 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren())
                     {
                         Trip mTrip = childDataSnapshot.getValue(Trip.class);
-                        if(mTrip.getStatus() == 0)
+                        if(mTrip.getStatus() == 0 && mTrip.getUserUID().equals(mAuth.getCurrentUser().getUid()))
                             dataSet.add(mTrip);
                     }
-
-                    TripsRecyclerViewAdapter recyclerViewAdapter = new TripsRecyclerViewAdapter(UpComingFragment.this);
+                    String [] mStatusArray = getResources().getStringArray(R.array.status_array);
+                    String [] mTypeArray = getResources().getStringArray(R.array.type_array);
+                    TripsRecyclerViewAdapter recyclerViewAdapter = new TripsRecyclerViewAdapter(UpComingFragment.this,mStatusArray,mTypeArray);
                     mRecyclerView.setAdapter(recyclerViewAdapter);
                     recyclerViewAdapter.setDataSource(dataSet);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Log.e("upComming " , "error"+databaseError.getMessage());
+                    Log.e("upComing " , "error"+databaseError.getMessage());
                 }
             });
         }
