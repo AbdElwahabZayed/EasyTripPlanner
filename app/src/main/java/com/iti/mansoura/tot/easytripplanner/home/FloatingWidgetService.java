@@ -1,13 +1,16 @@
 package com.iti.mansoura.tot.easytripplanner.home;
 
 
+import android.app.AlertDialog;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,10 +21,11 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.andremion.counterfab.CounterFab;
-import com.iti.mansoura.tot.easytripplanner.MainActivity;
 import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.trip.steps.TripNotesStep;
 
 /**
  * Created by anupamchugh on 01/08/17.
@@ -35,7 +39,7 @@ public class FloatingWidgetService extends Service {
     private int mWidth;
     private CounterFab counterFab;
     boolean activity_background;
-
+    AppCompatActivity mAppCompatActivity;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -96,9 +100,7 @@ public class FloatingWidgetService extends Service {
                     display.getSize(size);
 
                     counterFab = mOverlayView.findViewById(R.id.fabHead);
-                    counterFab.setCount(1);
-
-
+                    counterFab.setCount(intent.getIntExtra("notesCount",1));
                     final RelativeLayout layout = mOverlayView.findViewById(R.id.layout);
                     ViewTreeObserver vto = layout.getViewTreeObserver();
                     vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -113,16 +115,13 @@ public class FloatingWidgetService extends Service {
                         }
                     });
 
+
                     counterFab.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
-                            if(counterFab.getCount() < 10)
-                                counterFab.setCount(counterFab.getCount()+1);
-                            else
-                                stopSelf();
+                        public void onClick(View view) {
+
                         }
                     });
-
                     counterFab.setOnTouchListener(new View.OnTouchListener() {
                         private int initialX;
                         private int initialY;
@@ -154,13 +153,45 @@ public class FloatingWidgetService extends Service {
                                         float yDiff = event.getRawY() - initialTouchY;
 
                                         if ((Math.abs(xDiff) < 5) && (Math.abs(yDiff) < 5)) {
-                                            Intent intent = new Intent(FloatingWidgetService.this, MainActivity.class);
+                                            Intent intent = new Intent(FloatingWidgetService.this, TripNotesStep.class);
                                             intent.putExtra("badge_count", counterFab.getCount());
                                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent);
+                                            String[] multiChoiceItems = new String[]{"Yes I does ","No you doesnt","yes he do","no she dont","","","","","","","","",""};
+                                            //getResources().getStringArray(R.array.dialog_multi_choice_array);
+                                            final boolean[] checkedItems = {false, false, false, false ,false ,false ,false , false, false,false,false, false, false};
+                                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    switch(which){
+                                                        case DialogInterface.BUTTON_POSITIVE:
+                                                            // User clicked the Yes button
+                                                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getApplicationContext())) {
+                                                                startService(new Intent(getApplicationContext(), FloatingWidgetService.class).putExtra("activity_background", true));
+                                                            }
+                                                            break;
 
-                                            //close the service and remove the fab view
+                                                        case DialogInterface.BUTTON_NEGATIVE:
+                                                            // User clicked the No button
+                                                            break;
+                                                    }
+                                                }
+                                            };
+                                            AlertDialog alertDialog=  new AlertDialog.Builder(FloatingWidgetService.this)
+                                                    .setTitle("Your Notes")
+                                                    .setMultiChoiceItems(multiChoiceItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int index, boolean isChecked) {
+                                                            Log.d("MainActivity", "clicked item index is " + index);
+                                                        }
+                                                    })
+                                                    .setPositiveButton("Continue Trip", dialogClickListener)
+                                                    .setNegativeButton("Close Widget", dialogClickListener)
+                                                    .create();
+                                            alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                                            alertDialog.show();
+
                                             stopSelf();
+
                                         }
 
                                     }
@@ -196,7 +227,7 @@ public class FloatingWidgetService extends Service {
                     });
                 }
                 else {
-                    counterFab.increase();
+
                 }
             }
         }
