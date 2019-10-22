@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1016581390203:android:8936ffcab9a4a8664387de",
         "android_client_info": {
-          "package_name": "com.example.zayed.easytripplanner"
+          "package_name": "com.iti.mansoura.tot.easytripplanner"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "1016581390203-8fbrl4vs9hrolu4tubmcvqij8c1ecnfv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.zayed.easytripplanner",
+            "package_name": "com.iti.mansoura.tot.easytripplanner",
             "certificate_hash": "899738921309fca002fb0440481d71db32cac5ae"
           }
         },
