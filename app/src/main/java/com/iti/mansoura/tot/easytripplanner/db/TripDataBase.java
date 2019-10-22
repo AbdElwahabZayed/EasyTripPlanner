@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
-@Database(entities = {Trip.class},version = 1)//will add user.class
+@Database(entities = {Trip.class},version = 1,exportSchema = false)//will add user.class
 public abstract class TripDataBase extends RoomDatabase {
 public static Context dbcontext;
     public static TripDataBase getDataBaseInstance(){

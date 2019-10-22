@@ -73,7 +73,7 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
             mTrip.setStatus(0);
 
             String tripFireBaseUID = UUID.randomUUID().toString();
-            mTrip.setTripFireBaseUID(tripFireBaseUID);
+            mTrip.setFirebaseUID(tripFireBaseUID);
             TripViewModel tripViewModel= ViewModelProviders.of(addTripActivity).get(TripViewModel.class);
             tripViewModel.setContext(addTripActivity.getApplicationContext());
             tripViewModel.addTrip(mTrip);
@@ -114,7 +114,7 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
         mTrip.setStatus(0);
 
         String tripFireBaseUID = UUID.randomUUID().toString();
-        mTrip.setTripFireBaseUID(tripFireBaseUID);
+        mTrip.setFirebaseUID(tripFireBaseUID);
         TripViewModel tripViewModel= ViewModelProviders.of(addTripActivity).get(TripViewModel.class);
         tripViewModel.setContext(addTripActivity.getApplicationContext());
         tripViewModel.addTrip(mTrip);
