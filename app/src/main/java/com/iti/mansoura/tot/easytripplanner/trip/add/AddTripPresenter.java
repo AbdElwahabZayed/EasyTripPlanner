@@ -76,7 +76,7 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
             mTrip.setFirebaseUID(tripFireBaseUID);
             TripViewModel tripViewModel= ViewModelProviders.of(addTripActivity).get(TripViewModel.class);
             tripViewModel.setContext(addTripActivity.getApplicationContext());
-            tripViewModel.addTrip(mTrip);
+            tripViewModel.addTripWithReminder(mTrip);
 
             if(data[3].equals("2")) {
                 addRoundTrip(data,source, dest ,notes,tripUID);
@@ -117,7 +117,7 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
         mTrip.setFirebaseUID(tripFireBaseUID);
         TripViewModel tripViewModel= ViewModelProviders.of(addTripActivity).get(TripViewModel.class);
         tripViewModel.setContext(addTripActivity.getApplicationContext());
-        tripViewModel.addTrip(mTrip);
+        tripViewModel.addTripWithReminder(mTrip);
 
         addTripActivity.showMessage(addTripActivity.getResources().getString(R.string.trip_saved));
         addTripActivity.onBackPressed();
