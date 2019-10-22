@@ -5,12 +5,6 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +25,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 public class TripRepository {
     //List<Trip> tempList;
@@ -128,6 +128,17 @@ public class TripRepository {
         @Override
         protected Void doInBackground(Trip... trips) {
             tripDao.addTrip(trips[0]);
+            return null;
+        }
+    }
+
+    public void addTripWithReminder(Trip trip){
+        new AddTripWithReminder().execute(trip);
+    }
+    private class AddTripWithReminder extends AsyncTask<Trip,Void,Void> {
+        @Override
+        protected Void doInBackground(Trip... trips) {
+            tripDao.addTrip(trips[0]);
             // set alarm
             setReminder(trips[0].getTripTime(),trips[0].getTripDate(),trips[0].getTripUID());
             // calculate duration
@@ -169,7 +180,6 @@ public class TripRepository {
     }
     public void uploadTOfirebaseThenputInroom(){
         new getAllTrips().execute();
-
 
     }
 
@@ -314,4 +324,6 @@ public class TripRepository {
         //TODO request it from google using retrofit
         return duration;
     }
+
+
 }
