@@ -199,7 +199,12 @@ public class TripAlertFragment extends DialogFragment {
     {
         try {
             // navigation intent
-            Uri gmmIntentUri = Uri.parse("google.navigation:"+mTrip.getSourceLat()+","+mTrip.getSourceLong()+"?z=10&q="+mTrip.getDestinationLat()+","+mTrip.getDestinationLong()+"&avoid=tb");
+            Uri gmmIntentUri;
+            if(mTrip != null)
+                gmmIntentUri = Uri.parse("google.navigation:"+mTrip.getSourceLat()+","+mTrip.getSourceLong()+"?z=10&q="+mTrip.getDestinationLat()+","+mTrip.getDestinationLong()+"&avoid=tb");
+            else
+                gmmIntentUri = Uri.parse("google.navigation:0,0?z=10&avoid=tb");
+
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);
