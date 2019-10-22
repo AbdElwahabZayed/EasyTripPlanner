@@ -95,7 +95,13 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
 
         String [] sourceData = tripSourceStep.getStepData().split(" , ");
         String [] destData = tripDestinationStep.getStepData().split(" , ");
-        String [] notes = tripNotesStep.getStepData().split(" , ");
+
+        String [] notes;
+        if(tripNotesStep.getStepData() != null)
+            notes = tripNotesStep.getStepData().split(" , ");
+        else
+            notes = new String[]{""};
+
         addTripPresenter.tripProcess(data, sourceData , destData , notes );
     }
 

@@ -12,16 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.iti.mansoura.tot.easytripplanner.R;
-import com.iti.mansoura.tot.easytripplanner.SettingsActivity;
-import com.iti.mansoura.tot.easytripplanner.home.upcoming.UpComingFragment;
-import com.iti.mansoura.tot.easytripplanner.login.Login;
-import com.iti.mansoura.tot.easytripplanner.trip.add.AddTripActivity;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,12 +19,25 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.SettingsActivity;
+import com.iti.mansoura.tot.easytripplanner.db.TripDataBase;
+import com.iti.mansoura.tot.easytripplanner.home.upcoming.UpComingFragment;
+import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
+import com.iti.mansoura.tot.easytripplanner.login.Login;
+import com.iti.mansoura.tot.easytripplanner.trip.add.AddTripActivity;
 
 public class HomeActivity extends AppCompatActivity  {
 
     private FloatingActionButton mAddTrip;
-    private FloatingWidgetService g;
+    public static FragmentManager mfragmentManager;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
@@ -47,10 +50,13 @@ public class HomeActivity extends AppCompatActivity  {
     private UpComingFragment upComingFragment;
     private HistoryFragment historyFragment;
     Fragment[] fragments;
+    TripViewModel tripViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home);
+        TripDataBase.dbcontext=this;
         initComponent();
 
 
@@ -64,6 +70,9 @@ public class HomeActivity extends AppCompatActivity  {
                 startActivity(new Intent(HomeActivity.this, AddTripActivity.class));
             }
         });
+        mfragmentManager=getSupportFragmentManager();
+        tripViewModel= ViewModelProviders.of(this).get(TripViewModel.class);
+        tripViewModel.setContext(this);
         drawerLayout=findViewById(R.id.drawerLayout);
         navigationView=findViewById(R.id.navi);
         header=findViewById(R.id.header);
@@ -111,6 +120,7 @@ public class HomeActivity extends AppCompatActivity  {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.sync:
+                        tripViewModel.uploadTOfirebaseThenputInroom();
                         Toast.makeText(getApplicationContext(), "synced", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
@@ -155,6 +165,4 @@ public class HomeActivity extends AppCompatActivity  {
             finish();
         }*/
     }
-
-
 }

@@ -4,6 +4,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TimePicker;
@@ -124,8 +125,11 @@ public class TripTimeStep extends Step<String> {
         tripTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // check if current system hours is 24 or 12
+                boolean is24Hour = DateFormat.is24HourFormat(getContext());
+
                 TimePickerDialog timePickerDialog  = new TimePickerDialog(getContext(), time, myCalendar
-                        .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),true);
+                        .get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),is24Hour);
                 timePickerDialog.show();
             }
         });

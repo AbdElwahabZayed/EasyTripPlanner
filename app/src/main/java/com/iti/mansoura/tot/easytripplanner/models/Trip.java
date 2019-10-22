@@ -3,16 +3,70 @@ package com.iti.mansoura.tot.easytripplanner.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Trip implements Parcelable
 {
-    private String tripUID ,tripTitle , tripType , tripSource ,  tripDestination , tripTime , tripDate , notes , userUID;
-    private double sourceLat , sourceLong , destinationLat , destinationLong;
+    @NonNull
+    @PrimaryKey
+    private String tripUID;
+    @ColumnInfo
+    private String tripTitle;
+    @ColumnInfo
+    private String tripType;
+    @ColumnInfo
+    private String tripSource;
+    @ColumnInfo
+    private String tripDestination;
+    @ColumnInfo
+    private String tripTime;
+    @ColumnInfo
+    private String tripDate;
+    @ColumnInfo
+    private String notes;
+    @ColumnInfo
+    private String userUID;
+    @ColumnInfo
+    private double sourceLat;
+    @ColumnInfo
+    private double sourceLong;
+    @ColumnInfo
+    private double destinationLat;
+    @ColumnInfo
+    private double destinationLong;
+    @ColumnInfo
     private int status; // 0 not-started (upcoming) , 1 started , 2 history(finished) , 3 soft deleted (hidden from user)
+    @ColumnInfo
+    private String firebaseUID;
 
     public Trip() {
     }
 
+    public Trip(@NonNull String tripUID, String tripTitle, String tripType, String tripSource, String tripDestination,
+                String tripTime, String tripDate, String notes, String userUID,
+                double sourceLat, double sourceLong, double destinationLat, double destinationLong, int status) {
+        this.tripUID = tripUID;
+        this.tripTitle = tripTitle;
+        this.tripType = tripType;
+        this.tripSource = tripSource;
+        this.tripDestination = tripDestination;
+        this.tripTime = tripTime;
+        this.tripDate = tripDate;
+        this.notes = notes;
+        this.userUID = userUID;
+        this.sourceLat = sourceLat;
+        this.sourceLong = sourceLong;
+        this.destinationLat = destinationLat;
+        this.destinationLong = destinationLong;
+        this.status = status;
+    }
+
     public Trip(Parcel in) {
+        firebaseUID = in.readString();
         tripUID = in.readString();
         tripTitle = in.readString();
         tripType = in.readString();
@@ -41,6 +95,12 @@ public class Trip implements Parcelable
         }
     };
 
+    public String getFirebaseUID() {
+        return firebaseUID;
+    }
+    public void setFirebaseUID(String firebaseUID) {
+        this.firebaseUID = firebaseUID;
+    }
     public String getTripTime() {
         return tripTime;
     }
@@ -177,6 +237,7 @@ public class Trip implements Parcelable
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(firebaseUID);
         dest.writeString(tripUID);
         dest.writeString(tripTitle);
         dest.writeString(tripType);

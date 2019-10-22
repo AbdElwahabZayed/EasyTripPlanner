@@ -119,7 +119,6 @@ public class TripDestinationStep extends Step<String> {
 
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
                 Log.e(TAG, "An error occurred: " + status.getStatusMessage() + " , " + status.getStatusCode());
                 locationValue.setText("");
                 markAsUncompleted(getContext().getResources().getString(R.string.error_destination),true);

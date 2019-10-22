@@ -2,19 +2,14 @@ package com.iti.mansoura.tot.easytripplanner.trip.add;
 
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
+import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
 import java.util.UUID;
@@ -23,10 +18,7 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
 
     private FirebaseAuth mAuth;
     private AddTripActivity addTripActivity;
-    private  FirebaseUser currentUser;
-    private WorkManager mWorkManager;
-    private OneTimeWorkRequest mWorkRequest;
-    private static final String WORKER_TAG = "worker";
+    private FirebaseUser currentUser;
 
     AddTripPresenter(AddTripActivity addTripActivity)
     {
@@ -57,13 +49,6 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
     private void doSave(final String[] data, final String[] source, final String[] dest , final String [] notes) {
 
         if(currentUser !=null) {
-            mWorkManager = WorkManager.getInstance(addTripActivity);
-            mWorkRequest = new OneTimeWorkRequest.Builder(TripSchedulingWorker.class)
-                    .addTag(WORKER_TAG)
-                    .build();
-
-            mWorkManager.enqueueUniqueWork(WORKER_TAG, ExistingWorkPolicy.REPLACE,mWorkRequest);
-
             final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             final String tripUID = UUID.randomUUID().toString();
             final Trip mTrip = new Trip();
@@ -87,27 +72,20 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
 
             mTrip.setStatus(0);
 
-            reference.child("Trips").push().setValue(mTrip)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            if(data[3].equals("1")) {
-                                addTripActivity.showMessage(addTripActivity.getResources().getString(R.string.trip_saved));
-                                addTripActivity.finish();
-                            }
-                            else
-                            {
-                                addRoundTrip(data,source, dest ,notes,tripUID);
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    addTripActivity.showMessage(e.getMessage());
-                }
-            });
+            String tripFireBaseUID = UUID.randomUUID().toString();
+            mTrip.setTripFireBaseUID(tripFireBaseUID);
+            TripViewModel tripViewModel= ViewModelProviders.of(addTripActivity).get(TripViewModel.class);
+            tripViewModel.setContext(addTripActivity.getApplicationContext());
+            tripViewModel.addTrip(mTrip);
+
+            if(data[3].equals("2")) {
+                addRoundTrip(data,source, dest ,notes,tripUID);
+            }
+
+            addTripActivity.showMessage(addTripActivity.getResources().getString(R.string.trip_saved));
+            addTripActivity.onBackPressed();
         }
-        else {
+        else{
             addTripActivity.showMessage(addTripActivity.getResources().getString(R.string.authintication_failed));
         }
     }
@@ -116,7 +94,7 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         // round
-        Trip mTrip = new Trip();
+        final Trip mTrip = new Trip();
         mTrip.setTripUID(tripUID);
         mTrip.setUserUID(currentUser.getUid());
         mTrip.setTripTitle(data[0]);
@@ -135,18 +113,13 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
 
         mTrip.setStatus(0);
 
-        reference.child("Trips").push().setValue(mTrip)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        addTripActivity.showMessage(addTripActivity.getResources().getString(R.string.trip_saved));
-                        addTripActivity.finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                addTripActivity.showMessage(e.getMessage());
-            }
-        });
+        String tripFireBaseUID = UUID.randomUUID().toString();
+        mTrip.setTripFireBaseUID(tripFireBaseUID);
+        TripViewModel tripViewModel= ViewModelProviders.of(addTripActivity).get(TripViewModel.class);
+        tripViewModel.setContext(addTripActivity.getApplicationContext());
+        tripViewModel.addTrip(mTrip);
+
+        addTripActivity.showMessage(addTripActivity.getResources().getString(R.string.trip_saved));
+        addTripActivity.onBackPressed();
     }
 }

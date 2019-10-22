@@ -1,14 +1,11 @@
 package com.iti.mansoura.tot.easytripplanner.home.upcoming;
 
-import android.transition.AutoTransition;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -24,7 +21,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     private static final int VIEW_TYPE_NORMAL = 1;
     private static final int VIEW_TYPE_EMPTY = 2;
 
-    private ArrayList<Trip> dataSet;
+    private ArrayList<Trip> dataSet=new ArrayList<>();
     private Callback mCallback;
     private ViewGroup viewGroup;
     private String [] mStatusArray,mTypeArray;
@@ -47,7 +44,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     @Override
     public int getItemViewType(int position) {
         if (dataSet != null && dataSet.size() > 0) {
-                return VIEW_TYPE_NORMAL;
+            return VIEW_TYPE_NORMAL;
         } else {
             return VIEW_TYPE_EMPTY;
         }
@@ -82,7 +79,13 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     }
 
     public void setDataSource(ArrayList<Trip> trips) {
-        this.dataSet = trips;
+        this.dataSet.clear();
+        for(Trip t:trips) {
+            if(t.getStatus()==1 && !this.dataSet.contains(t)) {
+                System.out.println(""+t.getStatus());
+                this.dataSet.add(t);
+            }
+        }
         notifyDataSetChanged();
     }
 

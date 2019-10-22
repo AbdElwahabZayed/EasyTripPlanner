@@ -39,6 +39,7 @@ public class NoteFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putString("title", title);
         frag.setArguments(args);
+
         return frag;
     }
 
@@ -52,7 +53,7 @@ public class NoteFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.note_fragment_layout, container);
+        return inflater.inflate(R.layout.note_fragment_layout, container,false);
     }
 
     @Override
