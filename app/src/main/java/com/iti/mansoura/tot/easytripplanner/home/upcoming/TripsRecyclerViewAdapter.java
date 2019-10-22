@@ -4,17 +4,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.models.Trip;
+
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.iti.mansoura.tot.easytripplanner.R;
-import com.iti.mansoura.tot.easytripplanner.models.Trip;
-
-import java.util.ArrayList;
 
 public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -81,7 +81,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     public void setDataSource(ArrayList<Trip> trips) {
         this.dataSet.clear();
         for(Trip t:trips) {
-            if(t.getStatus()==1 && !this.dataSet.contains(t)) {
+            if(t.getStatus()==0 && !this.dataSet.contains(t)) {
                 System.out.println(""+t.getStatus());
                 this.dataSet.add(t);
             }

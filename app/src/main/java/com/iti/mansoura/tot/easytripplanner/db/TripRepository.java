@@ -76,7 +76,9 @@ public class TripRepository {
     }
 
     public LiveData<List<Trip>> getAllHistoryTrips(String id){
-        return tripDao.getHistoryTripsByUserUID();
+        mutableLiveDataHistoryTrips=tripDao.getHistoryTripsByUserUID();
+        return mutableLiveDataHistoryTrips;
+
     }
 
     /*private List<Trip> getHistoryFromFireBase(final String id) {
@@ -200,6 +202,7 @@ public class TripRepository {
         @Override
         protected void onPostExecute(List<Trip> trips) {
             for(final Trip t:trips){
+                System.out.println("dsfg  :"+t.getTripUID());
                 final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                 reference.child("Trips").child(t.getTripUID()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -216,8 +219,9 @@ public class TripRepository {
 
                     }
                 });
-                new GetAllDataFromFireBase().execute();
+
             }
+            new GetAllDataFromFireBase().execute();
         }
     }
 
