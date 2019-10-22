@@ -130,10 +130,14 @@ public class TripAlertFragment extends DialogFragment {
             public void onClick(View v) {
                 if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
                     // TODO fetch trip data then open map activity + History Worker + floating widget
+                    showMap();
+                    if(mTrip != null)
+                        showNotification(mTrip.getTripTitle(), mTrip.getTripSource() + " -> " + mTrip.getTripDestination());
+                    else
+                        showNotification("N/A" , "N/A -> N/A");
+
                     TripAlertFragment.this.dismissAllowingStateLoss();
                     getActivity().finish();
-                    showMap();
-                    showNotification(mTrip.getTripTitle(), mTrip.getTripSource() + " -> " + mTrip.getTripDestination());
                 } else {
                     Toast.makeText(getActivity(),getResources().getString(R.string.network_not_avaliable),Toast.LENGTH_LONG).show();
                 }
