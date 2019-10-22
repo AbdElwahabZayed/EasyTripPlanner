@@ -115,7 +115,11 @@ public class TripAlertFragment extends DialogFragment {
         mLater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNotification(mTrip.getTripTitle(), mTrip.getTripSource() + " -> " + mTrip.getTripDestination());
+                if(mTrip != null)
+                    showNotification(mTrip.getTripTitle(), mTrip.getTripSource() + " -> " + mTrip.getTripDestination());
+                else
+                    showNotification("N/A" , "N/A -> N/A");
+
                 TripAlertFragment.this.dismissAllowingStateLoss();
                 getActivity().finish();
             }
