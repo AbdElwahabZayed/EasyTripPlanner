@@ -3,6 +3,7 @@ package com.iti.mansoura.tot.easytripplanner.home;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,6 +12,20 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.iti.mansoura.tot.easytripplanner.About;
+import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.SettingsActivity;
+import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripDataBase;
+import com.iti.mansoura.tot.easytripplanner.db_user.UserDataBase;
+import com.iti.mansoura.tot.easytripplanner.home.upcoming.UpComingFragment;
+import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
+import com.iti.mansoura.tot.easytripplanner.login.Login;
+import com.iti.mansoura.tot.easytripplanner.trip.add.AddTripActivity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,18 +36,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.iti.mansoura.tot.easytripplanner.R;
-import com.iti.mansoura.tot.easytripplanner.SettingsActivity;
-import com.iti.mansoura.tot.easytripplanner.db.TripDataBase;
-import com.iti.mansoura.tot.easytripplanner.home.upcoming.UpComingFragment;
-import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
-import com.iti.mansoura.tot.easytripplanner.login.Login;
-import com.iti.mansoura.tot.easytripplanner.trip.add.AddTripActivity;
 
 public class HomeActivity extends AppCompatActivity  {
 
@@ -51,12 +54,15 @@ public class HomeActivity extends AppCompatActivity  {
     private HistoryFragment historyFragment;
     Fragment[] fragments;
     TripViewModel tripViewModel;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
         TripDataBase.dbcontext=this;
+        UserDataBase.dbcontext=this;
+        mAuth =FirebaseAuth.getInstance();
         initComponent();
 
 
@@ -92,9 +98,8 @@ public class HomeActivity extends AppCompatActivity  {
         myHomePagerAdapter.setFragments(fragments);
         myHomePagerAdapter.notifyDataSetChanged();
         textViewImg=navigationView.getHeaderView(0).findViewById(R.id.txtViewImag);
+        new SetText().execute();
         textViewEmail=navigationView.getHeaderView(0).findViewById(R.id.textViewEmail);
-        textViewImg.setText("AZ");
-        textViewEmail.setText("AbdElWhab_Zayed@yahoo.com");
         setSupportActionBar(toolbar);
         setMenu();
         setListeners();
@@ -136,6 +141,7 @@ public class HomeActivity extends AppCompatActivity  {
                         break;
                     case R.id.about:
                         drawerLayout.closeDrawers();
+                        startActivity(new Intent(HomeActivity.this, About.class));
                         break;
                 }
 
@@ -164,5 +170,29 @@ public class HomeActivity extends AppCompatActivity  {
             startService(new Intent(Home.this, FloatingWidgetService.class).putExtra("activity_background", true));
             finish();
         }*/
+    }
+
+    private class SetText extends AsyncTask<Void,Void,String[]> {
+        @Override
+        protected String[] doInBackground(Void... voids) {
+            String[] s=new String[]{"",""};
+            if(tripViewModel.getUser(mAuth.getUid())!=null) {
+                s[0] = tripViewModel.getUser(mAuth.getUid()).getUserName().substring(0, 2).toUpperCase();
+                s[1] = tripViewModel.getUser(mAuth.getUid()).getEmail();
+            }else{
+                s[0]="";
+                s[1]="";
+            }
+
+
+            return s;
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            super.onPostExecute(strings);
+            textViewImg.setText(strings[0]);
+            textViewEmail.setText(strings[1]);
+        }
     }
 }

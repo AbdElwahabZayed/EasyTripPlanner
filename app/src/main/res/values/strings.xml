@@ -34,8 +34,7 @@
     <string name="end">End</string>
     <string name="empty">No data Found</string>
     <string name="retry">Retry</string>
-
-<!--    show activity-->
+    <!--    show activity-->
     <string name="start_point">Start Point</string>
     <string name="end_point">End Point</string>
     <string name="time">Time </string>
@@ -63,5 +62,6 @@
     <string name="take_action">Take Action</string>
 
     <string name="addnewtrip">addNewTrip</string>
+    <string name="About">about</string>
 
 </resources>

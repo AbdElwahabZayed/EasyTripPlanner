@@ -9,7 +9,7 @@
     <uses-permission android:name="TASKS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-    <uses-feature android:name="android:name=android.hardware.screen.portrait"/>
+    <uses-feature android:name="android:name=android.hardware.screen.portrait" />
 
     <application
         android:allowBackup="true"
@@ -19,37 +19,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".About"
+            android:label="@string/About"
+            android:parentActivityName=".home.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.NoActionBar" android:parentActivityName=".home.HomeActivity"></activity>
+            android:parentActivityName=".home.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".trip.add.AddTripActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".signup.SignUp"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".trip.show.ShowTripActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name="com.iti.mansoura.tot.easytripplanner.trip.show.ShowTripActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
         <activity
             android:name=".home.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".login.Login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".trip.add.TripAlertFragmentActivity"
-            android:theme="@style/Theme.AppCompat.Dialog"
-            android:excludeFromRecents="true"></activity>
-
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -58,7 +62,6 @@
             android:name=".home.FloatingWidgetService"
             android:enabled="true"
             android:exported="true" />
-
         <service
             android:name=".trip.add.NotificationActionService"
             android:exported="false" />

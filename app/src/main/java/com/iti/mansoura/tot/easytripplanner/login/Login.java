@@ -1,19 +1,19 @@
 package com.iti.mansoura.tot.easytripplanner.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.iti.mansoura.tot.easytripplanner.R;
-import com.iti.mansoura.tot.easytripplanner.signup.SignUp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.db_user.UserDataBase;
+import com.iti.mansoura.tot.easytripplanner.signup.SignUp;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class Login extends AppCompatActivity implements LoginContract.LoginView {
@@ -29,7 +29,7 @@ public class Login extends AppCompatActivity implements LoginContract.LoginView 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         mAuth=FirebaseAuth.getInstance();
-
+        UserDataBase.dbcontext=this;
         initComponent();
     }
 

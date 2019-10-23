@@ -6,12 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,6 +14,13 @@ import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,8 +39,7 @@ public class HistoryFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         tripViewModel= ViewModelProviders.of(this).get(TripViewModel.class);
         tripViewModel.setContext(getActivity());
@@ -49,7 +49,6 @@ public class HistoryFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         recyclerView = rootView.findViewById(R.id.rv);
         setupRecyclerView();
-        getHistoryTrips("ewrtyr");
         return rootView;
 
     }
@@ -60,11 +59,16 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onChanged(List<Trip> trips) {
                 System.out.println("getAllHistoryTrips(id).observe(getActivity(),");
-
                 adapter.setDataSource(trips);
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
     }
 
     @Override
@@ -90,8 +94,16 @@ public class HistoryFragment extends Fragment {
 
             }
         });*/
-
+        //adapter.notifyDataSetChanged();
+        getHistoryTrips("ewrtyr");
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //adapter.notifyDataSetChanged();
+    }
+
     private void setupRecyclerView() {
         LinearLayoutManager mngr = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mngr);

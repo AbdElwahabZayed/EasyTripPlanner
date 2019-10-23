@@ -1,22 +1,42 @@
 package com.iti.mansoura.tot.easytripplanner.models;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class User {
 
-    private String email , password , userName ,uuid;
+
+    private String password;
+    @NonNull
+    @PrimaryKey
+    private String uuid;
+
+    @ColumnInfo
+    private String userName ;
+
+    @ColumnInfo
+    private String email;
 
     public User(String email,String userName , String password) {
         this.email = email;
         this.password = password;
         this.userName = userName;
     }
-
+    @Ignore
     public User(String email,String userName , String password , String uuid) {
         this.email = email;
         this.password = password;
         this.userName = userName;
         this.uuid = uuid;
     }
+    @Ignore
+    public User(){
 
+    }
     public String getUuid() {
         return uuid;
     }

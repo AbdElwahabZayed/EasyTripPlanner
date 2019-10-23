@@ -2,8 +2,10 @@ package com.iti.mansoura.tot.easytripplanner.home.viewmodel;
 
 import android.content.Context;
 
-import com.iti.mansoura.tot.easytripplanner.db.TripRepository;
+import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
+import com.iti.mansoura.tot.easytripplanner.db_user.UserRepo;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
+import com.iti.mansoura.tot.easytripplanner.models.User;
 
 import java.util.List;
 
@@ -12,12 +14,14 @@ import androidx.lifecycle.ViewModel;
 
 public class TripViewModel extends ViewModel {
     TripRepository tripRepository;
+    UserRepo userRepo=new UserRepo();;
 
     public TripViewModel() {
 
     }
     public void setContext(Context context) {
         tripRepository=new TripRepository(context);
+
     }
     public LiveData<List<Trip>> getAllUpCommingTrips(String id){
         System.out.println("ViewModel getAllUpCommingTrips "+id);
@@ -42,5 +46,11 @@ public class TripViewModel extends ViewModel {
         tripRepository.deleteTrip(trip);
     }
     public void uploadTOfirebaseThenputInroom(){tripRepository.uploadTOfirebaseThenputInroom();}
+    public void addUser(User user){
+        userRepo.addUser(user);
+    }
+    public User getUser(String uid){
+        return userRepo.getUser(uid);
+    }
 
 }

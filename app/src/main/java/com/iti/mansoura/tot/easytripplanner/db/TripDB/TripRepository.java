@@ -1,4 +1,4 @@
-package com.iti.mansoura.tot.easytripplanner.db;
+package com.iti.mansoura.tot.easytripplanner.db.TripDB;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -11,6 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.iti.mansoura.tot.easytripplanner.db_user.UserDataBase;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.trip.add.TripSchedulingWorker;
 
@@ -40,8 +41,7 @@ public class TripRepository {
     private TripDao tripDao;
     private FirebaseAuth mAuth;
     private List<Trip> dataSet= new ArrayList<>();
-    private List<Trip> tempList= new ArrayList<>();
-
+    //private List<Trip> tempList= new ArrayList<>();
     private WorkManager mWorkManager;
     private OneTimeWorkRequest mWorkRequest;
 
@@ -50,16 +50,14 @@ public class TripRepository {
     public TripRepository(Context context){
         System.out.println("TripRepository");
         myContext=context;
+        UserDataBase.dbcontext=context;
         tripDataBase=TripDataBase.getDataBaseInstance();
         tripDao= tripDataBase.getDaoInstance();
 
     }
 
     public LiveData<List<Trip>> getAllUpComingTrips(String id){
-        mutableLiveDataUpComingTrips=tripDao.getUpCommingTripsByUserUID();
-        if(isNetworkConnected()) {
-            uploadTOfirebaseThenputInroom();
-        }
+        mutableLiveDataUpComingTrips=tripDao.getUpCommingTripsByUserUID(id);
         return mutableLiveDataUpComingTrips;
     }
 
@@ -76,7 +74,7 @@ public class TripRepository {
     }
 
     public LiveData<List<Trip>> getAllHistoryTrips(String id){
-        mutableLiveDataHistoryTrips=tripDao.getHistoryTripsByUserUID();
+        mutableLiveDataHistoryTrips=tripDao.getHistoryTripsByUserUID(id);
         return mutableLiveDataHistoryTrips;
 
     }
@@ -140,6 +138,7 @@ public class TripRepository {
     private class AddTripWithReminder extends AsyncTask<Trip,Void,Void> {
         @Override
         protected Void doInBackground(Trip... trips) {
+            System.out.println("");
             tripDao.addTrip(trips[0]);
             // set alarm
             setReminder(trips[0].getTripTime(),trips[0].getTripDate(),trips[0].getTripUID());
@@ -147,6 +146,7 @@ public class TripRepository {
             String duration = getTripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
                     new String []{String.valueOf(trips[0].getDestinationLat()) , String.valueOf(trips[0].getDestinationLong())});
             Log.e("duration" , duration);
+
             //TODO setup a worker to set trip to history
             return null;
         }
@@ -181,8 +181,9 @@ public class TripRepository {
         }
     }
     public void uploadTOfirebaseThenputInroom(){
-        new getAllTrips().execute();
-
+        if(isNetworkConnected()) {
+            new getAllTrips().execute();
+        }
     }
 
     private boolean isNetworkConnected() {
@@ -261,11 +262,8 @@ public class TripRepository {
     {
         // passing trip UID to WorkRequest
         Data data = new Data.Builder().putString("tripUID",tripUID ).build();
-
         mWorkManager = WorkManager.getInstance(myContext);
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
             try {
                 DateTimeFormatter formatter =
                         DateTimeFormatter.ofPattern("MM/dd/yy HH:mm")

@@ -79,13 +79,16 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
     }
 
     public void setDataSource(ArrayList<Trip> trips) {
-        this.dataSet.clear();
-        for(Trip t:trips) {
-            if(t.getStatus()==0 && !this.dataSet.contains(t)) {
-                System.out.println(""+t.getStatus());
-                this.dataSet.add(t);
-            }
-        }
+        //this.dataSet.clear();
+//        ArrayList<Trip> ts=new ArrayList<>();
+//        for(Trip t:trips) {
+//            switch (t.getStatus()){
+//                case 0:
+//                    ts.add(t);
+//                    break;
+//            }
+//        }
+        this.dataSet=trips;
         notifyDataSetChanged();
     }
 

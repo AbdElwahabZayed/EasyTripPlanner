@@ -10,14 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
@@ -25,7 +17,16 @@ import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.trip.show.ShowTripActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +39,8 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
     View myView;
     private Context context;
     private TripViewModel tripViewModel;
+    private TripsRecyclerViewAdapter recyclerViewAdapter;
+    private static boolean firstTime=true;
 
     public UpComingFragment() {
         // Required empty public constructor
@@ -46,7 +49,6 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_up_coming, container, false);
     }
 
@@ -54,22 +56,23 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         myView=view;
-        tripViewModel= ViewModelProviders.of(this).get(TripViewModel.class);
+        tripViewModel = ViewModelProviders.of(this).get(TripViewModel.class);
         tripViewModel.setContext(this.getContext());
+        if(firstTime) {
+            tripViewModel.uploadTOfirebaseThenputInroom();
+            firstTime=false;
+        }
         mRecyclerView = view.findViewById(R.id.trips);
         dataSet = new ArrayList<>();
         setUpRecyclerView(view);
+
     }
 
     private void setUpRecyclerView(View view)
     {
-
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-
-        prepareData();
     }
 
     private void prepareData() {
@@ -107,17 +110,40 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
 
             }
         });*/
+
         final String [] mStatusArray = getResources().getStringArray(R.array.status_array);
         String [] mTypeArray = getResources().getStringArray(R.array.type_array);
-        final TripsRecyclerViewAdapter recyclerViewAdapter = new TripsRecyclerViewAdapter(UpComingFragment.this,mStatusArray,mTypeArray);
+        recyclerViewAdapter = new TripsRecyclerViewAdapter(UpComingFragment.this,mStatusArray,mTypeArray);
         mRecyclerView.setAdapter(recyclerViewAdapter);
-        tripViewModel.getAllUpCommingTrips("").observe(this, new Observer<List<Trip>>() {
+        tripViewModel.getAllUpCommingTrips(mAuth.getUid()).observe(this, new Observer<List<Trip>>() {
             @Override
             public void onChanged(List<Trip> trips) {
                 System.out.println("getAllHistoryTrips(id).observe(getActivity(),");
+                Collections.reverse(trips);
                 recyclerViewAdapter.setDataSource((ArrayList<Trip>) trips);
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
+        recyclerViewAdapter.notifyDataSetChanged();
+        //recyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //recyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override
