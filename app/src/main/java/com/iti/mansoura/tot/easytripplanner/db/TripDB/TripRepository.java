@@ -205,13 +205,13 @@ public class TripRepository {
             for(final Trip t:trips){
                 System.out.println("dsfg  :"+t.getTripUID());
                 final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                reference.child("Trips").child(t.getTripUID()).addListenerForSingleValueEvent(new ValueEventListener() {
+                reference.child("Trips").child(t.getFirebaseUID()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(!dataSnapshot.exists()) {
-                            reference.child("Trips").child(t.getTripUID()).setValue(t);
+                            reference.child("Trips").child(t.getFirebaseUID()).setValue(t);
                         }else {
-                            reference.child("Trips").child(t.getTripUID()).setValue(t);
+                            reference.child("Trips").child(t.getFirebaseUID()).setValue(t);
                         }
                     }
 
