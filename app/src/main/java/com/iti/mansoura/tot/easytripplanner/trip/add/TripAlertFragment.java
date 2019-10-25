@@ -21,6 +21,11 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.retorfit.NetworkStatusAndType;
 
@@ -39,9 +45,10 @@ public class TripAlertFragment extends DialogFragment {
     private FirebaseAuth mAuth;
     private AppCompatTextView mTripTitle;
     private AppCompatButton mStart , mCancel , mLater;
-    private String tripUID;
+    private String tripUID , userUID;
     private MediaPlayer mediaPlayer;
     private Trip mTrip;
+    private TripRepository tripRepository;
 
     public TripAlertFragment() {
         // Empty constructor is required for DialogFragment
@@ -50,11 +57,12 @@ public class TripAlertFragment extends DialogFragment {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public static TripAlertFragment newInstance(String title,String tripUID) {
+    public static TripAlertFragment newInstance(String title,String tripUID,String userUID) {
         TripAlertFragment frag = new TripAlertFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
         args.putString("tripUID", tripUID);
+        args.putString("userUID", userUID);
         frag.setArguments(args);
         return frag;
     }
@@ -64,6 +72,7 @@ public class TripAlertFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         String title = getArguments().getString("title", "Trip Started");
         tripUID =  getArguments().getString("tripUID", "");
+        userUID =  getArguments().getString("userUID", "");
 //        getDialog().setTitle(title);
         // set style for the fragment
         setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
@@ -84,9 +93,11 @@ public class TripAlertFragment extends DialogFragment {
         mLater = view.findViewById(R.id.later);
         mCancel = view.findViewById(R.id.cancel);
 
-        mediaPlayer = MediaPlayer.create(getContext(), R.raw.town);
-        mediaPlayer.start();
-        mediaPlayer.setLooping(true);
+        if(savedInstanceState == null){
+            mediaPlayer = MediaPlayer.create(getContext(), R.raw.town);
+            mediaPlayer.start();
+            mediaPlayer.setLooping(true);
+        }
 
         if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -109,7 +120,8 @@ public class TripAlertFragment extends DialogFragment {
                 }
             });
         }else {
-            // TODO fetch trip data from local
+            mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
+            Log.e("trip alert l " , "local");
         }
 
         mLater.setOnClickListener(new View.OnClickListener() {
@@ -129,11 +141,12 @@ public class TripAlertFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
-                    // TODO fetch trip data then open map activity + History Worker + floating widget
+                    // TODO floating widget
                     showMap();
-                    if(mTrip != null)
+                    if(mTrip != null) {
                         showNotification(mTrip.getTripTitle(), mTrip.getTripSource() + " -> " + mTrip.getTripDestination());
-                    else
+                        setTripToHistory(mTrip.getTripUID(),mTrip.getUserUID());
+                    }else
                         showNotification("N/A" , "N/A -> N/A");
 
                     TripAlertFragment.this.dismissAllowingStateLoss();
@@ -147,12 +160,8 @@ public class TripAlertFragment extends DialogFragment {
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
-                    // TODO add trip to history ( update firebase + local)
-                }
-                else {
-                    // TODO add trip to history ( update local)
-                    Toast.makeText(getActivity(),getResources().getString(R.string.network_not_avaliable),Toast.LENGTH_LONG).show();
+                if(mTrip != null) {
+                    setTripToHistory(mTrip.getTripUID(), mTrip.getUserUID());
                 }
                 TripAlertFragment.this.dismissAllowingStateLoss();
                 getActivity().finish();
@@ -223,16 +232,39 @@ public class TripAlertFragment extends DialogFragment {
                 startActivity(new Intent(
                         Intent.ACTION_VIEW,
                         Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
-            }
+             }
 
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onPause()
+    private void setTripToHistory(String tripUID , String userUID)
     {
-        super.onPause();
+        // update local
+        Trip mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
+        mTrip.setStatus(2);
+        tripRepository.updateTrip(mTrip);
+
+        // update firebase
+        // passing trip UID to WorkRequest
+        Data data = new Data.Builder().putString("firebaseUID",mTrip.getFirebaseUID() ).build();
+        WorkManager mWorkManager = WorkManager.getInstance(getActivity());
+
+        Constraints mConstraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
+
+        OneTimeWorkRequest mWorkRequest = new OneTimeWorkRequest
+                .Builder(TripToHistoryWorker.class)
+                .setConstraints(mConstraints)
+                .setInputData(data)
+                .build();
+
+        mWorkManager.enqueue(mWorkRequest);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
         mediaPlayer.setLooping(false);
         mediaPlayer.stop();
         mediaPlayer.release();

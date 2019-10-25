@@ -5,6 +5,12 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,14 +33,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 public class TripRepository {
-    //List<Trip> tempList;
+    Trip mTrip;
     private LiveData<List<Trip>> mutableLiveDataHistoryTrips;
     private LiveData<List<Trip>> mutableLiveDataUpComingTrips;
     private TripDataBase tripDataBase;
@@ -57,7 +57,7 @@ public class TripRepository {
     }
 
     public LiveData<List<Trip>> getAllUpComingTrips(String id){
-        mutableLiveDataUpComingTrips=tripDao.getUpCommingTripsByUserUID(id);
+        mutableLiveDataUpComingTrips=tripDao.getUpComingTripsByUserUID(id);
         return mutableLiveDataUpComingTrips;
     }
 
@@ -141,13 +141,11 @@ public class TripRepository {
             System.out.println("");
             tripDao.addTrip(trips[0]);
             // set alarm
-            setReminder(trips[0].getTripTime(),trips[0].getTripDate(),trips[0].getTripUID());
+            setTripReminder(trips[0].getTripTime(),trips[0].getTripDate(),trips[0].getTripUID(),trips[0].getUserUID());
             // calculate duration
             String duration = getTripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
                     new String []{String.valueOf(trips[0].getDestinationLat()) , String.valueOf(trips[0].getDestinationLong())});
             Log.e("duration" , duration);
-
-            //TODO setup a worker to set trip to history
             return null;
         }
     }
@@ -258,10 +256,93 @@ public class TripRepository {
         }
     }
 
-    private void setReminder(String tripTime,String tripDate,String tripUID)
+    public Trip getUpComingTrip(String userID , String tripUID){
+        new getUpComingTrip().execute(userID,tripUID);
+        return mTrip;
+    }
+
+    private class getUpComingTrip extends AsyncTask<String,Void,Trip> {
+
+        @Override
+        protected Trip doInBackground(String... strings) {
+            return tripDao.getUpComingTrip(strings[0],strings[1]);
+        }
+
+        @Override
+        protected void onPostExecute(Trip trip) {
+            super.onPostExecute(trip);
+            mTrip = trip;
+        }
+    }
+
+    public Trip getUpComingTripToEdit(String userID , String tripUID){
+        new getUpComingTripToEdit().execute(userID,tripUID);
+        return mTrip;
+    }
+
+    private class getUpComingTripToEdit extends AsyncTask<String,Void,Trip> {
+
+        @Override
+        protected Trip doInBackground(String... strings) {
+            return tripDao.getUpComingTripToEdit(strings[0],strings[1]);
+        }
+
+        @Override
+        protected void onPostExecute(Trip trip) {
+            super.onPostExecute(trip);
+            mTrip = trip;
+        }
+    }
+
+
+    public Trip getHistoryTrip(String userID , String tripUID){
+        new getHistoryTrip().execute(userID,tripUID);
+        return mTrip;
+    }
+
+    private class getHistoryTrip extends AsyncTask<String,Void,Trip> {
+
+        @Override
+        protected Trip doInBackground(String... strings) {
+            return tripDao.getHistoryTrip(strings[0],strings[1]);
+        }
+
+        @Override
+        protected void onPostExecute(Trip trip) {
+            super.onPostExecute(trip);
+            mTrip = trip;
+        }
+    }
+
+    public Trip getHistoryTripToEdit(String userID , String tripUID){
+        new getHistoryTripToEdit().execute(userID,tripUID);
+        return mTrip;
+    }
+
+    private class getHistoryTripToEdit extends AsyncTask<String,Void,Trip> {
+
+        @Override
+        protected Trip doInBackground(String... strings) {
+            return tripDao.getHistoryTripToEdit(strings[0],strings[1]);
+        }
+
+        @Override
+        protected void onPostExecute(Trip trip) {
+            super.onPostExecute(trip);
+            mTrip = trip;
+        }
+    }
+
+    /**
+     *
+     * @param tripTime trip start time
+     * @param tripDate trip date
+     * @param tripUID trip unique identifier (id)
+     */
+    private void setTripReminder(String tripTime, String tripDate, String tripUID , String userUID)
     {
         // passing trip UID to WorkRequest
-        Data data = new Data.Builder().putString("tripUID",tripUID ).build();
+        Data data = new Data.Builder().putString("tripUID",tripUID ).putString("userUID",userUID ).build();
         mWorkManager = WorkManager.getInstance(myContext);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             try {
@@ -320,6 +401,12 @@ public class TripRepository {
         mWorkManager.enqueue(mWorkRequest);
     }
 
+    /**
+     *
+     * @param source source city , lat and long
+     * @param destination destination city , lat and long
+     * @return the trip duration
+     */
     private String getTripDuration(String [] source , String [] destination)
     {
         String duration = "";

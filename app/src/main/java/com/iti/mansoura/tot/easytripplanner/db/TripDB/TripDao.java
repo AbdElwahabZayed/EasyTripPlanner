@@ -1,15 +1,15 @@
 package com.iti.mansoura.tot.easytripplanner.db.TripDB;
 
-import com.iti.mansoura.tot.easytripplanner.models.Trip;
-
-import java.util.List;
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import com.iti.mansoura.tot.easytripplanner.models.Trip;
+
+import java.util.List;
 
 @Dao
 public interface TripDao {
@@ -19,8 +19,20 @@ public interface TripDao {
     @Query("select * from Trip")
     List<Trip> getAllTrips();
 
+    @Query("select * from Trip where userUID=:userID and tripUID=:tripUID and status=0")
+    Trip getUpComingTrip(String userID , String tripUID);
+
+    @Query("select * from Trip where userUID=:userID and tripUID=:tripUID and status=2")
+    Trip getHistoryTrip(String userID , String tripUID);
+
+    @Query("select * from Trip where userUID=:userID and tripUID=:tripUID and status=0")
+    Trip getUpComingTripToEdit(String userID , String tripUID);
+
+    @Query("select * from Trip where userUID=:userID and tripUID=:tripUID and status=2")
+    Trip getHistoryTripToEdit(String userID , String tripUID);
+
     @Query("select * from Trip where status = 0 and userUID = :id order by tripDate")
-    LiveData<List<Trip>> getUpCommingTripsByUserUID(String id);
+    LiveData<List<Trip>> getUpComingTripsByUserUID(String id);
 
     @Query("select * from Trip where status = 2 and userUID = :id order by tripDate")
     LiveData<List<Trip>> getHistoryTripsByUserUID(String id);

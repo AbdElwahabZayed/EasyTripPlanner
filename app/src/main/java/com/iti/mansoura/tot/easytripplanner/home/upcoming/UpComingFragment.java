@@ -10,6 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
@@ -20,14 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -36,7 +36,7 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
     private RecyclerView mRecyclerView;
     private ArrayList<Trip> dataSet;
     private FirebaseAuth mAuth;
-    View myView;
+    private View myView;
     private Context context;
     private TripViewModel tripViewModel;
     private TripsRecyclerViewAdapter recyclerViewAdapter;
@@ -77,48 +77,14 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
 
     private void prepareData() {
         mAuth = FirebaseAuth.getInstance();
-        /*if(mAuth.getCurrentUser() != null) {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            reference.child("Trips").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren())
-                    {
-                        Trip mTrip = childDataSnapshot.getValue(Trip.class);
-                        if(mTrip.getStatus() == 0 && mTrip.getUserUID().equals(mAuth.getCurrentUser().getUid()))
-                            dataSet.add(mTrip);
-                    }
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e("upComing " , "error"+databaseError.getMessage());
-                }
-            });
-        }*/
-       /* final String [] mStatusArray = getResources().getStringArray(R.array.status_array);
-        String [] mTypeArray = getResources().getStringArray(R.array.type_array);
-
-        if(tripViewModel==null){
-            System.out.println( "is nuuuuuuullllllllllllllllllll");
-        }
-        tripViewModel.getAllUpCommingTrips("RKtAnAWYTgUVRbodyh9wx7ShQfv1").observe(this, new Observer<List<Trip>>() {
-            @Override
-            public void onChanged(List<Trip> trips) {
-
-            }
-        });*/
-
-        final String [] mStatusArray = getResources().getStringArray(R.array.status_array);
+        String [] mStatusArray = getResources().getStringArray(R.array.status_array);
         String [] mTypeArray = getResources().getStringArray(R.array.type_array);
         recyclerViewAdapter = new TripsRecyclerViewAdapter(UpComingFragment.this,mStatusArray,mTypeArray);
         mRecyclerView.setAdapter(recyclerViewAdapter);
-        tripViewModel.getAllUpCommingTrips(mAuth.getUid()).observe(this, new Observer<List<Trip>>() {
+        tripViewModel.getAllUpComingTrips(mAuth.getUid()).observe(this, new Observer<List<Trip>>() {
             @Override
             public void onChanged(List<Trip> trips) {
-                System.out.println("getAllHistoryTrips(id).observe(getActivity(),");
+                System.out.println("getAllUpComingTrips(id).observe(getActivity(),");
                 Collections.reverse(trips);
                 recyclerViewAdapter.setDataSource((ArrayList<Trip>) trips);
             }
@@ -148,7 +114,7 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
 
     @Override
     public void onEmptyViewRetryClick() {
-        //TODO Load from local
+        prepareData();
     }
 
     @Override

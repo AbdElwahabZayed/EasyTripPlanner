@@ -122,6 +122,7 @@ public class FloatingWidgetService extends Service {
 
                         }
                     });
+
                     counterFab.setOnTouchListener(new View.OnTouchListener() {
                         private int initialX;
                         private int initialY;

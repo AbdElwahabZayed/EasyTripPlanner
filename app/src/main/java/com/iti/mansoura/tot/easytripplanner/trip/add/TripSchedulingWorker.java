@@ -20,11 +20,12 @@ public class TripSchedulingWorker extends Worker {
     @Override
     public Result doWork() {
         String tripUID = getInputData().getString("tripUID");
-        showDialogFragment(tripUID);
+        String userUID = getInputData().getString("userUID");
+        showDialogFragment(tripUID , userUID);
         return Result.success();
     }
 
-    private void showDialogFragment(String tripUID){
-        context.startActivity(new Intent(context, TripAlertFragmentActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("tripUID",tripUID));
+    private void showDialogFragment(String tripUID , String userUID){
+        context.startActivity(new Intent(context, TripAlertFragmentActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("tripUID",tripUID).putExtra("userUID",userUID));
     }
 }

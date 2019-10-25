@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <ernestoyaquello.com.verticalstepperform.VerticalStepperFormView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/stepper_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:form_last_button_text="@string/add_trip"
+            app:form_circle_background_color="@color/colorPrimary"
+            app:form_next_button_background_color="@color/colorPrimary"
+            app:form_next_button_pressed_background_color="@color/colorPrimaryDark"
+            app:form_display_cancel_button_in_last_step="true"
+            app:form_cancel_button_background_color="@android:color/transparent"
+            app:form_cancel_button_pressed_background_color="@android:color/transparent"
+            app:form_cancel_button_text_color="@color/colorPrimary"
+            app:form_cancel_button_pressed_text_color="@color/colorPrimaryDark"/>
+
+    </ScrollView>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
