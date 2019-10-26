@@ -5,12 +5,6 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,7 +25,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 public class TripRepository {
     Trip mTrip;
@@ -201,6 +202,10 @@ public class TripRepository {
         @Override
         protected void onPostExecute(List<Trip> trips) {
             for(final Trip t:trips){
+                if(t.getFirebaseUID()==null){
+                    String tripFireBaseUID = UUID.randomUUID().toString();
+                    t.setFirebaseUID(tripFireBaseUID);
+                }
                 System.out.println("dsfg  :"+t.getTripUID());
                 final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                 reference.child("Trips").child(t.getFirebaseUID()).addListenerForSingleValueEvent(new ValueEventListener() {

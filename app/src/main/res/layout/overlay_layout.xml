@@ -14,7 +14,9 @@
         android:id="@+id/fabHead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_input_add"
+        android:src="@drawable/travel"
+        android:scaleType="center"
+        app:maxImageSize="56dp"
         app:fabSize="normal" />
 
 
