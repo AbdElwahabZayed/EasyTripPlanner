@@ -48,8 +48,8 @@ public class EditTripPresenter implements AddTripContract.IAddTripPresenter {
     private void doSave(final String[] data, final String[] source, final String[] dest , final String [] notes) {
 
         if(currentUser !=null) {
-            final String tripUID = UUID.randomUUID().toString();
-            final Trip mTrip = new Trip();
+            String tripUID = UUID.randomUUID().toString();
+            Trip mTrip = new Trip();
             // one way
             mTrip.setTripUID(tripUID);
             mTrip.setUserUID(currentUser.getUid());
@@ -91,7 +91,7 @@ public class EditTripPresenter implements AddTripContract.IAddTripPresenter {
     private void addRoundTrip(String[] data, String[] source, String[] dest , String [] notes , String tripUID)
     {
         // round
-        final Trip mTrip = new Trip();
+        Trip mTrip = new Trip();
         mTrip.setTripUID(tripUID);
         mTrip.setUserUID(currentUser.getUid());
         mTrip.setTripTitle(data[0]);

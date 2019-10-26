@@ -17,10 +17,11 @@ public class TripAlertFragmentActivity extends FragmentActivity {
         this.setFinishOnTouchOutside(false);
 
         String tripUID = getIntent().getExtras().getString("tripUID");
+        String userUID = getIntent().getExtras().getString("userUID");
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        TripAlertFragment tripAlertFragment = TripAlertFragment.newInstance(getResources().getString(R.string.trip_alert),tripUID);
+        TripAlertFragment tripAlertFragment = TripAlertFragment.newInstance(getResources().getString(R.string.trip_alert),tripUID,userUID);
         if(getSupportFragmentManager().findFragmentByTag("trip_alert_fragment") == null)
         {
             ft.add(R.id.container,tripAlertFragment,"trip_alert_fragment");

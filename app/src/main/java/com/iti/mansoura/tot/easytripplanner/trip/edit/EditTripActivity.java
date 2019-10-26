@@ -28,7 +28,6 @@ import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
 import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 
 public class EditTripActivity extends AppCompatActivity implements EditTripContract.IEditTripView , StepperFormListener {
-
     private static final String TAG = EditTripActivity.class.getSimpleName();
     private EditTripPresenter editTripPresenter;
     private TripTitleStep tripTitleStep;
@@ -40,7 +39,8 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
     private TripNotesStep tripNotesStep;
     private VerticalStepperFormView verticalStepperFormView;
     private FirebaseAuth mAuth;
-    private String tripUID ,firebaseUID ,editFrom;
+    private String tripUID ,firebaseUID;
+    private int tripStatus; // using trip status
     private Trip mTrip;
     private TripRepository tripRepository;
 
@@ -51,7 +51,7 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
 
         tripUID = getIntent().getExtras().getString("tripUID");
         firebaseUID = getIntent().getExtras().getString("firebaseUID");
-        editFrom = getIntent().getExtras().getString("editFrom");
+        tripStatus = getIntent().getExtras().getInt("tripStatus");
 
         mAuth = FirebaseAuth.getInstance();
         tripRepository = new TripRepository(this);
@@ -76,7 +76,7 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
                 }
             });
         }else {
-            if(editFrom.equals("upComing"))
+            if(tripStatus == 0)
                 mTrip = tripRepository.getUpComingTrip(mAuth.getCurrentUser().getUid(), tripUID);
             else
                 mTrip = tripRepository.getHistoryTrip(mAuth.getCurrentUser().getUid(), tripUID);
