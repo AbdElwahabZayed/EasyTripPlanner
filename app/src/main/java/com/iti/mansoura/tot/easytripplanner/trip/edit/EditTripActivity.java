@@ -40,7 +40,7 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
     private TripNotesStep tripNotesStep;
     private VerticalStepperFormView verticalStepperFormView;
     private FirebaseAuth mAuth;
-    private String tripUID ,firebaseUID;
+    private String tripUID ,firebaseUID ,editFrom;
     private Trip mTrip;
     private TripRepository tripRepository;
 
@@ -51,8 +51,10 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
 
         tripUID = getIntent().getExtras().getString("tripUID");
         firebaseUID = getIntent().getExtras().getString("firebaseUID");
+        editFrom = getIntent().getExtras().getString("editFrom");
 
         mAuth = FirebaseAuth.getInstance();
+        tripRepository = new TripRepository(this);
 
         if (new NetworkStatusAndType(this).NetworkStatus() == 2) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -74,7 +76,10 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
                 }
             });
         }else {
-            mTrip = tripRepository.getUpComingTrip(mAuth.getCurrentUser().getUid(), tripUID);
+            if(editFrom.equals("upComing"))
+                mTrip = tripRepository.getUpComingTrip(mAuth.getCurrentUser().getUid(), tripUID);
+            else
+                mTrip = tripRepository.getHistoryTrip(mAuth.getCurrentUser().getUid(), tripUID);
             Log.e("trip edit l " , "local");
         }
 
@@ -113,6 +118,8 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
                         tripNotesStep,
                         tripSourceStep,
                         tripDestinationStep)
+                .lastStepNextButtonText(getResources().getString(R.string.update_trip))
+                //.displayStepButtons(false)// for show
                 .init();
     }
 
