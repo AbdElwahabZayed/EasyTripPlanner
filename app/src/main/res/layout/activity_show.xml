@@ -155,22 +155,13 @@
                 android:gravity="center" />
         </TableRow>
 
-        <TableRow android:layout_weight="1">
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/map"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_start" />
-        </TableRow>
-
     </TableLayout>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/material_design_android_floating_action_menu"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -14,9 +14,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
-public class TripToHistoryWorker extends Worker {
-
-    public TripToHistoryWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+public class TripToDeleteWorker extends Worker {
+    public TripToDeleteWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
@@ -24,11 +23,11 @@ public class TripToHistoryWorker extends Worker {
     @Override
     public Result doWork() {
         String firebaseUID = getInputData().getString("firebaseUID");
-        addToHistory(firebaseUID);
+        addToDeleted(firebaseUID);
         return Result.success();
     }
 
-    private void addToHistory(final String firebaseUID)
+    private void addToDeleted(final String firebaseUID)
     {
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -38,7 +37,7 @@ public class TripToHistoryWorker extends Worker {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 //                    postValues.put(snapshot.getKey(),snapshot.getValue());
                     Trip mTrip = snapshot.getValue(Trip.class);
-                    mTrip.setStatus(2);
+                    mTrip.setStatus(3);
                     reference.child("Trips").child(firebaseUID).removeValue();
                     reference.child("Trips").child(firebaseUID).setValue(mTrip);
                 }
@@ -48,7 +47,7 @@ public class TripToHistoryWorker extends Worker {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("history worker " , "error"+databaseError.getMessage());
+                Log.e("Delete worker " , "error"+databaseError.getMessage());
             }
         });
     }
