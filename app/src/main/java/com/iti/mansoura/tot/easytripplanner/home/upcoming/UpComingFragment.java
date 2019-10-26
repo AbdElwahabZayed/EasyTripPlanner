@@ -157,7 +157,7 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
               e.printStackTrace();
           }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getContext())) {
-            getContext().startService(new Intent(getContext(), FloatingWidgetService.class).putExtra("activity_background", true));
+            getContext().startService(new Intent(getContext(), FloatingWidgetService.class).putExtra("activity_background", true).putExtra("notes",trip.getNotes()));
         }
     }
 }

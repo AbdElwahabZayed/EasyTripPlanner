@@ -87,6 +87,7 @@ public class ShowTripActivity extends AppCompatActivity {
         editdate=findViewById(R.id.date);
         mMap = findViewById(R.id.map);
 
+
         mMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
