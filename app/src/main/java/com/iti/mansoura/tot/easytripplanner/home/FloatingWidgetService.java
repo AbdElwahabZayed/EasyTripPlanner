@@ -20,14 +20,14 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.andremion.counterfab.CounterFab;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripNotesStep;
 
 import java.util.Arrays;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by anupamchugh on 01/08/17.
@@ -56,8 +56,7 @@ public class FloatingWidgetService extends Service {
 
         if (intent != null) {
             activity_background = intent.getBooleanExtra("activity_background", false);
-            notes=intent.getStringExtra("notes");
-
+            notes = intent.getStringExtra("notes");
         }
 
         // check if permission allowed
@@ -162,41 +161,52 @@ public class FloatingWidgetService extends Service {
                                             Intent intent = new Intent(FloatingWidgetService.this, TripNotesStep.class);
                                             intent.putExtra("badge_count", counterFab.getCount());
                                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            String[] myNotes=notes.split(",");
-                                            String[] multiChoiceItems = myNotes;
-                                            //getResources().getStringArray(R.array.dialog_multi_choice_array);
-                                            final boolean[] checkedItems = new boolean[myNotes.length];
-                                            Arrays.fill(checkedItems,false  );
-                                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    switch(which){
-                                                        case DialogInterface.BUTTON_POSITIVE:
-                                                            // User clicked the Yes button
-                                                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getApplicationContext())) {
-                                                                startService(new Intent(getApplicationContext(), FloatingWidgetService.class).putExtra("activity_background", true));
-                                                            }
-                                                            break;
+                                            if(notes != null) {
+                                                String[] myNotes = notes.split(" , ");
+                                                String[] multiChoiceItems = myNotes;
+                                                //getResources().getStringArray(R.array.dialog_multi_choice_array);
+                                                final boolean[] checkedItems = new boolean[myNotes.length];
+                                                Arrays.fill(checkedItems,false  );
+                                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        switch(which){
+                                                            case DialogInterface.BUTTON_POSITIVE:
+                                                                // User clicked the Yes button
+                                                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getApplicationContext())) {
+                                                                    startService(new Intent(getApplicationContext(), FloatingWidgetService.class).putExtra("notes",notes).putExtra("activity_background", true));
+                                                                }
+                                                                break;
 
-                                                        case DialogInterface.BUTTON_NEGATIVE:
-                                                            // User clicked the No button
-                                                            break;
-                                                    }
-                                                }
-                                            };
-                                            AlertDialog alertDialog=  new AlertDialog.Builder(FloatingWidgetService.this)
-                                                    .setTitle("Your Notes")
-                                                    .setMultiChoiceItems(multiChoiceItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog, int index, boolean isChecked) {
-                                                            Log.d("MainActivity", "clicked item index is " + index);
+                                                            case DialogInterface.BUTTON_NEGATIVE:
+                                                                // User clicked the No button
+                                                                break;
                                                         }
-                                                    })
-                                                    .setPositiveButton("Continue Trip", dialogClickListener)
-                                                    .setNegativeButton("Close Widget", dialogClickListener)
-                                                    .create();
-                                            alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-                                            alertDialog.show();
+                                                    }
+                                                };
+                                                AlertDialog alertDialog=  new AlertDialog.Builder(FloatingWidgetService.this)
+                                                        .setTitle("Your Notes")
+                                                        .setMultiChoiceItems(multiChoiceItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int index, boolean isChecked) {
+                                                                Log.d("MainActivity", "clicked item index is " + index);
+                                                            }
+                                                        })
+                                                        .setPositiveButton("Continue Trip", dialogClickListener)
+                                                        .setNegativeButton("Close Widget", dialogClickListener)
+                                                        .create();
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+                                                }
+                                                else {
+                                                    alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_PHONE);
+                                                }
+                                                alertDialog.show();
+                                            }
+                                            else
+                                            {
+                                                // TODO null notes
+                                            }
 
                                             stopSelf();
 
