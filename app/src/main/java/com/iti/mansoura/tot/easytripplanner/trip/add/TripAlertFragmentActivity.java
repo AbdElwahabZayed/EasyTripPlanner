@@ -18,10 +18,11 @@ public class TripAlertFragmentActivity extends FragmentActivity {
 
         String tripUID = getIntent().getExtras().getString("tripUID");
         String userUID = getIntent().getExtras().getString("userUID");
+        String firebaseUID = getIntent().getExtras().getString("firebaseUID");
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        TripAlertFragment tripAlertFragment = TripAlertFragment.newInstance(getResources().getString(R.string.trip_alert),tripUID,userUID);
+        TripAlertFragment tripAlertFragment = TripAlertFragment.newInstance(getResources().getString(R.string.trip_alert),tripUID,userUID,firebaseUID);
         if(getSupportFragmentManager().findFragmentByTag("trip_alert_fragment") == null)
         {
             ft.add(R.id.container,tripAlertFragment,"trip_alert_fragment");

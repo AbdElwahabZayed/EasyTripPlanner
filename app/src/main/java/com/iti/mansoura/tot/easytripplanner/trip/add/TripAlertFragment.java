@@ -45,7 +45,7 @@ public class TripAlertFragment extends DialogFragment {
     private FirebaseAuth mAuth;
     private AppCompatTextView mTripTitle;
     private AppCompatButton mStart , mCancel , mLater;
-    private String tripUID , userUID;
+    private String tripUID , userUID,firebaseUID;
     private MediaPlayer mediaPlayer;
     private Trip mTrip;
     private TripRepository tripRepository;
@@ -57,12 +57,13 @@ public class TripAlertFragment extends DialogFragment {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public static TripAlertFragment newInstance(String title,String tripUID,String userUID) {
+    public static TripAlertFragment newInstance(String title,String tripUID,String userUID,String firebaseUID) {
         TripAlertFragment frag = new TripAlertFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
         args.putString("tripUID", tripUID);
         args.putString("userUID", userUID);
+        args.putString("firebaseUID", firebaseUID);
         frag.setArguments(args);
         return frag;
     }
@@ -73,6 +74,7 @@ public class TripAlertFragment extends DialogFragment {
         String title = getArguments().getString("title", "Trip Started");
         tripUID =  getArguments().getString("tripUID", "");
         userUID =  getArguments().getString("userUID", "");
+        firebaseUID = getArguments().getString("firebaseUID", "");
 //        getDialog().setTitle(title);
         // set style for the fragment
         setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
@@ -103,7 +105,7 @@ public class TripAlertFragment extends DialogFragment {
 
         if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            reference.child("Trips").addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren())
