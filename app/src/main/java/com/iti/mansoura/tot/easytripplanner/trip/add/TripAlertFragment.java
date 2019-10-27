@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
+import com.iti.mansoura.tot.easytripplanner.home.FloatingWidgetService;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.retorfit.NetworkStatusAndType;
 
@@ -101,33 +103,6 @@ public class TripAlertFragment extends DialogFragment {
             mediaPlayer.setLooping(true);
         }
 
-        tripRepository = new TripRepository(getActivity());
-
-        if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren())
-                    {
-                        Trip mTrip = childDataSnapshot.getValue(Trip.class);
-                        if(mTrip.getTripUID().equals(tripUID) && mTrip.getUserUID().equals(mAuth.getCurrentUser().getUid())) {
-                            TripAlertFragment.this.mTrip = mTrip;
-                            mTripTitle.setText(mTrip.getTripTitle());
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e("trip alert f " , "error"+databaseError.getMessage());
-                }
-            });
-        }else {
-            mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
-            Log.e("trip alert l " , "local");
-        }
-
         mLater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +120,6 @@ public class TripAlertFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
-                    // TODO floating widget
                     showMap();
                     if(mTrip != null) {
                         showNotification(mTrip.getTripTitle(), mTrip.getTripSource() + " -> " + mTrip.getTripDestination());
@@ -171,6 +145,38 @@ public class TripAlertFragment extends DialogFragment {
                 getActivity().finish();
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        tripRepository = new TripRepository(getContext().getApplicationContext());
+
+        if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+            reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren())
+                    {
+                        Trip mTrip = childDataSnapshot.getValue(Trip.class);
+                        if(mTrip.getTripUID().equals(tripUID) && mTrip.getUserUID().equals(mAuth.getCurrentUser().getUid())) {
+                            TripAlertFragment.this.mTrip = mTrip;
+                            mTripTitle.setText(mTrip.getTripTitle());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("trip alert f " , "error"+databaseError.getMessage());
+                }
+            });
+        }else {
+            mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
+            Log.e("trip alert l " , "local");
+        }
     }
 
     private void showNotification(String tripTitle, String route) {
@@ -239,6 +245,10 @@ public class TripAlertFragment extends DialogFragment {
              }
 
             e.printStackTrace();
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getActivity())) {
+           getActivity().startService(new Intent(getActivity(), FloatingWidgetService.class).putExtra("activity_background", true).putExtra("notes",mTrip.getNotes()));
         }
     }
 
