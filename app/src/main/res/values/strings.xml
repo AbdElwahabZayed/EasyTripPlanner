@@ -64,5 +64,8 @@
     <string name="addnewtrip">addNewTrip</string>
     <string name="About">about</string>
     <string name="update_trip">Update Trip</string>
+    <string name="delete_trip">Delete Trip</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

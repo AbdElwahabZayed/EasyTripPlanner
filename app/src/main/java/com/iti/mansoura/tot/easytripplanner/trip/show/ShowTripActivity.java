@@ -120,9 +120,9 @@ public class ShowTripActivity extends AppCompatActivity {
                 };
 
                 AlertDialog alertDialog=  new AlertDialog.Builder(ShowTripActivity.this)
-                        .setTitle("Your Notes")
-                        .setPositiveButton("Continue Trip", dialogClickListener)
-                        .setNegativeButton("Close Widget", dialogClickListener)
+                        .setTitle(getResources().getString(R.string.delete_trip))
+                        .setPositiveButton(getResources().getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(getResources().getString(R.string.no), dialogClickListener)
                         .create();
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
