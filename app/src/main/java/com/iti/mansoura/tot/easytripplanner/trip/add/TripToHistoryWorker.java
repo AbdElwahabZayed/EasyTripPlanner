@@ -3,16 +3,16 @@ package com.iti.mansoura.tot.easytripplanner.trip.add;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
+
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 public class TripToHistoryWorker extends Worker {
 
@@ -35,9 +35,11 @@ public class TripToHistoryWorker extends Worker {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Trip mTrip = dataSnapshot.getValue(Trip.class);
-                mTrip.setStatus(2);
-                reference.child("Trips").child(firebaseUID).removeValue();
-                reference.child("Trips").child(firebaseUID).setValue(mTrip);
+                if(mTrip!=null) {
+                    mTrip.setStatus(2);
+                    reference.child("Trips").child(firebaseUID).removeValue();
+                    reference.child("Trips").child(firebaseUID).setValue(mTrip);
+                }
             }
 
             @Override

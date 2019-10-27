@@ -65,7 +65,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".trip.add.TripAlertFragmentActivity"
-            android:excludeFromRecents="true"
+
             android:theme="@style/Theme.AppCompat.Dialog" />
 
         <activity
@@ -95,3 +95,4 @@
     </application>
 
 </manifest>
+<!--    android:excludeFromRecents="true"-->

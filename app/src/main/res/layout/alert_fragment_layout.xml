@@ -61,9 +61,7 @@
             android:text="@string/start_trip"
             android:textColor="@color/design_default_color_primary_dark"
             app:layout_constraintBottom_toBottomOf="@+id/later"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/later" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

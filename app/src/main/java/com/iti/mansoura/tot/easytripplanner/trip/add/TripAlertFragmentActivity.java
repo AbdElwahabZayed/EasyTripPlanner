@@ -2,18 +2,19 @@ package com.iti.mansoura.tot.easytripplanner.trip.add;
 
 import android.os.Bundle;
 
+import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripDataBase;
+
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import com.iti.mansoura.tot.easytripplanner.R;
 
 public class TripAlertFragmentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alert);
-
+        TripDataBase.dbcontext=getApplicationContext();
         this.setFinishOnTouchOutside(false);
 
         String tripUID = getIntent().getExtras().getString("tripUID");

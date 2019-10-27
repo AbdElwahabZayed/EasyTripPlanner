@@ -16,6 +16,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripDataBase;
+import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
+import com.iti.mansoura.tot.easytripplanner.home.FloatingWidgetService;
+import com.iti.mansoura.tot.easytripplanner.models.Trip;
+import com.iti.mansoura.tot.easytripplanner.retorfit.NetworkStatusAndType;
+
+import java.util.Random;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -27,20 +42,6 @@ import androidx.work.Data;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.iti.mansoura.tot.easytripplanner.R;
-import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
-import com.iti.mansoura.tot.easytripplanner.home.FloatingWidgetService;
-import com.iti.mansoura.tot.easytripplanner.models.Trip;
-import com.iti.mansoura.tot.easytripplanner.retorfit.NetworkStatusAndType;
-
-import java.util.Random;
 
 public class TripAlertFragment extends DialogFragment {
 
@@ -148,12 +149,17 @@ public class TripAlertFragment extends DialogFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        tripRepository = new TripRepository(getContext().getApplicationContext());
+    public void onResume()
+    {
+        super.onResume();
+        TripDataBase.dbcontext=getContext().getApplicationContext();
+        tripRepository = new TripRepository(getContext());
 
         if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
+            mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
+            if (mTrip != null){
+                mTripTitle.setText(mTrip.getTripTitle());
+            }
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -171,10 +177,18 @@ public class TripAlertFragment extends DialogFragment {
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     Log.e("trip alert f " , "error"+databaseError.getMessage());
+                    mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
+                    if (mTrip != null){
+                        mTripTitle.setText(mTrip.getTripTitle());
+                    }
                 }
             });
+
         }else {
             mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
+            if (mTrip != null){
+                mTripTitle.setText(mTrip.getTripTitle());
+            }
             Log.e("trip alert l " , "local");
         }
     }
