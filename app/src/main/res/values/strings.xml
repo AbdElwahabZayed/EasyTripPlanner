@@ -68,5 +68,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="forgot">Forgot Your Password ?</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_notes_found">No Botes Found for this trip</string>
+    <string name="continue_trip">Continue Trip</string>
+    <string name="close_widget">Close Widget</string>
 
 </resources>

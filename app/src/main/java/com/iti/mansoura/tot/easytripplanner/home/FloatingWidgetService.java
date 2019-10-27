@@ -21,7 +21,6 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.andremion.counterfab.CounterFab;
 import com.iti.mansoura.tot.easytripplanner.MainActivity;
@@ -36,15 +35,14 @@ import java.util.Arrays;
 
 public class FloatingWidgetService extends Service {
 
-
     private WindowManager mWindowManager;
     private View mOverlayView;
     private int mWidth;
     private CounterFab counterFab;
     private boolean activity_background;
     private String notes;
+    private boolean[] checkedItems;
 
-    AppCompatActivity mAppCompatActivity;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -58,6 +56,8 @@ public class FloatingWidgetService extends Service {
         if (intent != null) {
             activity_background = intent.getBooleanExtra("activity_background", false);
             notes = intent.getStringExtra("notes");
+            if(intent.getExtras().containsKey("checkedItems"))
+                checkedItems = intent.getBooleanArrayExtra("checkedItems");
         }
 
         // check if permission allowed
@@ -165,9 +165,12 @@ public class FloatingWidgetService extends Service {
                                             if(notes != null) {
                                                 String[] myNotes = notes.split(" , ");
                                                 String[] multiChoiceItems = myNotes;
+                                                if(checkedItems == null)
+                                                {
+                                                    checkedItems = new boolean[myNotes.length];
+                                                    Arrays.fill(checkedItems,false  );
+                                                }
                                                 //getResources().getStringArray(R.array.dialog_multi_choice_array);
-                                                final boolean[] checkedItems = new boolean[myNotes.length];
-                                                Arrays.fill(checkedItems,false  );
                                                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -175,7 +178,10 @@ public class FloatingWidgetService extends Service {
                                                             case DialogInterface.BUTTON_POSITIVE:
                                                                 // User clicked the Yes button
                                                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getApplicationContext())) {
-                                                                    startService(new Intent(getApplicationContext(), FloatingWidgetService.class).putExtra("notes",notes).putExtra("activity_background", true));
+                                                                    startService(new Intent(getApplicationContext(), FloatingWidgetService.class)
+                                                                            .putExtra("checkedItems", checkedItems)
+                                                                            .putExtra("notes",notes)
+                                                                            .putExtra("activity_background", true));
                                                                 }
                                                                 break;
 
@@ -186,15 +192,15 @@ public class FloatingWidgetService extends Service {
                                                     }
                                                 };
                                                 AlertDialog alertDialog=  new AlertDialog.Builder(FloatingWidgetService.this)
-                                                        .setTitle("Your Notes")
+                                                        .setTitle(getResources().getString(R.string.trip_notes))
                                                         .setMultiChoiceItems(multiChoiceItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int index, boolean isChecked) {
                                                                 Log.d("MainActivity", "clicked item index is " + index);
                                                             }
                                                         })
-                                                        .setPositiveButton("Continue Trip", dialogClickListener)
-                                                        .setNegativeButton("Close Widget", dialogClickListener)
+                                                        .setPositiveButton(getResources().getString(R.string.continue_trip), dialogClickListener)
+                                                        .setNegativeButton(getResources().getString(R.string.close_widget), dialogClickListener)
                                                         .create();
                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                                     alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
@@ -206,7 +212,38 @@ public class FloatingWidgetService extends Service {
                                             }
                                             else
                                             {
-                                                // TODO null notes
+                                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        switch(which){
+                                                            case DialogInterface.BUTTON_POSITIVE:
+                                                                // User clicked the Yes button
+                                                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getApplicationContext())) {
+                                                                    startService(new Intent(getApplicationContext(), FloatingWidgetService.class)
+                                                                            .putExtra("notes",notes)
+                                                                            .putExtra("activity_background", true));
+                                                                }
+                                                                break;
+
+                                                            case DialogInterface.BUTTON_NEGATIVE:
+                                                                startActivity(new Intent(FloatingWidgetService.this, MainActivity.class));
+                                                                break;
+                                                        }
+                                                    }
+                                                };
+                                                AlertDialog alertDialog=  new AlertDialog.Builder(FloatingWidgetService.this)
+                                                        .setTitle(getResources().getString(R.string.trip_notes))
+                                                        .setMessage(getResources().getString(R.string.no_notes_found))
+                                                        .setPositiveButton(getResources().getString(R.string.continue_trip), dialogClickListener)
+                                                        .setNegativeButton(getResources().getString(R.string.close_widget), dialogClickListener)
+                                                        .create();
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+                                                }
+                                                else {
+                                                    alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_PHONE);
+                                                }
+                                                alertDialog.show();
                                             }
 
                                             stopSelf();
