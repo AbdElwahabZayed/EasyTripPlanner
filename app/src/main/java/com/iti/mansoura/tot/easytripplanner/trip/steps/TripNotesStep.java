@@ -1,6 +1,7 @@
 package com.iti.mansoura.tot.easytripplanner.trip.steps;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -10,7 +11,6 @@ import androidx.fragment.app.FragmentManager;
 import com.iti.mansoura.tot.easytripplanner.R;
 
 import ernestoyaquello.com.verticalstepperform.Step;
-import android.text.TextUtils;
 
 public class TripNotesStep extends Step<String> implements Notable {
 
@@ -58,8 +58,9 @@ public class TripNotesStep extends Step<String> implements Notable {
      */
     @Override
     public void restoreStepData(String data) {
-        if(data != null)
+        if(data != null) {
             notes = data.split(" , ");
+        }
     }
 
     /**
@@ -87,7 +88,7 @@ public class TripNotesStep extends Step<String> implements Notable {
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NoteFragment noteFragment = NoteFragment.newInstance(getContext().getResources().getString(R.string.add_notes),TripNotesStep.this);
+                NoteFragment noteFragment = NoteFragment.newInstance(getContext().getResources().getString(R.string.add_notes),notes,TripNotesStep.this);
                 noteFragment.show(fragmentManager, "note_fragment");
             }
         });

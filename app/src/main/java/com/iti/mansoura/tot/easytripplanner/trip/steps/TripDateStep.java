@@ -4,17 +4,19 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
 import com.iti.mansoura.tot.easytripplanner.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import ernestoyaquello.com.verticalstepperform.Step;
@@ -58,7 +60,16 @@ public class TripDateStep extends Step<String> {
      */
     @Override
     public void restoreStepData(String data) {
-        tripDate.setText(data);
+        try {
+            String stringCurrentDate = new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(new Date());
+            Date currentDateTime = new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).parse(stringCurrentDate);
+            Date tripDateTime = new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).parse(data);
+            if (currentDateTime.before(tripDateTime))
+                tripDate.setText(data);
+        }
+        catch (ParseException ex){
+            Log.e("Date Step", ""+ex.getMessage());
+        }
     }
 
     /**

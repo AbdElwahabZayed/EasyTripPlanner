@@ -34,10 +34,11 @@ public class NoteFragment extends DialogFragment {
         this.notable = notable;
     }
 
-    public static NoteFragment newInstance(String title,Notable notable) {
+    public static NoteFragment newInstance(String title,String [] notes,Notable notable) {
         NoteFragment frag = new NoteFragment(notable);
         Bundle args = new Bundle();
         args.putString("title", title);
+        args.putStringArray("notes", notes);
         frag.setArguments(args);
 
         return frag;
@@ -63,7 +64,19 @@ public class NoteFragment extends DialogFragment {
         mContainer = view.findViewById(R.id.container);
         mAddNote = view.findViewById(R.id.add);
         mSave = view.findViewById(R.id.save);
-        notes = new String[10];
+
+        // Fetch arguments from bundle and set title
+        String title = getArguments().getString("title", "Enter Name");
+        getDialog().setTitle(title);
+        notes = getArguments().getStringArray("notes");
+        if(notes == null)
+        {
+            notes = new String[10];
+        }
+        else
+        {
+            displayNotes();
+        }
 
         setUpContainer();
 
@@ -74,13 +87,55 @@ public class NoteFragment extends DialogFragment {
                 NoteFragment.this.dismissAllowingStateLoss();
             }
         });
-
-        // Fetch arguments from bundle and set title
-        String title = getArguments().getString("title", "Enter Name");
-        getDialog().setTitle(title);
     }
 
+    private void displayNotes()
+    {
+        for(int i = 0; i < notes.length ; i++) {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final View inflatedView = inflater.inflate(R.layout.note_layout, null);
+            inflatedView.setId(View.generateViewId());
+            mContainer.addView(inflatedView);
 
+            AppCompatImageButton mRemove = inflatedView.findViewById(R.id.remove);
+            AppCompatEditText mNote = inflatedView.findViewById(R.id.note_data);
+
+            mNote.setText(notes[i]);
+
+            mNote.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    // ensure its not null
+                    if (!s.toString().trim().isEmpty()) {
+                        // get index of the layout inside the container
+                        int indexOfMyView = mContainer.indexOfChild(inflatedView);
+                        // add to array
+                        notes[indexOfMyView] = s.toString().trim();
+                    }
+                }
+            });
+
+            mRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // remove view using it's child
+                    mContainer.removeView((View) v.getParent());
+                    // get index of the layout inside the container
+                    // then update notes
+                    int indexOfMyView = mContainer.indexOfChild(inflatedView);
+                    notes[indexOfMyView] = null;
+                }
+            });
+        }
+    }
 
     private void setUpContainer()
     {
@@ -122,6 +177,10 @@ public class NoteFragment extends DialogFragment {
                         public void onClick(View v) {
                             // remove view using it's child
                             mContainer.removeView((View) v.getParent());
+                            // get index of the layout inside the container
+                            // then update notes
+                            int indexOfMyView = mContainer.indexOfChild(inflatedView);
+                            notes[indexOfMyView] = null;
                         }
                     });
                 }
