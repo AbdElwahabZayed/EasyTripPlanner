@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.andremion.counterfab.CounterFab;
+import com.iti.mansoura.tot.easytripplanner.MainActivity;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripNotesStep;
 
@@ -40,8 +41,8 @@ public class FloatingWidgetService extends Service {
     private View mOverlayView;
     private int mWidth;
     private CounterFab counterFab;
-    boolean activity_background;
-    String notes;
+    private boolean activity_background;
+    private String notes;
 
     AppCompatActivity mAppCompatActivity;
     @Nullable
@@ -179,7 +180,7 @@ public class FloatingWidgetService extends Service {
                                                                 break;
 
                                                             case DialogInterface.BUTTON_NEGATIVE:
-                                                                // User clicked the No button
+                                                                startActivity(new Intent(FloatingWidgetService.this, MainActivity.class));
                                                                 break;
                                                         }
                                                     }

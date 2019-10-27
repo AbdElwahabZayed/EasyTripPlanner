@@ -33,16 +33,10 @@ public class TripToDeleteWorker extends Worker {
         reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                Map<String, Object> postValues = new HashMap<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    postValues.put(snapshot.getKey(),snapshot.getValue());
-                    Trip mTrip = snapshot.getValue(Trip.class);
-                    mTrip.setStatus(3);
-                    reference.child("Trips").child(firebaseUID).removeValue();
-                    reference.child("Trips").child(firebaseUID).setValue(mTrip);
-                }
-//                postValues.put("status", 2);
-//                reference.child("Trips").child(firebaseUID).updateChildren(postValues);
+                Trip mTrip = dataSnapshot.getValue(Trip.class);
+                mTrip.setStatus(3);
+                reference.child("Trips").child(firebaseUID).removeValue();
+                reference.child("Trips").child(firebaseUID).setValue(mTrip);
             }
 
             @Override

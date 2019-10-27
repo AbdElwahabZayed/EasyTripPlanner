@@ -84,7 +84,7 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
         String [] mTypeArray = getResources().getStringArray(R.array.type_array);
         recyclerViewAdapter = new TripsRecyclerViewAdapter(UpComingFragment.this,mStatusArray,mTypeArray);
         mRecyclerView.setAdapter(recyclerViewAdapter);
-        tripViewModel.getAllUpComingTrips(mAuth.getUid()).observe(this, new Observer<List<Trip>>() {
+        tripViewModel.getAllUpComingTrips(mAuth.getCurrentUser().getUid()).observe(this, new Observer<List<Trip>>() {
             @Override
             public void onChanged(List<Trip> trips) {
                 System.out.println("getAllUpComingTrips(id).observe(getActivity(),");
@@ -160,5 +160,7 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
           if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getContext())) {
                 getContext().startService(new Intent(getContext(), FloatingWidgetService.class).putExtra("activity_background", true).putExtra("notes",trip.getNotes()));
           }
+
+          getActivity().finishAffinity();
     }
 }

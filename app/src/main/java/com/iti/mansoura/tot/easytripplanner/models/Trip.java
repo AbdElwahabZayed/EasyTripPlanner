@@ -49,8 +49,9 @@ public class Trip implements Parcelable
     }
 
     public Trip(@NonNull String tripUID, String tripTitle, String tripType, String tripSource, String tripDestination,
-                String tripTime, String tripDate, String notes, String userUID,
+                String tripTime, String tripDate, String notes, String userUID,String firebaseUID,
                 double sourceLat, double sourceLong, double destinationLat, double destinationLong, int status) {
+        this.firebaseUID = firebaseUID;
         this.tripUID = tripUID;
         this.tripTitle = tripTitle;
         this.tripType = tripType;
@@ -73,16 +74,16 @@ public class Trip implements Parcelable
         tripTitle = in.readString();
         tripType = in.readString();
         tripSource = in.readString();
-        userUID = in.readString();
         tripDestination = in.readString();
-        tripDate = in.readString();
         tripTime = in.readString();
+        tripDate = in.readString();
+        notes = in.readString();
+        userUID = in.readString();
         sourceLat = in.readDouble();
         sourceLong = in.readDouble();
         destinationLat = in.readDouble();
         destinationLong = in.readDouble();
         status = in.readInt();
-        notes = in.readString();
     }
 
     public static final Creator<Trip> CREATOR = new Creator<Trip>() {
@@ -100,9 +101,11 @@ public class Trip implements Parcelable
     public String getFirebaseUID() {
         return firebaseUID;
     }
+
     public void setFirebaseUID(String firebaseUID) {
         this.firebaseUID = firebaseUID;
     }
+
     public String getTripTime() {
         return tripTime;
     }
@@ -244,15 +247,15 @@ public class Trip implements Parcelable
         dest.writeString(tripTitle);
         dest.writeString(tripType);
         dest.writeString(tripSource);
-        dest.writeString(userUID);
         dest.writeString(tripDestination);
-        dest.writeString(tripDate);
         dest.writeString(tripTime);
+        dest.writeString(tripDate);
+        dest.writeString(notes);
+        dest.writeString(userUID);
         dest.writeDouble(sourceLat);
         dest.writeDouble(sourceLong);
         dest.writeDouble(destinationLat);
         dest.writeDouble(destinationLong);
-        dest.writeString(notes);
         dest.writeInt(status);
     }
 }

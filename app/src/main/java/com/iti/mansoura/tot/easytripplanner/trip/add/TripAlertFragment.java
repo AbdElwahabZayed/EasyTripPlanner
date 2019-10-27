@@ -99,6 +99,8 @@ public class TripAlertFragment extends DialogFragment {
             mediaPlayer.setLooping(true);
         }
 
+        tripRepository = new TripRepository(getActivity());
+
         if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             reference.child("Trips").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -242,8 +244,13 @@ public class TripAlertFragment extends DialogFragment {
     {
         // update local
         Trip mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
-        mTrip.setStatus(2);
-        tripRepository.updateTrip(mTrip);
+        if(mTrip != null) {
+            mTrip.setStatus(2);
+            tripRepository.updateTrip(mTrip);
+        }
+        else{
+            Log.e("history trip alert", "null");
+        }
 
         // update firebase
         // passing trip UID to WorkRequest

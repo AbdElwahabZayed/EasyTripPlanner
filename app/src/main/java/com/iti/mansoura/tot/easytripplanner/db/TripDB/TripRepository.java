@@ -5,6 +5,12 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,16 +32,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 public class TripRepository {
-    Trip mTrip;
+
     private LiveData<List<Trip>> mutableLiveDataHistoryTrips;
     private LiveData<List<Trip>> mutableLiveDataUpComingTrips;
     private TripDataBase tripDataBase;
@@ -262,8 +263,12 @@ public class TripRepository {
     }
 
     public Trip getUpComingTrip(String userID , String tripUID){
-        new getUpComingTrip().execute(userID,tripUID);
-        return mTrip;
+        try {
+            return new getUpComingTrip().execute(userID,tripUID).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private class getUpComingTrip extends AsyncTask<String,Void,Trip> {
@@ -276,13 +281,16 @@ public class TripRepository {
         @Override
         protected void onPostExecute(Trip trip) {
             super.onPostExecute(trip);
-            mTrip = trip;
         }
     }
 
     public Trip getUpComingTripToEdit(String userID , String tripUID){
-        new getUpComingTripToEdit().execute(userID,tripUID);
-        return mTrip;
+        try {
+            return new getUpComingTripToEdit().execute(userID,tripUID).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private class getUpComingTripToEdit extends AsyncTask<String,Void,Trip> {
@@ -295,14 +303,17 @@ public class TripRepository {
         @Override
         protected void onPostExecute(Trip trip) {
             super.onPostExecute(trip);
-            mTrip = trip;
         }
     }
 
 
     public Trip getHistoryTrip(String userID , String tripUID){
-        new getHistoryTrip().execute(userID,tripUID);
-        return mTrip;
+        try {
+            return new getHistoryTrip().execute(userID,tripUID).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private class getHistoryTrip extends AsyncTask<String,Void,Trip> {
@@ -315,13 +326,16 @@ public class TripRepository {
         @Override
         protected void onPostExecute(Trip trip) {
             super.onPostExecute(trip);
-            mTrip = trip;
         }
     }
 
     public Trip getHistoryTripToEdit(String userID , String tripUID){
-        new getHistoryTripToEdit().execute(userID,tripUID);
-        return mTrip;
+        try {
+            return new getHistoryTripToEdit().execute(userID,tripUID).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private class getHistoryTripToEdit extends AsyncTask<String,Void,Trip> {
@@ -334,7 +348,6 @@ public class TripRepository {
         @Override
         protected void onPostExecute(Trip trip) {
             super.onPostExecute(trip);
-            mTrip = trip;
         }
     }
 

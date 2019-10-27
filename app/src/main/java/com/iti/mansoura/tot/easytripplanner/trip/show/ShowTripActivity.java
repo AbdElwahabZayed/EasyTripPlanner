@@ -1,12 +1,16 @@
 package com.iti.mansoura.tot.easytripplanner.trip.show;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +46,7 @@ public class ShowTripActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show);
 
         trip = getIntent().getExtras().getParcelable("trip");
+
         mypresenter=new Presenter(trip);
 
         initComponent();
@@ -79,9 +84,12 @@ public class ShowTripActivity extends AppCompatActivity {
         mEdit = findViewById(R.id.material_design_floating_action_menu_item2);
         mDelete = findViewById(R.id.material_design_floating_action_menu_item3);
 
+        tripRepository = new TripRepository(this);
+
         mMap.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showMap(trip.getNotes());
+                finishAffinity();
             }
         });
 
@@ -96,7 +104,36 @@ public class ShowTripActivity extends AppCompatActivity {
 
         mDelete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                setTripToDeleted(trip.getTripUID(),trip.getUserUID());
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch(which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                setTripToDeleted(trip.getTripUID(),trip.getUserUID());
+                                onBackPressed();
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog alertDialog=  new AlertDialog.Builder(ShowTripActivity.this)
+                        .setTitle("Your Notes")
+                        .setPositiveButton("Continue Trip", dialogClickListener)
+                        .setNegativeButton("Close Widget", dialogClickListener)
+                        .create();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+                }
+                else {
+                    alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_PHONE);
+                }
+
+                alertDialog.show();
+
             }
         });
     }
@@ -140,8 +177,13 @@ public class ShowTripActivity extends AppCompatActivity {
     {
         // update local
         Trip mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
-        mTrip.setStatus(3);
-        tripRepository.updateTrip(mTrip);
+        if(mTrip != null) {
+            mTrip.setStatus(3);
+            tripRepository.updateTrip(mTrip);
+        }
+        else {
+            Log.e("delete trip fab", "null");
+        }
 
         // update firebase
         // passing trip UID to WorkRequest

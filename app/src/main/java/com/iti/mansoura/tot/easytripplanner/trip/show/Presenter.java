@@ -5,6 +5,16 @@ import com.iti.mansoura.tot.easytripplanner.models.Trip;
 public class Presenter {
     Trip trip_obj;
 
+    String title,type,source,destination,date,time ,triptime;
+    int status;
+    double source_Lat,source_Long,destination_Lat,destination_Long;
+    String note;
+
+    public Presenter(Trip trip_obj)
+    {
+        this.trip_obj = trip_obj;
+    }
+
     public String getTripTitle_presenter() {
       title=trip_obj.getTripTitle();
 
@@ -116,15 +126,5 @@ public class Presenter {
 
     public void setTripstatus_presenter(int tripstatus) {
         trip_obj.setStatus(tripstatus);
-    }
-
-    String title,type,source,destination,date,time ,triptime;
-    int status;
-    double source_Lat,source_Long,destination_Lat,destination_Long;
-    String note;
-
-    public Presenter(Trip trip_obj)
-    {
-        this.trip_obj = trip_obj;
     }
 }
