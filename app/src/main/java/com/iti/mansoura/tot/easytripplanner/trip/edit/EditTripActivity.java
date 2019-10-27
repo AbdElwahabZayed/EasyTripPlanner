@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,7 +24,6 @@ import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTimeStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTitleStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTypeStep;
 
-import androidx.appcompat.app.AppCompatActivity;
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
 import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 
@@ -56,10 +57,13 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
         tripRepository = new TripRepository(this);
 
         if (new NetworkStatusAndType(this).NetworkStatus() == 2) {
+            // get from room
             if(tripStatus == 0)
                 mTrip = tripRepository.getUpComingTrip(mAuth.getCurrentUser().getUid(), tripUID);
             else
                 mTrip = tripRepository.getHistoryTrip(mAuth.getCurrentUser().getUid(), tripUID);
+
+            // try to get from firebase
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -102,8 +106,6 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
         tripNotesStep = new TripNotesStep(getResources().getString(R.string.trip_notes),getSupportFragmentManager());
         verticalStepperFormView = findViewById(R.id.stepper_form);
 
-
-
         verticalStepperFormView
                 .setup(this,
                         tripTitleStep,
@@ -116,18 +118,18 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
                 .lastStepNextButtonText(getResources().getString(R.string.update_trip))
                 //.displayStepButtons(false)// for show
                 .init();
+
         if(mTrip != null) {
             tripTitleStep.restoreStepData(mTrip.getTripTitle());
             tripTypeStep.restoreStepData(mTrip.getTripType());
-            tripSourceStep.restoreStepData(mTrip.getTripSource());
-            tripDestinationStep.restoreStepData(mTrip.getTripDestination());
+            tripSourceStep.restoreStepData(mTrip.getTripSource()+" , "+mTrip.getSourceLat() + " , "+mTrip.getSourceLong());
+            tripDestinationStep.restoreStepData(mTrip.getTripDestination()+" , "+ mTrip.getDestinationLat() + " , "+mTrip.getDestinationLong());
             tripDateStep.restoreStepData(mTrip.getTripDate());
             tripTimeStep.restoreStepData(mTrip.getTripTime());
             tripNotesStep.restoreStepData(mTrip.getNotes());
         }else{
             Log.e("null","null");
         }
-
     }
 
     @Override
