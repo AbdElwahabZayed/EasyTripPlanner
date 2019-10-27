@@ -56,6 +56,10 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
         tripRepository = new TripRepository(this);
 
         if (new NetworkStatusAndType(this).NetworkStatus() == 2) {
+            if(tripStatus == 0)
+                mTrip = tripRepository.getUpComingTrip(mAuth.getCurrentUser().getUid(), tripUID);
+            else
+                mTrip = tripRepository.getHistoryTrip(mAuth.getCurrentUser().getUid(), tripUID);
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

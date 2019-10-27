@@ -88,6 +88,29 @@ public class HomeActivity extends AppCompatActivity  {
         tabs.setupWithViewPager(pager);
         tabs.addTab(tabs.newTab().setText("First"));
         tabs.addTab(tabs.newTab().setText("Second"));
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0:
+
+                        break;
+                    case 1:
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         //tabs.setTabTextColors(Color.RED,Color.BLUE);
         fragmentManager=getSupportFragmentManager();
         MyHomePagerAdapter myHomePagerAdapter=new MyHomePagerAdapter(fragmentManager);
