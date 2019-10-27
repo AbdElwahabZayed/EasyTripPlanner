@@ -4,7 +4,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@drawable/login_gradiant"
-tools:context=".home.HistoryFragment"
+tools:context=".home.history.HistoryFragment"
 android:id="@+id/ll">
 
 <androidx.recyclerview.widget.RecyclerView

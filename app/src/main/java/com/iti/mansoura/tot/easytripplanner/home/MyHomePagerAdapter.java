@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.iti.mansoura.tot.easytripplanner.home.history.HistoryFragment;
 import com.iti.mansoura.tot.easytripplanner.home.upcoming.UpComingFragment;
 
 public class MyHomePagerAdapter extends FragmentPagerAdapter {

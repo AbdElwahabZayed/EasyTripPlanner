@@ -22,6 +22,8 @@ import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.SettingsActivity;
 import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripDataBase;
 import com.iti.mansoura.tot.easytripplanner.db_user.UserDataBase;
+import com.iti.mansoura.tot.easytripplanner.home.history.HistoryFragment;
+import com.iti.mansoura.tot.easytripplanner.home.history.show_historyMap;
 import com.iti.mansoura.tot.easytripplanner.home.upcoming.UpComingFragment;
 import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
 import com.iti.mansoura.tot.easytripplanner.login.Login;
@@ -98,10 +100,22 @@ public class HomeActivity extends AppCompatActivity  {
             public void onPageSelected(int position) {
                 switch (position){
                     case 0:
-
+                        mAddTrip.setImageResource(R.drawable.ic_luggage);
+                        mAddTrip.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(HomeActivity.this, AddTripActivity.class));
+                            }
+                        });
                         break;
                     case 1:
-
+                        mAddTrip.setImageResource(R.drawable.ic_map);
+                        mAddTrip.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(HomeActivity.this, show_historyMap.class));
+                            }
+                        });
                         break;
                 }
             }

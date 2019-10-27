@@ -45,6 +45,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.libraries.places:places:2.0.0'
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.github.clans:fab:1.6.2'
     implementation 'com.ernestoyaquello.stepperform:vertical-stepper-form:2.2.1'
     implementation group: 'com.github.andremion', name: 'counterfab', version: '1.2.1'
