@@ -30,7 +30,7 @@ public class SignUp extends AppCompatActivity implements SignUpContract.SignUpVi
     @Override
     public void initComponent() {
         signUpPresenter=new SignUpPresenter(this,getApplicationContext());
-        btn_SignUp=findViewById(R.id.btn_SignUP);
+        btn_SignUp=findViewById(R.id.btn_Login);
         editText_Mail_SignUp=findViewById(R.id.editText_Mail_Sign);
         editText_Pass1_SignUp=findViewById(R.id.editText_Pass1_Sign);
         editText_Pass2_SignUp=findViewById(R.id.editText_Pass2_Sign);

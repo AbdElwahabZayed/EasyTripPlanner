@@ -95,7 +95,7 @@
         android:onClick="txtPassClick_Sign"
         android:textColor="@android:color/white"
         android:textColorHint="@color/common_google_signin_btn_text_dark_default"
-        app:layout_constraintBottom_toTopOf="@+id/btn_SignUP"
+        app:layout_constraintBottom_toTopOf="@+id/btn_Login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
@@ -124,7 +124,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editText_UserName_Sign" />
 
     <Button
-        android:id="@+id/btn_SignUP"
+        android:id="@+id/btn_Login"
         android:layout_width="0dp"
         android:layout_height="49dp"
         android:layout_marginStart="32dp"

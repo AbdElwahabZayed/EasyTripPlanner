@@ -8,11 +8,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.db_user.UserDataBase;
 import com.iti.mansoura.tot.easytripplanner.signup.SignUp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -38,7 +41,7 @@ public class Login extends AppCompatActivity implements LoginContract.LoginView 
         loginPresenter=new LoginPresenter(this);
         editText_Mail=findViewById(R.id.editText_Mail_Sign);
         editText_Pass=findViewById(R.id.editText_Pass2_Sign);
-        btn_Login=findViewById(R.id.btn_SignUP);
+        btn_Login=findViewById(R.id.btn_Login);
 
     }
 
@@ -74,5 +77,21 @@ public class Login extends AppCompatActivity implements LoginContract.LoginView 
 
     public void btn_signUp(View view) {
         startActivity(new Intent(this, SignUp.class));
+    }
+
+    public void forgot_Password(View view) {
+        if(!editText_Mail.getText().toString().isEmpty()) {
+            mAuth.sendPasswordResetEmail(editText_Mail.getText().toString())
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            showMsg("Check your Email");
+                        }
+
+                    });
+
+        }else{
+            showMsg("Enter Your email first");
+        }
     }
 }

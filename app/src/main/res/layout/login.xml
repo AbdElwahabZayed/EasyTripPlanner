@@ -71,25 +71,25 @@
         android:onClick="txtPassClick"
         android:textColor="@android:color/white"
         android:textColorHint="@color/common_google_signin_btn_text_dark_default"
-        app:layout_constraintBottom_toTopOf="@+id/btn_SignUP"
+        app:layout_constraintBottom_toTopOf="@+id/btn_Login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_Mail_Sign" />
 
     <Button
-        android:id="@+id/btn_SignUP"
+        android:id="@+id/btn_Login"
         android:layout_width="0dp"
         android:layout_height="49dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
         android:onClick="btnLoginClick"
         android:text="@string/login"
         android:textColor="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_SignUp"
+        app:layout_constraintBottom_toTopOf="@+id/forgot_TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +99,7 @@
         android:id="@+id/btn_SignUp"
         android:layout_width="170dp"
         android:layout_height="34dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="8dp"
         android:alpha="0.9"
         android:background="@drawable/shape"
         android:onClick="btn_signUp"
@@ -108,8 +108,25 @@
         android:text="@string/create_new"
         android:textColor="#6200EE"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_SignUP" />
+        app:layout_constraintTop_toBottomOf="@+id/forgot_TextView" />
+
+    <TextView
+        android:id="@+id/forgot_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="forgot_Password"
+        android:text="@string/forgot"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/btn_SignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_Login" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
