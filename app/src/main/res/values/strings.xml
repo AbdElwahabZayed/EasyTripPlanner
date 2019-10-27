@@ -67,5 +67,6 @@
     <string name="delete_trip">Delete Trip</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="forgot">Forgot Your Password ?</string>
 
 </resources>
