@@ -105,7 +105,7 @@ public class DirectionFinder {
 
                 decoded.add(new LatLng(
                         lat / 100000d, lng / 100000d
-                ));
+                )); 
             }
         } catch (NullPointerException e) {
             e.printStackTrace();

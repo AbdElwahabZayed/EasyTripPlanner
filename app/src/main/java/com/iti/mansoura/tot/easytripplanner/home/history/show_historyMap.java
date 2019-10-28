@@ -76,7 +76,7 @@ public class show_historyMap extends AppCompatActivity implements DirectionFinde
     public void onDirectionFinderSuccess(List<com.iti.mansoura.tot.easytripplanner.home.history.map.Route> routes) {
         if (materialDialog != null && materialDialog.isShowing())
             materialDialog.dismiss();
-        //if (!routes.isEmpty() && polyline != null) polyline.remove();
+        if (!routes.isEmpty() && polyline != null) polyline.remove();
         try {
             for (Route route : routes) {
                 PolylineOptions polylineOptions = getDefaultPolyLines(route.points);

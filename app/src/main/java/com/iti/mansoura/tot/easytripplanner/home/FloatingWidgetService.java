@@ -29,9 +29,7 @@ import com.iti.mansoura.tot.easytripplanner.trip.steps.TripNotesStep;
 
 import java.util.Arrays;
 
-/**
- * Created by anupamchugh on 01/08/17.
- */
+
 
 public class FloatingWidgetService extends Service {
 
