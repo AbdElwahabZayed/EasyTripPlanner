@@ -9,11 +9,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
-import com.iti.mansoura.tot.easytripplanner.trip.add.AddTripContract;
 
 import java.util.UUID;
 
-public class EditTripPresenter implements AddTripContract.IAddTripPresenter {
+public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
 
     private FirebaseAuth mAuth;
     private EditTripActivity editTripActivity;
@@ -33,7 +32,12 @@ public class EditTripPresenter implements AddTripContract.IAddTripPresenter {
      * @param notes user trip notes
      */
     @Override
-    public void tripProcess(String[] data ,String [] source , String [] dest , String [] notes) {
+    public void upcomingTripProcess(String[] data ,String [] source , String [] dest , String [] notes,String tripUID,String firebaseUID) {
+        doSave(data, source, dest , notes, tripUID, firebaseUID);
+    }
+
+    @Override
+    public void historyTripProcess(String[] data, String[] source, String[] dest, String[] notes) {
         doSave(data, source, dest , notes);
     }
 
@@ -45,10 +49,11 @@ public class EditTripPresenter implements AddTripContract.IAddTripPresenter {
      * @param dest destinationLocationName , lat , long
      * @param notes user trip notes
      */
-    private void doSave(final String[] data, final String[] source, final String[] dest , final String [] notes) {
+    private void doSave(final String[] data, final String[] source, final String[] dest ,
+                        final String [] notes,String tripUID , String tripFireBaseUID)
+    {
 
         if(currentUser !=null) {
-            String tripUID = UUID.randomUUID().toString();
             Trip mTrip = new Trip();
             // one way
             mTrip.setTripUID(tripUID);
@@ -70,14 +75,59 @@ public class EditTripPresenter implements AddTripContract.IAddTripPresenter {
 
             mTrip.setStatus(0);
 
-            String tripFireBaseUID = UUID.randomUUID().toString();
             mTrip.setFirebaseUID(tripFireBaseUID);
+            TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
+            tripViewModel.setContext(editTripActivity.getApplicationContext());
+            // TODO will it update old trip ??????
+            tripViewModel.addTripWithReminder(mTrip);
+
+            if(data[3].equals("2")) {
+                //TODO update round
+                addRoundTrip(data,source, dest ,notes,tripUID);
+            }
+
+            editTripActivity.showMessage(editTripActivity.getResources().getString(R.string.trip_saved));
+            editTripActivity.onBackPressed();
+        }
+        else{
+            editTripActivity.showMessage(editTripActivity.getResources().getString(R.string.authintication_failed));
+        }
+    }
+
+    private void doSave(final String[] data, final String[] source, final String[] dest ,
+                        final String [] notes)
+    {
+
+        if(currentUser !=null) {
+            Trip mTrip = new Trip();
+            // one way
+            mTrip.setTripUID(UUID.randomUUID().toString());
+            mTrip.setUserUID(currentUser.getUid());
+            mTrip.setTripTitle(data[0]);
+            mTrip.setTripDate(data[1]);
+            mTrip.setTripTime(data[2]);
+            mTrip.setTripType(data[3]);
+
+            mTrip.setTripSource(source[0]);
+            mTrip.setSourceLat(Double.parseDouble(source[1]));
+            mTrip.setSourceLong(Double.parseDouble(source[2]));
+
+            mTrip.setTripDestination(dest[0]);
+            mTrip.setDestinationLat(Double.parseDouble(dest[1]));
+            mTrip.setDestinationLong(Double.parseDouble(dest[2]));
+
+            mTrip.setNotes(TextUtils.join(" , ", notes));
+
+            mTrip.setStatus(0);
+
+            mTrip.setFirebaseUID(UUID.randomUUID().toString());
             TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
             tripViewModel.setContext(editTripActivity.getApplicationContext());
             tripViewModel.addTripWithReminder(mTrip);
 
             if(data[3].equals("2")) {
-                addRoundTrip(data,source, dest ,notes,tripUID);
+                //TODO update round
+                addRoundTrip(data,source, dest ,notes,mTrip.getTripUID());
             }
 
             editTripActivity.showMessage(editTripActivity.getResources().getString(R.string.trip_saved));

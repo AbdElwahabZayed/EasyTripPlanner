@@ -16,6 +16,8 @@ public interface EditTripContract {
          * @param dest destinationLocationName , lat , long
          * @param notes user trip notes
          */
-        void tripProcess(String[] data, String[] source, String[] dest, String[] notes);
+        void upcomingTripProcess(String[] data, String[] source, String[] dest, String[] notes,String tripUID,String firebaseUID);
+
+        void historyTripProcess(String[] data, String[] source, String[] dest, String[] notes);
     }
 }

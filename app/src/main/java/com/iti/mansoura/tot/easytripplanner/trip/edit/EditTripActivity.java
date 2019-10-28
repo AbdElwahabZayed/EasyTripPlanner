@@ -147,7 +147,7 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
     @Override
     public void onCompletedForm() {
         String [] data = new String[4];
-        data[0] = tripTitleStep.getStepDataAsHumanReadableString();
+        data[0] = tripTitleStep.getStepData();
         data[1] = tripDateStep.getStepData();
         data[2] = tripTimeStep.getStepData();
         if(tripTypeStep.getStepData().equals(getResources().getString(R.string.radio_round)))
@@ -164,7 +164,10 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
         else
             notes = new String[]{""};
 
-        editTripPresenter.tripProcess(data, sourceData , destData , notes );
+        if(tripStatus == 0)
+            editTripPresenter.upcomingTripProcess(data, sourceData, destData, notes,mTrip.getTripUID(),mTrip.getFirebaseUID());
+        else
+            editTripPresenter.historyTripProcess(data, sourceData, destData, notes);
     }
 
     /**
