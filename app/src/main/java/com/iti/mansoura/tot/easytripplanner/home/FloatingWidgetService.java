@@ -20,14 +20,14 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.Nullable;
-
 import com.andremion.counterfab.CounterFab;
 import com.iti.mansoura.tot.easytripplanner.MainActivity;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripNotesStep;
 
 import java.util.Arrays;
+
+import androidx.annotation.Nullable;
 
 
 
@@ -184,7 +184,7 @@ public class FloatingWidgetService extends Service {
                                                                 break;
 
                                                             case DialogInterface.BUTTON_NEGATIVE:
-                                                                startActivity(new Intent(FloatingWidgetService.this, MainActivity.class));
+                                                                startActivity(new Intent(FloatingWidgetService.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                                                 break;
                                                         }
                                                     }
