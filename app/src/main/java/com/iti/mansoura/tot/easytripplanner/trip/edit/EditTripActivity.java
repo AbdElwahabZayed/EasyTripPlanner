@@ -129,7 +129,10 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
 
         if(mTrip != null) {
             tripTitleStep.restoreStepData(mTrip.getTripTitle());
-            tripTypeStep.restoreStepData(mTrip.getTripType());
+            if(mTrip.getTripType().equals("1"))
+                tripTypeStep.restoreStepData(getResources().getString(R.string.radio_one));
+            else
+                tripTypeStep.restoreStepData(getResources().getString(R.string.radio_round));
             tripSourceStep.restoreStepData(mTrip.getTripSource()+" , "+mTrip.getSourceLat() + " , "+mTrip.getSourceLong());
             tripDestinationStep.restoreStepData(mTrip.getTripDestination()+" , "+ mTrip.getDestinationLat() + " , "+mTrip.getDestinationLong());
             tripDateStep.restoreStepData(mTrip.getTripDate());
