@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripDateStep;
@@ -31,6 +32,7 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
     private TripDateStep tripDateStep;
     private TripNotesStep tripNotesStep;
     private VerticalStepperFormView verticalStepperFormView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,12 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
 
     @Override
     public void initComponent() {
+        toolbar = findViewById(R.id.toolbar);
+        verticalStepperFormView = findViewById(R.id.stepper_form);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         addTripPresenter = new AddTripPresenter(this);
 
         tripTitleStep = new TripTitleStep(getResources().getString(R.string.trip_title_hint));
@@ -56,7 +64,6 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
         tripDateStep = new TripDateStep(getResources().getString(R.string.date));
         tripTimeStep = new TripTimeStep(getResources().getString(R.string.time));
         tripNotesStep = new TripNotesStep(getResources().getString(R.string.trip_notes),getSupportFragmentManager());
-        verticalStepperFormView = findViewById(R.id.stepper_form);
         verticalStepperFormView
                 .setup(this,
                         tripTitleStep,

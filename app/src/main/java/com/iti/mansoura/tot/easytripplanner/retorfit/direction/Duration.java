@@ -1,10 +1,10 @@
 
-package com.iti.mansoura.tot.easytripplanner.retorfit;
+package com.iti.mansoura.tot.easytripplanner.retorfit.direction;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Distance {
+public class Duration {
 
     @SerializedName("text")
     @Expose

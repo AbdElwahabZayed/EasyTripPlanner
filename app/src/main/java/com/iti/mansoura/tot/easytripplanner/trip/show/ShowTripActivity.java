@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.NetworkType;
@@ -26,7 +27,7 @@ import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
 import com.iti.mansoura.tot.easytripplanner.home.FloatingWidgetService;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
-import com.iti.mansoura.tot.easytripplanner.trip.add.TripToDeleteWorker;
+import com.iti.mansoura.tot.easytripplanner.trip.workers.TripToDeleteWorker;
 import com.iti.mansoura.tot.easytripplanner.trip.edit.EditTripActivity;
 
 public class ShowTripActivity extends AppCompatActivity {
@@ -39,6 +40,7 @@ public class ShowTripActivity extends AppCompatActivity {
     private FloatingActionButton mMap, mEdit, mDelete;
     private Trip trip;
     private TripRepository tripRepository;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class ShowTripActivity extends AppCompatActivity {
     }
 
     private void initComponent() {
+        toolbar = findViewById(R.id.toolbar);
         status =findViewById(R.id.trip_status);
         start_point=findViewById(R.id.start_point);
         end_point=findViewById(R.id.end_point);
@@ -83,6 +86,9 @@ public class ShowTripActivity extends AppCompatActivity {
         mMap = findViewById(R.id.material_design_floating_action_menu_item1);
         mEdit = findViewById(R.id.material_design_floating_action_menu_item2);
         mDelete = findViewById(R.id.material_design_floating_action_menu_item3);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tripRepository = new TripRepository(this);
 

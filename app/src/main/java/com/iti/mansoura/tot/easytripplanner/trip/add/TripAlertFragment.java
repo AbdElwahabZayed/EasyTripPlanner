@@ -16,6 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,20 +40,9 @@ import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
 import com.iti.mansoura.tot.easytripplanner.home.FloatingWidgetService;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.retorfit.NetworkStatusAndType;
+import com.iti.mansoura.tot.easytripplanner.trip.workers.TripToHistoryWorker;
 
 import java.util.Random;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.work.Constraints;
-import androidx.work.Data;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 public class TripAlertFragment extends DialogFragment {
 
@@ -263,7 +264,7 @@ public class TripAlertFragment extends DialogFragment {
             e.printStackTrace();
         }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getActivity())) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(getActivity()) && mTrip != null) {
            getActivity().startService(new Intent(getActivity(), FloatingWidgetService.class).putExtra("activity_background", true).putExtra("notes",mTrip.getNotes()));
         }
     }
@@ -286,7 +287,10 @@ public class TripAlertFragment extends DialogFragment {
         Data data = new Data.Builder().putString("firebaseUID",mTrip.getFirebaseUID() ).build();
         WorkManager mWorkManager = WorkManager.getInstance(getActivity());
 
-        Constraints mConstraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
+        Constraints mConstraints = new Constraints.Builder()
+                .setRequiresDeviceIdle(false)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
 
         OneTimeWorkRequest mWorkRequest = new OneTimeWorkRequest
                 .Builder(TripToHistoryWorker.class)

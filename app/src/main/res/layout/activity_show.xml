@@ -1,225 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/login_gradiant">
 
-    <TableLayout
+    <include layout="@layout/toolbar"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:weightSum="8"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <TableRow
-            android:layout_weight="1"
-            android:gravity="center"
-            android:weightSum="4">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:weightSum="8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <TableRow
                 android:layout_weight="1"
-                android:fontFamily="casual"
                 android:gravity="center"
-                android:text="@string/start_point"
-                android:textSize="15sp" />
+                android:weightSum="4">
 
-            <TextView
-                android:id="@+id/start_point"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="3"
-                android:background="@drawable/border_edittext"
-                android:gravity="center" />
-        </TableRow>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="casual"
+                    android:gravity="center"
+                    android:text="@string/start_point"
+                    android:textSize="15sp" />
 
-        <TableRow
-            android:layout_weight="1"
-            android:gravity="center">
+                <TextView
+                    android:id="@+id/start_point"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/border_edittext"
+                    android:gravity="center" />
+            </TableRow>
 
-            <TextView
-
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <TableRow
                 android:layout_weight="1"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="@string/end_point"
-                android:textSize="15sp" />
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/end_point"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="3"
-                android:background="@drawable/border_edittext"
-                android:gravity="center" />
-        </TableRow>
+                <TextView
 
-        <TableRow
-            android:layout_weight="1"
-            android:gravity="center">
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="casual"
+                    android:gravity="center"
+                    android:text="@string/end_point"
+                    android:textSize="15sp" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/end_point"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/border_edittext"
+                    android:gravity="center" />
+            </TableRow>
+
+            <TableRow
                 android:layout_weight="1"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="@string/date"
-                android:textSize="15sp" />
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="3"
-                android:background="@drawable/border_edittext"
-                android:gravity="center" />
-        </TableRow>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="casual"
+                    android:gravity="center"
+                    android:text="@string/date"
+                    android:textSize="15sp" />
 
-        <TableRow
-            android:layout_weight="1"
-            android:gravity="center">
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/border_edittext"
+                    android:gravity="center" />
+            </TableRow>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <TableRow
                 android:layout_weight="1"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="@string/time"
-                android:textSize="15sp" />
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="3"
-                android:background="@drawable/border_edittext"
-                android:gravity="center" />
-        </TableRow>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="casual"
+                    android:gravity="center"
+                    android:text="@string/time"
+                    android:textSize="15sp" />
 
-        <TableRow
-            android:layout_weight="2"
-            android:gravity="center">
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/border_edittext"
+                    android:gravity="center" />
+            </TableRow>
 
-            <TextView
+            <TableRow
+                android:layout_weight="2"
+                android:gravity="center">
 
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="casual"
+                    android:gravity="center"
+                    android:text="@string/notes"
+                    android:textSize="15sp" />
+
+
+                <TextView
+                    android:id="@+id/notes"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/border_edittext"
+                    android:gravity="center" />
+            </TableRow>
+
+            <TableRow
                 android:layout_weight="1"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="@string/notes"
-                android:textSize="15sp" />
+                android:gravity="center">
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="casual"
+                    android:gravity="center"
+                    android:text="@string/trip_status"
+                    android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/notes"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="3"
-                android:background="@drawable/border_edittext"
-                android:gravity="center" />
-        </TableRow>
+                <TextView
+                    android:id="@+id/trip_status"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/border_edittext"
+                    android:gravity="center" />
+            </TableRow>
 
-        <TableRow
-            android:layout_weight="1"
-            android:gravity="center">
+        </TableLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:text="@string/trip_status"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/trip_status"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="3"
-                android:background="@drawable/border_edittext"
-                android:gravity="center" />
-        </TableRow>
-
-    </TableLayout>
-
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/material_design_android_floating_action_menu"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:padding="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        fab:menu_animationDelayPerItem="55"
-        fab:menu_backgroundColor="@android:color/transparent"
-        fab:menu_buttonSpacing="0dp"
-        fab:menu_colorNormal="#da3c2f"
-        fab:menu_colorPressed="#dc4b3f"
-        fab:menu_colorRipple="#99d4d4d4"
-        fab:menu_fab_label="Floating Action Menu"
-        fab:menu_fab_size="normal"
-        fab:menu_icon="@drawable/ic_gear"
-        fab:menu_labels_colorNormal="#333"
-        fab:menu_labels_colorPressed="#444"
-        fab:menu_labels_colorRipple="#66efecec"
-        fab:menu_labels_cornerRadius="3dp"
-        fab:menu_labels_ellipsize="none"
-        fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
-        fab:menu_labels_margin="0dp"
-        fab:menu_labels_maxLines="-1"
-        fab:menu_labels_padding="8dp"
-        fab:menu_labels_position="left"
-        fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
-        fab:menu_labels_showShadow="true"
-        fab:menu_labels_singleLine="false"
-        fab:menu_labels_textColor="#f2f1f1"
-        fab:menu_labels_textSize="15sp"
-        fab:menu_openDirection="up"
-        fab:menu_shadowColor="#66aff198"
-        fab:menu_shadowRadius="4dp"
-        fab:menu_shadowXOffset="1dp"
-        fab:menu_shadowYOffset="4dp"
-        fab:menu_showShadow="true">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/material_design_floating_action_menu_item1"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:baselineAlignBottom="false"
-            android:scrollbarSize="0dp"
-            android:src="@drawable/ic_map"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/material_design_floating_action_menu_item2"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/material_design_android_floating_action_menu"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:padding="5dp"
-            android:src="@drawable/ic_notes"
-            fab:fab_size="mini" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            fab:menu_animationDelayPerItem="55"
+            fab:menu_backgroundColor="@android:color/transparent"
+            fab:menu_buttonSpacing="0dp"
+            fab:menu_colorNormal="#da3c2f"
+            fab:menu_colorPressed="#dc4b3f"
+            fab:menu_colorRipple="#99d4d4d4"
+            fab:menu_fab_label="Floating Action Menu"
+            fab:menu_fab_size="normal"
+            fab:menu_icon="@drawable/ic_gear"
+            fab:menu_labels_colorNormal="#333"
+            fab:menu_labels_colorPressed="#444"
+            fab:menu_labels_colorRipple="#66efecec"
+            fab:menu_labels_cornerRadius="3dp"
+            fab:menu_labels_ellipsize="none"
+            fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+            fab:menu_labels_margin="0dp"
+            fab:menu_labels_maxLines="-1"
+            fab:menu_labels_padding="8dp"
+            fab:menu_labels_position="left"
+            fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+            fab:menu_labels_showShadow="true"
+            fab:menu_labels_singleLine="false"
+            fab:menu_labels_textColor="#f2f1f1"
+            fab:menu_labels_textSize="15sp"
+            fab:menu_openDirection="up"
+            fab:menu_shadowColor="#66aff198"
+            fab:menu_shadowRadius="4dp"
+            fab:menu_shadowXOffset="1dp"
+            fab:menu_shadowYOffset="4dp"
+            fab:menu_showShadow="true">
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/material_design_floating_action_menu_item3"
-            android:layout_width="5dp"
-            android:layout_height="5dp"
-            android:padding="3dp"
-            android:src="@drawable/ic_file"
-            fab:fab_size="mini" />
-    </com.github.clans.fab.FloatingActionMenu>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/material_design_floating_action_menu_item1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:baselineAlignBottom="false"
+                android:scrollbarSize="0dp"
+                android:src="@drawable/ic_map"
+                fab:fab_size="mini" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/material_design_floating_action_menu_item2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_notes"
+                fab:fab_size="mini" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/material_design_floating_action_menu_item3"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:padding="3dp"
+                android:src="@drawable/ic_file"
+                fab:fab_size="mini" />
+        </com.github.clans.fab.FloatingActionMenu>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

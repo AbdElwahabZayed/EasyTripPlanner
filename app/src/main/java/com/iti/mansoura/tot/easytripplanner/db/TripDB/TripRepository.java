@@ -6,6 +6,12 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,13 +21,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.db_user.UserDataBase;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
-import com.iti.mansoura.tot.easytripplanner.retorfit.Direction;
 import com.iti.mansoura.tot.easytripplanner.retorfit.DirectionInterface;
-import com.iti.mansoura.tot.easytripplanner.retorfit.Duration;
-import com.iti.mansoura.tot.easytripplanner.retorfit.Leg;
 import com.iti.mansoura.tot.easytripplanner.retorfit.RetrofitClient;
-import com.iti.mansoura.tot.easytripplanner.retorfit.Route;
-import com.iti.mansoura.tot.easytripplanner.trip.add.TripSchedulingWorker;
+import com.iti.mansoura.tot.easytripplanner.retorfit.direction.Direction;
+import com.iti.mansoura.tot.easytripplanner.retorfit.direction.Duration;
+import com.iti.mansoura.tot.easytripplanner.retorfit.direction.Leg;
+import com.iti.mansoura.tot.easytripplanner.retorfit.direction.Route;
+import com.iti.mansoura.tot.easytripplanner.trip.workers.TripSchedulingWorker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,6 +35,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -36,11 +43,6 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -154,7 +156,7 @@ public class TripRepository{
             // set alarm
             setTripReminder(trips[0].getTripTime(),trips[0].getTripDate(),trips[0].getTripUID(),trips[0].getUserUID());
             // calculate duration
-            getTripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
+            tripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
                     new String []{String.valueOf(trips[0].getDestinationLat()) , String.valueOf(trips[0].getDestinationLong())} , trips[0]);
             return null;
         }
@@ -385,9 +387,60 @@ public class TripRepository{
                 Instant end = sdf.parse(tripDate+" "+tripTime).toInstant();
                 java.time.Duration duration = java.time.Duration.between(start, end);
 
-//                Log.e("reminder start ", formatter.format( start ));
-//                Log.e("reminder end ", formatter.format( end ));
-//                Log.e("reminder duration ", ""+duration.getSeconds());
+                mWorkRequest = new OneTimeWorkRequest
+                        .Builder(TripSchedulingWorker.class)
+                        .setInputData(data)
+                        .setInitialDelay(duration)
+                        .build();
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm", Locale.getDefault());
+
+                long start = System.currentTimeMillis();
+                start = TimeUnit.MILLISECONDS.toSeconds(start);
+
+                Date mDate = sdf.parse(tripDate+" "+tripTime);
+                long end = mDate.getTime();
+                end = TimeUnit.MILLISECONDS.toSeconds(end);
+                long difference = end - start;
+
+                mWorkRequest = new OneTimeWorkRequest
+                        .Builder(TripSchedulingWorker.class)
+                        .setInputData(data)
+                        .setInitialDelay(difference, TimeUnit.SECONDS)
+                        .build();
+
+            }
+            catch (ParseException e) {
+                Log.e("SR ", e.getMessage());
+            }
+        }
+
+        mWorkManager.enqueue(mWorkRequest);
+    }
+
+    private void setRoundTrip(String tripTime, String tripDate, String tripUID , String userUID)
+    {
+        // passing trip UID to WorkRequest
+        Data data = new Data.Builder().putString("tripUID",tripUID ).putString("userUID",userUID ).build();
+        mWorkManager = WorkManager.getInstance(myContext);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            try {
+                DateTimeFormatter formatter =
+                        DateTimeFormatter.ofPattern("MM/dd/yy HH:mm")
+                                .withLocale( Locale.getDefault() )
+                                .withZone( ZoneId.systemDefault() );
+                String currentFormatted = formatter.format( Instant.now() );
+
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm",Locale.getDefault());
+                Instant start = sdf.parse(currentFormatted).toInstant();
+                Instant end = sdf.parse(tripDate+" "+tripTime).toInstant();
+                java.time.Duration duration = java.time.Duration.between(start, end);
 
                 mWorkRequest = new OneTimeWorkRequest
                         .Builder(TripSchedulingWorker.class)
@@ -411,9 +464,6 @@ public class TripRepository{
                 end = TimeUnit.MILLISECONDS.toSeconds(end);
                 long difference = end - start;
 
-//                Log.e("reminder start ", ""+start );
-//                Log.e("reminder end ", ""+end);
-
                 mWorkRequest = new OneTimeWorkRequest
                         .Builder(TripSchedulingWorker.class)
                         .setInputData(data)
@@ -435,7 +485,7 @@ public class TripRepository{
      * @param destination destination city , lat and long
      * @return the trip duration
      */
-    private void getTripDuration(String [] source , String [] destination , final Trip trip)
+    private void tripDuration(String [] source , String [] destination , final Trip trip)
     {
         final DirectionInterface directionService = RetrofitClient.getRetrofitClientInstance().getRetrofit().create(DirectionInterface.class);
 
@@ -456,24 +506,22 @@ public class TripRepository{
                         for (Leg leg: legs) {
                             Duration duration =leg.getDuration();
                             int durationValue = duration.getValue();
-                            Log.e("duration text" , ""+duration.getText());
                             //TODO add to history if one way && re-schadule time and date then add reminder if round
-                            SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yy HH:mm", Locale.getDefault());
-                            SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
                             try {
+                                SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yy HH:mm", Locale.getDefault());
                                 Date mDate = sdfDate.parse(trip.getTripDate()+" "+trip.getTripTime());
-                                Log.e("date " , mDate.toString());
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTime(mDate);
+                                calendar.add(Calendar.SECOND, durationValue);
+                                mDate = calendar.getTime();
 
-                                mDate = sdfTime.parse(trip.getTripTime());
-                                long tripTime = TimeUnit.MILLISECONDS.toSeconds(mDate.getTime());
-                                Log.e("duration " , ""+tripTime);
-                                tripTime += TimeUnit.MILLISECONDS.toSeconds(durationValue);
-                                Log.e("duration " , ""+tripTime);
+                                if(trip.getStatus() == 0){
 
-                                String date = sdfTime.format(new Date(tripTime));
-                                mDate = sdfDate.parse(trip.getTripDate()+" "+date);
-                                Log.e("date " , mDate.toString());
+                                }
+                                else
+                                {
 
+                                }
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -488,5 +536,64 @@ public class TripRepository{
                 Log.e("Failed " , call.request().body().toString());
             }
         });
+    }
+
+    private void setTripToHistory(Trip mTrip,Date mDate)
+    {
+        Data data = new Data.Builder().putString("firebaseUID",mTrip.getFirebaseUID() ).build();
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            try {
+                DateTimeFormatter formatter =
+                        DateTimeFormatter.ofPattern("MM/dd/yy HH:mm")
+                                .withLocale( Locale.getDefault() )
+                                .withZone( ZoneId.systemDefault() );
+                String currentFormatted = formatter.format( Instant.now() );
+
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm",Locale.getDefault());
+                Instant start = sdf.parse(currentFormatted).toInstant();
+                Instant end = sdf.parse(mDate.toString()).toInstant();
+                java.time.Duration duration = java.time.Duration.between(start, end);
+
+                mWorkRequest = new OneTimeWorkRequest
+                        .Builder(TripSchedulingWorker.class)
+                        .setInputData(data)
+                        .setInitialDelay(duration)
+                        .build();
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            long start = System.currentTimeMillis();
+            start = TimeUnit.MILLISECONDS.toSeconds(start);
+
+            long end = mDate.getTime();
+            end = TimeUnit.MILLISECONDS.toSeconds(end);
+            long difference = end - start;
+
+            mWorkRequest = new OneTimeWorkRequest
+                    .Builder(TripSchedulingWorker.class)
+                    .setInputData(data)
+                    .setInitialDelay(difference, TimeUnit.SECONDS)
+                    .build();
+        }
+
+//        WorkManager mWorkManager = WorkManager.getInstance(myContext);
+//
+//        Constraints mConstraints = new Constraints.Builder()
+//                .setRequiresDeviceIdle(false)
+//                .setRequiredNetworkType(NetworkType.CONNECTED)
+//                .build();
+//
+//        OneTimeWorkRequest mWorkRequest = new OneTimeWorkRequest
+//                .Builder(TripToHistoryWorker.class)
+//                .setInitialDelay()
+//                .setConstraints(mConstraints)
+//                .setInputData(data)
+//                .build();
+//
+//        mWorkManager.enqueue(mWorkRequest);
     }
 }

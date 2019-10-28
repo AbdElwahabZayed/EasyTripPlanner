@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -43,6 +44,7 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
     private int tripStatus; // using trip status
     private Trip mTrip;
     private TripRepository tripRepository;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,13 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
 
     @Override
     public void initComponent() {
+
+        toolbar = findViewById(R.id.toolbar);
+        verticalStepperFormView = findViewById(R.id.stepper_form);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         editTripPresenter = new EditTripPresenter(this);
 
         tripTitleStep = new TripTitleStep(getResources().getString(R.string.trip_title_hint));
@@ -104,7 +113,6 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
         tripDateStep = new TripDateStep(getResources().getString(R.string.date));
         tripTimeStep = new TripTimeStep(getResources().getString(R.string.time));
         tripNotesStep = new TripNotesStep(getResources().getString(R.string.trip_notes),getSupportFragmentManager());
-        verticalStepperFormView = findViewById(R.id.stepper_form);
 
         verticalStepperFormView
                 .setup(this,
