@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,12 +127,13 @@ public class NoteFragment extends DialogFragment {
             mRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // remove view using it's child
-                    mContainer.removeView((View) v.getParent());
                     // get index of the layout inside the container
                     // then update notes
                     int indexOfMyView = mContainer.indexOfChild(inflatedView);
-                    notes[indexOfMyView] = null;
+                    if(notes.length-1 >= indexOfMyView)
+                        notes[indexOfMyView] = null;
+                    // remove view using it's child
+                    mContainer.removeView((View) v.getParent());
                 }
             });
         }
@@ -175,12 +177,15 @@ public class NoteFragment extends DialogFragment {
                     mRemove.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // remove view using it's child
-                            mContainer.removeView((View) v.getParent());
                             // get index of the layout inside the container
                             // then update notes
                             int indexOfMyView = mContainer.indexOfChild(inflatedView);
-                            notes[indexOfMyView] = null;
+                            Log.e("index", ""+indexOfMyView);
+                            if(notes.length-1 >= indexOfMyView)
+                                notes[indexOfMyView] = null;
+
+                            // remove view using it's child
+                            mContainer.removeView((View) v.getParent());
                         }
                     });
                 }

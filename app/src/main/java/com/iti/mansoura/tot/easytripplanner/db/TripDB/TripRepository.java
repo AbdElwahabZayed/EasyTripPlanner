@@ -158,7 +158,7 @@ public class TripRepository {
             int duration = getTripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
                     new String []{String.valueOf(trips[0].getDestinationLat()) , String.valueOf(trips[0].getDestinationLong())});
             Log.e("duration" , ""+duration);
-            //TODO add to history if one way && re-schadule time and date if round
+            //TODO add to history if one way && re-schadule time and date then add reminder if round
             return null;
         }
     }
