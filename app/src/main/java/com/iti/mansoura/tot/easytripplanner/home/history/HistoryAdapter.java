@@ -80,6 +80,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
                 this.historytrips.add(t);
             }
         }
+        notifyDataSetChanged();
     }
 
     class MyHolder extends RecyclerView.ViewHolder {

@@ -60,7 +60,7 @@ public class HistoryFragment extends Fragment {
             public void onChanged(List<Trip> trips) {
                 System.out.println("getAllHistoryTrips(id).observe(getActivity(),");
                 adapter.setDataSource(trips);
-                //adapter.notifyDataSetChanged();
+
             }
         });
     }
@@ -95,7 +95,7 @@ public class HistoryFragment extends Fragment {
             }
         });*/
         //adapter.notifyDataSetChanged();
-        getHistoryTrips("ewrtyr");
+        getHistoryTrips(mAuth.getUid());
     }
 
     @Override

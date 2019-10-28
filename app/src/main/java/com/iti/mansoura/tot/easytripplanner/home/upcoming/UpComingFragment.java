@@ -96,8 +96,6 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
     }
 
     @Override
