@@ -3,6 +3,7 @@ package com.iti.mansoura.tot.easytripplanner.db.TripDB;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -22,10 +23,10 @@ import com.iti.mansoura.tot.easytripplanner.db_user.UserDataBase;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.retorfit.Direction;
 import com.iti.mansoura.tot.easytripplanner.retorfit.DirectionInterface;
+import com.iti.mansoura.tot.easytripplanner.retorfit.Duration;
 import com.iti.mansoura.tot.easytripplanner.retorfit.Leg;
 import com.iti.mansoura.tot.easytripplanner.retorfit.RetrofitClient;
 import com.iti.mansoura.tot.easytripplanner.retorfit.Route;
-import com.iti.mansoura.tot.easytripplanner.retorfit.Duration;
 import com.iti.mansoura.tot.easytripplanner.trip.add.TripSchedulingWorker;
 
 import java.text.ParseException;
@@ -45,7 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TripRepository {
+public class TripRepository{
 
     private LiveData<List<Trip>> mutableLiveDataHistoryTrips;
     private LiveData<List<Trip>> mutableLiveDataUpComingTrips;
@@ -56,7 +57,6 @@ public class TripRepository {
     //private List<Trip> tempList= new ArrayList<>();
     private WorkManager mWorkManager;
     private OneTimeWorkRequest mWorkRequest;
-    private int durationValue;
 
     //Fragment myFragment;
     Context myContext;
@@ -155,10 +155,8 @@ public class TripRepository {
             // set alarm
             setTripReminder(trips[0].getTripTime(),trips[0].getTripDate(),trips[0].getTripUID(),trips[0].getUserUID());
             // calculate duration
-            int duration = getTripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
-                    new String []{String.valueOf(trips[0].getDestinationLat()) , String.valueOf(trips[0].getDestinationLong())});
-            Log.e("duration" , ""+duration);
-            //TODO add to history if one way && re-schadule time and date then add reminder if round
+            getTripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
+                    new String []{String.valueOf(trips[0].getDestinationLat()) , String.valueOf(trips[0].getDestinationLong())} , trips[0]);
             return null;
         }
     }
@@ -436,26 +434,48 @@ public class TripRepository {
      * @param destination destination city , lat and long
      * @return the trip duration
      */
-    private int getTripDuration(String [] source , String [] destination)
+    private void getTripDuration(String [] source , String [] destination , final Trip trip)
     {
-        DirectionInterface directionService = RetrofitClient.getRetrofitClientInstance()
-                .getRetrofit().create(DirectionInterface.class);
+        final DirectionInterface directionService = RetrofitClient.getRetrofitClientInstance().getRetrofit().create(DirectionInterface.class);
 
         Call<Direction> fetchUsers = directionService.
-                getDirection("origin="+source[0]+","+source[1]+"&destination="+destination[0]+","+destination[1]+"&mode=driving&key="+myContext.getResources().getString(R.string.google_api_key));
+                getDirection(TextUtils.join(",",source), TextUtils.join(",",destination),"driving",myContext.getResources().getString(R.string.google_api_key));
 
         fetchUsers.enqueue(new Callback<Direction>() {
             @Override
             public void onResponse(Call<Direction> call, Response<Direction> response) {
                 Direction direction = response.body();
+
+                Log.e("code " , ""+response.body().getStatus());
                 if(direction != null)
                 {
                     List<Route> routes = direction.getRoutes();
                     for (Route route: routes) {
                         List<Leg> legs = route.getLegs();
                         for (Leg leg: legs) {
-                             Duration duration =leg.getDuration();
-                             durationValue += duration.getValue();
+                            Duration duration =leg.getDuration();
+                            int durationValue = duration.getValue();
+                            Log.e("duration text" , ""+duration.getText());
+                            //TODO add to history if one way && re-schadule time and date then add reminder if round
+                            SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yy HH:mm", Locale.getDefault());
+                            SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                            try {
+                                Date mDate = sdfDate.parse(trip.getTripDate()+" "+trip.getTripTime());
+                                Log.e("date " , mDate.toString());
+
+                                mDate = sdfTime.parse(trip.getTripTime());
+                                long tripTime = TimeUnit.MILLISECONDS.toSeconds(mDate.getTime());
+                                Log.e("duration " , ""+tripTime);
+                                tripTime += TimeUnit.MILLISECONDS.toSeconds(durationValue);
+                                Log.e("duration " , ""+tripTime);
+
+                                String date = sdfTime.format(new Date(tripTime));
+                                mDate = sdfDate.parse(trip.getTripDate()+" "+date);
+                                Log.e("date " , mDate.toString());
+
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -464,10 +484,8 @@ public class TripRepository {
             @Override
             public void onFailure(Call<Direction> call, Throwable t) {
                 Log.e("Failed " , t.getMessage());
+                Log.e("Failed " , call.request().body().toString());
             }
         });
-        return durationValue;
     }
-
-
 }

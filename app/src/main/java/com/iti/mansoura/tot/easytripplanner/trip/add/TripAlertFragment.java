@@ -16,6 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,18 +42,6 @@ import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.retorfit.NetworkStatusAndType;
 
 import java.util.Random;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.work.Constraints;
-import androidx.work.Data;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 public class TripAlertFragment extends DialogFragment {
 
@@ -156,10 +156,12 @@ public class TripAlertFragment extends DialogFragment {
         tripRepository = new TripRepository(getContext());
 
         if (new NetworkStatusAndType(getActivity()).NetworkStatus() == 2) {
+
             mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
             if (mTrip != null){
                 mTripTitle.setText(mTrip.getTripTitle());
             }
+
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

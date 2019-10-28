@@ -5,10 +5,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient
 {
-    public static final String BASE_URL = "https://maps.googleapis.com/";
-
+    private static final String BASE_URL = "https://maps.googleapis.com/";
     private static RetrofitClient retrofitClient;
-    private static Retrofit retrofitInstance;
+    private Retrofit retrofitInstance;
 
     private RetrofitClient()
     {
@@ -22,7 +21,7 @@ public class RetrofitClient
         return retrofitClient;
     }
 
-    public static Retrofit getRetrofit()
+    public Retrofit getRetrofit()
     {
         if(retrofitInstance == null)
         {
