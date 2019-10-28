@@ -12,14 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.home.FloatingWidgetService;
@@ -30,6 +22,14 @@ import com.iti.mansoura.tot.easytripplanner.trip.show.ShowTripActivity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,7 +87,6 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
         tripViewModel.getAllUpComingTrips(mAuth.getCurrentUser().getUid()).observe(this, new Observer<List<Trip>>() {
             @Override
             public void onChanged(List<Trip> trips) {
-                System.out.println("getAllUpComingTrips(id).observe(getActivity(),");
                 Collections.reverse(trips);
                 recyclerViewAdapter.setDataSource((ArrayList<Trip>) trips);
             }

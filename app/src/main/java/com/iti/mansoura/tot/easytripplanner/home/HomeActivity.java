@@ -3,7 +3,6 @@ package com.iti.mansoura.tot.easytripplanner.home;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -27,6 +26,7 @@ import com.iti.mansoura.tot.easytripplanner.home.history.show_historyMap;
 import com.iti.mansoura.tot.easytripplanner.home.upcoming.UpComingFragment;
 import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
 import com.iti.mansoura.tot.easytripplanner.login.Login;
+import com.iti.mansoura.tot.easytripplanner.models.User;
 import com.iti.mansoura.tot.easytripplanner.trip.add.AddTripActivity;
 
 import androidx.annotation.NonNull;
@@ -36,6 +36,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -135,7 +136,15 @@ public class HomeActivity extends AppCompatActivity  {
         myHomePagerAdapter.setFragments(fragments);
         myHomePagerAdapter.notifyDataSetChanged();
         textViewImg=navigationView.getHeaderView(0).findViewById(R.id.txtViewImag);
-        new SetText().execute();
+        tripViewModel.getUserLiveData(mAuth.getUid()).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if(user!=null) {
+                    textViewImg.setText(user.getUserName().substring(0, 2).toUpperCase());
+                    textViewEmail.setText(user.getEmail());
+                }
+            }
+        });
         textViewEmail=navigationView.getHeaderView(0).findViewById(R.id.textViewEmail);
         setSupportActionBar(toolbar);
         setMenu();
@@ -209,26 +218,4 @@ public class HomeActivity extends AppCompatActivity  {
         }*/
     }
 
-    private class SetText extends AsyncTask<Void,Void,String[]> {
-        @Override
-        protected String[] doInBackground(Void... voids) {
-            String[] s=new String[]{"",""};
-            if(tripViewModel.getUser(mAuth.getUid())!=null) {
-                s[0] = tripViewModel.getUser(mAuth.getUid()).getUserName().substring(0,2).toUpperCase();
-                s[1] = tripViewModel.getUser(mAuth.getUid()).getEmail();
-            }else{
-                s[0]="";
-                s[1]="";
-            }
-
-            return s;
-        }
-
-        @Override
-        protected void onPostExecute(String[] strings) {
-            super.onPostExecute(strings);
-            textViewImg.setText(strings[0]);
-            textViewEmail.setText(strings[1]);
-        }
-    }
 }

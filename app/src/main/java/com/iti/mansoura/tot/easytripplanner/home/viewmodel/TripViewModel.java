@@ -2,15 +2,15 @@ package com.iti.mansoura.tot.easytripplanner.home.viewmodel;
 
 import android.content.Context;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
-
 import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
 import com.iti.mansoura.tot.easytripplanner.db_user.UserRepo;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.models.User;
 
 import java.util.List;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 public class TripViewModel extends ViewModel {
     TripRepository tripRepository;
@@ -51,6 +51,9 @@ public class TripViewModel extends ViewModel {
     }
     public User getUser(String uid){
         return userRepo.getUser(uid);
+    }
+    public LiveData<User> getUserLiveData(String uid){
+        return userRepo.getUserLiveData(uid);
     }
 
 }

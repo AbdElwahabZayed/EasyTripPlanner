@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.iti.mansoura.tot.easytripplanner.models.User;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 public class UserRepo {
     private UserDataBase userDataBase;
@@ -28,7 +29,9 @@ public class UserRepo {
     public void addUser(User user){
         new AddUser().execute(user);
     }
-
+    public LiveData<User> getUserLiveData(String uid){
+        return userDao.getUserLiveData(uid);
+    }
     private class AddUser extends AsyncTask<User,Void,Void> {
         @Override
         protected Void doInBackground(final User... users) {
@@ -53,7 +56,8 @@ public class UserRepo {
 
     public User getUser(String uid){
         user=userDao.getUser(uid);
-        if(user==null){
+        //System.out.println("user.getEmail()"+user.getEmail());
+        if(user==null || user.getEmail().isEmpty() || user.getUserName().isEmpty()){
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             reference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -61,8 +65,18 @@ public class UserRepo {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren())
                     {
                         final User user1 = childDataSnapshot.getValue(User.class);
-                        if (user1.getUuid()==mAuth.getUid()){
+                        //System.out.println("UserName : "+user1.getUserName());
+                        System.out.println(user1.getUuid()+"    <---->   "+mAuth.getUid());
+                        if (user1.getUuid().equals(mAuth.getUid())){
+                            System.out.println("hgjhkl;l;lgkj   "+user1.getUserName());
                             user=user1;
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    deleteUser(user1);
+                                    addUser(user1);
+                                }
+                            }).start();
                         }
                     }
 
@@ -74,6 +88,19 @@ public class UserRepo {
                 }
             });
         }
+
         return user;
+    }
+    void deleteUser(User u){
+        new DeleteUser().execute(u);
+
+    }
+
+    private class DeleteUser extends AsyncTask<User,Void,Void>{
+        @Override
+        protected Void doInBackground(User... users) {
+            userDao.deletUser(users[0]);
+            return null;
+        }
     }
 }

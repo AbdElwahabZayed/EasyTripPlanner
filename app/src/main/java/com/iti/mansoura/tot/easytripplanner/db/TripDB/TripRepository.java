@@ -65,7 +65,7 @@ public class TripRepository{
         UserDataBase.dbcontext=context;
         tripDataBase=TripDataBase.getDataBaseInstance();
         tripDao= tripDataBase.getDaoInstance();
-
+        mAuth = FirebaseAuth.getInstance();
     }
 
     public LiveData<List<Trip>> getAllUpComingTrips(String id){
@@ -79,7 +79,7 @@ public class TripRepository{
 
     private List<Trip> getUpComingFromFireBase(final String id) {
 
-        mAuth = FirebaseAuth.getInstance();
+
         if(mAuth.getCurrentUser() != null) {
         }
         return dataSet;
@@ -249,6 +249,7 @@ public class TripRepository{
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren())
                     {
                         final Trip mTrip = childDataSnapshot.getValue(Trip.class);
+                        if(mTrip!=null)
                         if(mTrip.getUserUID().equals(mAuth.getUid())) {
                             new Thread(new Runnable() {
                                 @Override
