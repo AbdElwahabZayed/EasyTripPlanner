@@ -17,13 +17,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.db_user.UserDataBase;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
+import com.iti.mansoura.tot.easytripplanner.retorfit.Direction;
+import com.iti.mansoura.tot.easytripplanner.retorfit.DirectionInterface;
+import com.iti.mansoura.tot.easytripplanner.retorfit.Leg;
+import com.iti.mansoura.tot.easytripplanner.retorfit.RetrofitClient;
+import com.iti.mansoura.tot.easytripplanner.retorfit.Route;
+import com.iti.mansoura.tot.easytripplanner.retorfit.Duration;
 import com.iti.mansoura.tot.easytripplanner.trip.add.TripSchedulingWorker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +40,10 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TripRepository {
 
@@ -46,6 +56,7 @@ public class TripRepository {
     //private List<Trip> tempList= new ArrayList<>();
     private WorkManager mWorkManager;
     private OneTimeWorkRequest mWorkRequest;
+    private int durationValue;
 
     //Fragment myFragment;
     Context myContext;
@@ -140,14 +151,13 @@ public class TripRepository {
     private class AddTripWithReminder extends AsyncTask<Trip,Void,Void> {
         @Override
         protected Void doInBackground(Trip... trips) {
-            System.out.println("");
             tripDao.addTrip(trips[0]);
             // set alarm
             setTripReminder(trips[0].getTripTime(),trips[0].getTripDate(),trips[0].getTripUID(),trips[0].getUserUID());
             // calculate duration
-            String duration = getTripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
+            int duration = getTripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
                     new String []{String.valueOf(trips[0].getDestinationLat()) , String.valueOf(trips[0].getDestinationLong())});
-            Log.e("duration" , duration);
+            Log.e("duration" , ""+duration);
             return null;
         }
     }
@@ -373,7 +383,7 @@ public class TripRepository {
                 SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm",Locale.getDefault());
                 Instant start = sdf.parse(currentFormatted).toInstant();
                 Instant end = sdf.parse(tripDate+" "+tripTime).toInstant();
-                Duration duration = Duration.between(start, end);
+                java.time.Duration duration = java.time.Duration.between(start, end);
 
 //                Log.e("reminder start ", formatter.format( start ));
 //                Log.e("reminder end ", formatter.format( end ));
@@ -425,11 +435,37 @@ public class TripRepository {
      * @param destination destination city , lat and long
      * @return the trip duration
      */
-    private String getTripDuration(String [] source , String [] destination)
+    private int getTripDuration(String [] source , String [] destination)
     {
-        String duration = "";
-        //TODO request it from google using retrofit
-        return duration;
+        DirectionInterface directionService = RetrofitClient.getRetrofitClientInstance()
+                .getRetrofit().create(DirectionInterface.class);
+
+        Call<Direction> fetchUsers = directionService.
+                getDirection("origin="+source[0]+","+source[1]+"&destination="+destination[0]+","+destination[1]+"&mode=driving&key="+myContext.getResources().getString(R.string.google_api_key));
+
+        fetchUsers.enqueue(new Callback<Direction>() {
+            @Override
+            public void onResponse(Call<Direction> call, Response<Direction> response) {
+                Direction direction = response.body();
+                if(direction != null)
+                {
+                    List<Route> routes = direction.getRoutes();
+                    for (Route route: routes) {
+                        List<Leg> legs = route.getLegs();
+                        for (Leg leg: legs) {
+                             Duration duration =leg.getDuration();
+                             durationValue += duration.getValue();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Direction> call, Throwable t) {
+                Log.e("Failed " , t.getMessage());
+            }
+        });
+        return durationValue;
     }
 
 
