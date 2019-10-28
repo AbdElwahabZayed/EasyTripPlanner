@@ -6,12 +6,6 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +36,11 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -250,14 +249,15 @@ public class TripRepository{
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren())
                     {
                         final Trip mTrip = childDataSnapshot.getValue(Trip.class);
-                        System.out.println("Trip "+mTrip.getTripTitle());
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                deleteTrip(mTrip);
-                                addTrip(mTrip);
-                            }
-                        }).start();
+                        if(mTrip.getUserUID().equals(mAuth.getUid())) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    deleteTrip(mTrip);
+                                    addTrip(mTrip);
+                                }
+                            }).start();
+                        }
                     }
 
                 }
