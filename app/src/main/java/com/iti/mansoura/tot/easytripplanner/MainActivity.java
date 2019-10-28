@@ -9,7 +9,6 @@ import android.provider.Settings;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 import com.iti.mansoura.tot.easytripplanner.db_user.UserDataBase;
 import com.iti.mansoura.tot.easytripplanner.home.HomeActivity;
 import com.iti.mansoura.tot.easytripplanner.login.Login;
@@ -18,16 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
-    static boolean calledAlready = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UserDataBase.dbcontext=getApplicationContext();
-        if (!calledAlready)
-        {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            calledAlready = true;
-        }
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_main);
         //to grant the permission.
