@@ -103,7 +103,7 @@ public class FloatingWidgetService extends Service {
                     display.getSize(size);
 
                     counterFab = mOverlayView.findViewById(R.id.fabHead);
-                    if(intent.getExtras() != null)
+                    if(intent!=null && intent.getExtras() != null)
                         counterFab.setCount(intent.getIntExtra("notesCount",1));
                     final RelativeLayout layout = mOverlayView.findViewById(R.id.layout);
                     ViewTreeObserver vto = layout.getViewTreeObserver();

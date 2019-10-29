@@ -11,13 +11,14 @@
 
 
     <com.andremion.counterfab.CounterFab
-        android:id="@+id/fabHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/travel"
-        android:scaleType="center"
-        app:maxImageSize="56dp"
-        app:fabSize="normal" />
+         android:id="@+id/fabHead"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:scaleType="center"
+         android:src="@drawable/logo"
+         app:backgroundTint="@color/colorPrimary"
+         app:fabSize="normal"
+         app:maxImageSize="56dp" />
 
 
 </RelativeLayout>

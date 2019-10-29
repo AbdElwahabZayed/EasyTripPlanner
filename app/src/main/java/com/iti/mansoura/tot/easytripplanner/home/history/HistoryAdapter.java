@@ -93,7 +93,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
     }
 
     public void setDataSource(List<Trip> historytrips) {
-        this.historytrips.clear();
+        //this.historytrips.clear();
         for(Trip t:historytrips) {
             if(t.getStatus()==2 && !this.historytrips.contains(t)) {
                 System.out.println(""+t.getStatus());

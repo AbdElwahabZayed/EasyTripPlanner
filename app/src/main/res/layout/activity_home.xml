@@ -55,7 +55,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/addnewtrip"
-                app:backgroundTint="@color/tab1"
+                app:backgroundTint="@color/colorPrimary"
                 android:elevation="25dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +71,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/header_layout"
-        app:menu="@menu/drawer_menu">
+        app:menu="@menu/drawer_menu"
+         android:background="@drawable/backgroundmenu">
 
     </com.google.android.material.navigation.NavigationView>
 

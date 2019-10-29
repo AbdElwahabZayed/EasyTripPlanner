@@ -1,5 +1,6 @@
 package com.iti.mansoura.tot.easytripplanner.home.history;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -59,6 +60,9 @@ public class show_historyMap extends AppCompatActivity implements DirectionFinde
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+        toolbar.setTitleTextColor(Color.WHITE);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         assert mapFragment != null;
         mapFragment.getMapAsync(new OnMapReadyCallback() {
