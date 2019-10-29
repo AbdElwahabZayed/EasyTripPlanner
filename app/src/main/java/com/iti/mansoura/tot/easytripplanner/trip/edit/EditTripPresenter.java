@@ -84,12 +84,11 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
             mTrip.setFirebaseUID(tripFireBaseUID);
             TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
             tripViewModel.setContext(editTripActivity.getApplicationContext());
-            // TODO will it update old trip ??????
-            tripViewModel.addTripWithReminder(mTrip);
+            tripViewModel.updateTripWithReminder(mTrip);
 
             if(data[3].equals("2")) {
-                //TODO update round
-                addRoundTrip(data,source, dest ,notes,tripUID);
+                //TODO query trip firebase UID
+                updateRoundTrip(data,source, dest ,notes,tripUID);
             }
 
             editTripActivity.showMessage(editTripActivity.getResources().getString(R.string.trip_saved));
@@ -132,7 +131,6 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
             tripViewModel.addTripWithReminder(mTrip);
 
             if(data[3].equals("2")) {
-                //TODO update round
                 addRoundTrip(data,source, dest ,notes,mTrip.getTripUID());
             }
 
@@ -142,6 +140,38 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
         else{
             editTripActivity.showMessage(editTripActivity.getResources().getString(R.string.authintication_failed));
         }
+    }
+
+    private void updateRoundTrip(String[] data, String[] source, String[] dest , String [] notes , String tripUID)
+    {
+        // round
+        Trip mTrip = new Trip();
+        mTrip.setTripUID(tripUID);
+        mTrip.setUserUID(currentUser.getUid());
+        mTrip.setTripTitle(data[0]);
+        mTrip.setTripTime(data[2]);
+        mTrip.setTripType(data[3]);
+
+        mTrip.setTripSource(dest[0]);
+        mTrip.setSourceLat(Double.parseDouble(dest[1]));
+        mTrip.setSourceLong(Double.parseDouble(dest[2]));
+
+        mTrip.setTripDestination(source[0]);
+        mTrip.setDestinationLat(Double.parseDouble(source[1]));
+        mTrip.setDestinationLong(Double.parseDouble(source[2]));
+
+        mTrip.setNotes(TextUtils.join(" , ", notes));
+
+        mTrip.setStatus(0);
+
+        //TODO assign the quiried firebase UID
+        mTrip.setFirebaseUID("");
+        TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
+        tripViewModel.setContext(editTripActivity.getApplicationContext());
+        tripViewModel.updateRoundTrip(mTrip);
+
+        editTripActivity.showMessage(editTripActivity.getResources().getString(R.string.trip_saved));
+        editTripActivity.onBackPressed();
     }
 
     private void addRoundTrip(String[] data, String[] source, String[] dest , String [] notes , String tripUID)
@@ -170,7 +200,7 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
         mTrip.setFirebaseUID(tripFireBaseUID);
         TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
         tripViewModel.setContext(editTripActivity.getApplicationContext());
-        tripViewModel.addTripWithReminder(mTrip);
+        tripViewModel.addRoundTrip(mTrip);
 
         editTripActivity.showMessage(editTripActivity.getResources().getString(R.string.trip_saved));
         editTripActivity.onBackPressed();
