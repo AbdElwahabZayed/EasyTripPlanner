@@ -2,6 +2,7 @@ package com.iti.mansoura.tot.easytripplanner.home.history;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
+import com.iti.mansoura.tot.easytripplanner.trip.show.ShowTripActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,13 +57,21 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-        Trip trip=historytrips.get(position);
+        final Trip trip=historytrips.get(position);
         if (trip.getStatus()==2 && holder.tripName!=null) {
             holder.tripName.setText(trip.getTripTitle().toUpperCase());
             holder.tripDate.setText(trip.getTripDate());
             holder.tripStatus.setText(trip.getTripType());
             holder.tripSource.setText(trip.getTripSource());
             holder.tripDes.setText(trip.getTripDestination());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent showActivity = new Intent(context.getApplicationContext(), ShowTripActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    showActivity.putExtra("trip",trip);
+                    context.getApplicationContext().startActivity(showActivity);
+                }
+            });
         }
     }
 
@@ -96,12 +106,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
             tripSource=itemView.findViewById(R.id.textView_Source);
             tripStatus=itemView.findViewById(R.id.textView_ٍStatus);
             collapse=itemView.findViewById(R.id.collapsePart);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                }
-            });
 
 
         }

@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +22,8 @@ import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTimeStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTitleStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTypeStep;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
 import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 
@@ -157,7 +156,7 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
      */
     @Override
     public void onCompletedForm() {
-        String [] data = new String[4];
+        String [] data = new String[5];
         data[0] = tripTitleStep.getStepData();
         data[1] = tripDateStep.getStepData();
         data[2] = tripTimeStep.getStepData();
@@ -166,6 +165,7 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
         else
             data[3] = "1";
 
+        data[4]=mTrip.getTripUID();
         String [] sourceData = tripSourceStep.getStepData().split(" , ");
         String [] destData = tripDestinationStep.getStepData().split(" , ");
 
@@ -177,8 +177,10 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
 
         if(tripStatus == 0)
             editTripPresenter.upcomingTripProcess(data, sourceData, destData, notes,mTrip.getTripUID(),mTrip.getFirebaseUID());
-        else
+        else {
+
             editTripPresenter.historyTripProcess(data, sourceData, destData, notes);
+        }
     }
 
     /**

@@ -2,8 +2,6 @@ package com.iti.mansoura.tot.easytripplanner.trip.edit;
 
 import android.text.TextUtils;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.iti.mansoura.tot.easytripplanner.R;
@@ -11,6 +9,8 @@ import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
 import java.util.UUID;
+
+import androidx.lifecycle.ViewModelProviders;
 
 public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
 
@@ -38,6 +38,12 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
 
     @Override
     public void historyTripProcess(String[] data, String[] source, String[] dest, String[] notes) {
+        TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
+        tripViewModel.setContext(editTripActivity.getApplicationContext());
+        Trip trip=new Trip();
+        trip.setTripUID(data[4]);
+        trip.setStatus(3);
+        tripViewModel.updateTrip(trip);
         doSave(data, source, dest , notes);
     }
 

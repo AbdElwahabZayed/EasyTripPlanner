@@ -13,6 +13,23 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
+import com.iti.mansoura.tot.easytripplanner.home.FloatingWidgetService;
+import com.iti.mansoura.tot.easytripplanner.models.Trip;
+import com.iti.mansoura.tot.easytripplanner.trip.edit.EditTripActivity;
+import com.iti.mansoura.tot.easytripplanner.trip.workers.TripToDeleteWorker;
+
+import java.util.UUID;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.work.Constraints;
@@ -20,15 +37,6 @@ import androidx.work.Data;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-import com.iti.mansoura.tot.easytripplanner.R;
-import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
-import com.iti.mansoura.tot.easytripplanner.home.FloatingWidgetService;
-import com.iti.mansoura.tot.easytripplanner.models.Trip;
-import com.iti.mansoura.tot.easytripplanner.trip.workers.TripToDeleteWorker;
-import com.iti.mansoura.tot.easytripplanner.trip.edit.EditTripActivity;
 
 public class ShowTripActivity extends AppCompatActivity {
 
@@ -105,6 +113,7 @@ public class ShowTripActivity extends AppCompatActivity {
                         .putExtra("tripStatus", trip.getStatus())
                         .putExtra("tripUID", trip.getTripUID())
                         .putExtra("firebaseUID", trip.getFirebaseUID()));
+
             }
         });
 
@@ -115,7 +124,11 @@ public class ShowTripActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch(which){
                             case DialogInterface.BUTTON_POSITIVE:
-                                setTripToDeleted(trip.getTripUID(),trip.getUserUID());
+                                if(trip.getStatus()==0) {
+                                    setTripToDeleted(trip.getTripUID(), trip.getUserUID());
+                                }else{
+                                    deleteHistoryTrip(trip);
+                                }
                                 onBackPressed();
                                 break;
 
@@ -142,6 +155,34 @@ public class ShowTripActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void deleteHistoryTrip(final Trip trip) {
+        if(trip != null) {
+            trip.setStatus(3);
+            tripRepository.updateTrip(trip);
+        }
+        else {
+            Log.e("delete trip fab", "null");
+        }
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        if(trip!=null) {
+            if(trip.getFirebaseUID().isEmpty() || trip.getFirebaseUID()==null){
+                String tripFireBaseUID = UUID.randomUUID().toString();
+                trip.setFirebaseUID(tripFireBaseUID);
+            }
+            reference.child("Trips").child(trip.getFirebaseUID()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    reference.child("Trips").child(trip.getFirebaseUID()).setValue(trip);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("delete trip fab", "onCancelled");
+                }
+            });
+        }
     }
 
     private void showMap(String notes)
@@ -181,6 +222,7 @@ public class ShowTripActivity extends AppCompatActivity {
 
     private void setTripToDeleted(String tripUID , String userUID)
     {
+
         // update local
         Trip mTrip = tripRepository.getUpComingTrip(userUID, tripUID);
         if(mTrip != null) {
