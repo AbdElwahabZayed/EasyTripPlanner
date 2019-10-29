@@ -9,16 +9,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.home.history.map.DirectionFinder;
 import com.iti.mansoura.tot.easytripplanner.home.history.map.DirectionFinderListener;
 import com.iti.mansoura.tot.easytripplanner.home.history.map.Route;
+import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
+import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import static com.iti.mansoura.tot.easytripplanner.home.history.map.GoogleMapHelper.buildCameraUpdate;
 import static com.iti.mansoura.tot.easytripplanner.home.history.map.GoogleMapHelper.defaultMapSettings;
@@ -42,10 +48,14 @@ public class show_historyMap extends AppCompatActivity implements DirectionFinde
     private Polyline polyline;
     private MaterialDialog materialDialog;
     private Toolbar toolbar;
+    private TripViewModel tripViewModel;
+    private FirebaseAuth mAuth;
+    private LiveData<Trip> history;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_history_map);
+        mAuth =FirebaseAuth.getInstance();
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,8 +68,29 @@ public class show_historyMap extends AppCompatActivity implements DirectionFinde
                 show_historyMap.this.googleMap1 = googleMap;
             }
         });
-        fetchDirections("31.040949,31.378469", "30.044420,31.235712");
-        fetchDirections("31.040949,31.378469", "31.200092,29.918739");
+        boolean fromFab=getIntent().getBooleanExtra("FromFAB",false);
+        tripViewModel= ViewModelProviders.of(this).get(TripViewModel.class);
+        tripViewModel.setContext(this);
+        if(fromFab) {
+            tripViewModel.getAllHistoryTrips(mAuth.getUid()).observe(this, new Observer<List<Trip>>() {
+                @Override
+                public void onChanged(List<Trip> trips) {
+                    for (Trip t : trips) {
+                        if (trips != null)
+                            System.out.println("wwwwwwwwwww" + trips.size());
+                        String o = "";
+                        o = o + "" + t.getSourceLat() + "," + t.getSourceLong();
+                        String d = "";
+                        d = d + "" + t.getDestinationLat() + "," + t.getDestinationLong();
+                        System.out.println(o + "," + d);
+                        if (!o.isEmpty() && !d.isEmpty())
+                            fetchDirections(o, d);
+                    }
+                }
+            });
+        }
+        //fetchDirections("31.040949,31.378469", "30.044420,31.235712");
+        //fetchDirections("31.040949,31.378469", "31.200092,29.918739");
     }
     private void fetchDirections(String origin, String destination) {
         try {
@@ -81,7 +112,7 @@ public class show_historyMap extends AppCompatActivity implements DirectionFinde
     public void onDirectionFinderSuccess(List<com.iti.mansoura.tot.easytripplanner.home.history.map.Route> routes) {
         if (materialDialog != null && materialDialog.isShowing())
             materialDialog.dismiss();
-        if (!routes.isEmpty() && polyline != null) polyline.remove();
+        //if (!routes.isEmpty() && polyline != null) polyline.remove();
         try {
             for (Route route : routes) {
                 PolylineOptions polylineOptions = getDefaultPolyLines(route.points);
@@ -94,7 +125,7 @@ public class show_historyMap extends AppCompatActivity implements DirectionFinde
         }
         if(routes.size()>0) {
             googleMap1.setMinZoomPreference(6.0f);
-            googleMap1.setMaxZoomPreference(10.0f);
+            googleMap1.setMaxZoomPreference(8.0f);
             googleMap1.animateCamera(buildCameraUpdate(routes.get(0).endLocation),10, null);
 
         }

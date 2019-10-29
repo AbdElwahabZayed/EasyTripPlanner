@@ -178,7 +178,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="6dp"
                 android:background="@drawable/shape2"
-                android:text="@string/btn_start"
+                android:text="@string/showMap"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

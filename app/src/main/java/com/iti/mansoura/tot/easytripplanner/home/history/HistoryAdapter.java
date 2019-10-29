@@ -61,7 +61,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
         if (trip.getStatus()==2 && holder.tripName!=null) {
             holder.tripName.setText(trip.getTripTitle().toUpperCase());
             holder.tripDate.setText(trip.getTripDate());
-            holder.tripStatus.setText(trip.getTripType());
+            holder.tripStatus.setText("History");
             holder.tripSource.setText(trip.getTripSource());
             holder.tripDes.setText(trip.getTripDestination());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +70,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
                     Intent showActivity = new Intent(context.getApplicationContext(), ShowTripActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     showActivity.putExtra("trip",trip);
                     context.getApplicationContext().startActivity(showActivity);
+                }
+            });
+            holder.btn_StartTrip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.getApplicationContext().startActivity(new Intent(context.getApplicationContext(), show_historyMap.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 }
             });
         }
@@ -106,7 +112,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
             tripSource=itemView.findViewById(R.id.textView_Source);
             tripStatus=itemView.findViewById(R.id.textView_ٍStatus);
             collapse=itemView.findViewById(R.id.collapsePart);
-
+            btn_StartTrip=itemView.findViewById(R.id.btn_StartTrip);
 
 
         }

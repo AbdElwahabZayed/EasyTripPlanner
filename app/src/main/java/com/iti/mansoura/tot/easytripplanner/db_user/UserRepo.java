@@ -30,6 +30,9 @@ public class UserRepo {
         new AddUser().execute(user);
     }
     public LiveData<User> getUserLiveData(String uid){
+
+        new GetUser().execute(uid);
+        //new GetUser(uid);
         return userDao.getUserLiveData(uid);
     }
     private class AddUser extends AsyncTask<User,Void,Void> {
@@ -56,8 +59,10 @@ public class UserRepo {
 
     public User getUser(String uid){
         user=userDao.getUser(uid);
+
         //System.out.println("user.getEmail()"+user.getEmail());
         if(user==null || user.getEmail().isEmpty() || user.getUserName().isEmpty()){
+            System.out.println("if(user==null || user.getEmail().isEmpty() || user.getUserName().isEmpty())");
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             reference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -65,7 +70,7 @@ public class UserRepo {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren())
                     {
                         final User user1 = childDataSnapshot.getValue(User.class);
-                        //System.out.println("UserName : "+user1.getUserName());
+                        System.out.println("UserName : "+user1.getUserName());
                         System.out.println(user1.getUuid()+"    <---->   "+mAuth.getUid());
                         if (user1.getUuid().equals(mAuth.getUid())){
                             System.out.println("hgjhkl;l;lgkj   "+user1.getUserName());
@@ -100,6 +105,14 @@ public class UserRepo {
         @Override
         protected Void doInBackground(User... users) {
             userDao.deletUser(users[0]);
+            return null;
+        }
+    }
+
+    private class GetUser extends AsyncTask<String,Void,Void> {
+        @Override
+        protected Void doInBackground(String... strings) {
+            getUser(strings[0]);
             return null;
         }
     }

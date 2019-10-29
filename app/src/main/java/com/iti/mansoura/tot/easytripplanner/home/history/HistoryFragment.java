@@ -95,13 +95,14 @@ public class HistoryFragment extends Fragment {
             }
         });*/
         //adapter.notifyDataSetChanged();
-        getHistoryTrips(mAuth.getUid());
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //adapter.notifyDataSetChanged();
+        getHistoryTrips(mAuth.getUid());
     }
 
     private void setupRecyclerView() {

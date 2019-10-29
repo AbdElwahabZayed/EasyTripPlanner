@@ -114,7 +114,7 @@ public class HomeActivity extends AppCompatActivity  {
                         mAddTrip.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                startActivity(new Intent(HomeActivity.this, show_historyMap.class));
+                                startActivity(new Intent(HomeActivity.this, show_historyMap.class).putExtra("FromFAB",true));
                             }
                         });
                         break;
@@ -139,7 +139,9 @@ public class HomeActivity extends AppCompatActivity  {
         tripViewModel.getUserLiveData(mAuth.getUid()).observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
+                //System.out.println( "out    observ      ooooooooooooo");
                 if(user!=null) {
+                    //System.out.println( "in observ    ggggggggggg");
                     textViewImg.setText(user.getUserName().substring(0, 2).toUpperCase());
                     textViewEmail.setText(user.getEmail());
                 }

@@ -4,17 +4,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.models.Trip;
+
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.iti.mansoura.tot.easytripplanner.R;
-import com.iti.mansoura.tot.easytripplanner.models.Trip;
-
-import java.util.ArrayList;
 
 public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -127,7 +127,7 @@ public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolde
             mTrip = dataSet.get(position);
 
             if (mTrip.getTripTitle() != null) {
-                mTripTitle.setText(mTrip.getTripTitle());
+                mTripTitle.setText(mTrip.getTripTitle().toUpperCase());
             }
 
             if (mTrip.getTripSource() != null) {
