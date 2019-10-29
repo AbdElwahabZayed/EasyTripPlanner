@@ -117,7 +117,7 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
         mTrip.setFirebaseUID(tripFireBaseUID);
         TripViewModel tripViewModel= ViewModelProviders.of(addTripActivity).get(TripViewModel.class);
         tripViewModel.setContext(addTripActivity.getApplicationContext());
-        tripViewModel.addTripWithReminder(mTrip);
+        tripViewModel.addRoundTrip(mTrip);
 
         addTripActivity.showMessage(addTripActivity.getResources().getString(R.string.trip_saved));
         addTripActivity.onBackPressed();
