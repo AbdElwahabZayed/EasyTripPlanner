@@ -88,6 +88,10 @@ public class show_historyMap extends AppCompatActivity implements DirectionFinde
                     }
                 }
             });
+        }else {
+            String o=getIntent().getStringExtra("Origin");
+            String d=getIntent().getStringExtra("Destination");
+            fetchDirections(o,d);
         }
         //fetchDirections("31.040949,31.378469", "30.044420,31.235712");
         //fetchDirections("31.040949,31.378469", "31.200092,29.918739");

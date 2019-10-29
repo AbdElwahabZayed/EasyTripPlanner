@@ -75,7 +75,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
             holder.btn_StartTrip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    context.getApplicationContext().startActivity(new Intent(context.getApplicationContext(), show_historyMap.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    String o = "";
+                    o = o + "" + trip.getSourceLat() + "," + trip.getSourceLong();
+                    String d = "";
+                    d = d + "" + trip.getDestinationLat() + "," + trip.getDestinationLong();
+                    context.getApplicationContext().startActivity(new Intent(context.getApplicationContext(), show_historyMap.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("FromFAB",false).putExtra("Origin",o).putExtra("Destination",d));
                 }
             });
         }

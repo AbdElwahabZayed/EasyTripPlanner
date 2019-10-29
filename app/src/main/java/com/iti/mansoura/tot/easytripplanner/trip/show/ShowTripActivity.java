@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
 import com.iti.mansoura.tot.easytripplanner.home.FloatingWidgetService;
+import com.iti.mansoura.tot.easytripplanner.home.history.show_historyMap;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.trip.edit.EditTripActivity;
 import com.iti.mansoura.tot.easytripplanner.trip.workers.TripToDeleteWorker;
@@ -102,8 +103,17 @@ public class ShowTripActivity extends AppCompatActivity {
 
         mMap.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showMap(trip.getNotes());
-                finishAffinity();
+                if(trip.getStatus()==0) {
+                    showMap(trip.getNotes());
+                    finishAffinity();
+                }else if(trip.getStatus()==2){
+                    String o = "";
+                    o = o + "" + trip.getSourceLat() + "," + trip.getSourceLong();
+                    String d = "";
+                    d = d + "" + trip.getDestinationLat() + "," + trip.getDestinationLong();
+                    startActivity(new Intent(ShowTripActivity.this, show_historyMap.class).putExtra("FromFAB",false).putExtra("Origin",o).putExtra("Destination",d));
+
+                }
             }
         });
 
