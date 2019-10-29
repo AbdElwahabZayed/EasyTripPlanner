@@ -49,11 +49,11 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
 
     /**
      * Saves Trip data to Firebase
-     *
      * @param data tripName , tripDate
      * @param source sourceLocationName , lat , long
      * @param dest destinationLocationName , lat , long
      * @param notes user trip notes
+     *
      */
     private void doSave(final String[] data, final String[] source, final String[] dest ,
                         final String [] notes,String tripUID , String tripFireBaseUID)

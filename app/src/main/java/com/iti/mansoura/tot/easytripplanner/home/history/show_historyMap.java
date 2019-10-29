@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import static com.iti.mansoura.tot.easytripplanner.home.history.map.GoogleMapHelper.buildCameraUpdate;
 import static com.iti.mansoura.tot.easytripplanner.home.history.map.GoogleMapHelper.defaultMapSettings;
@@ -40,10 +41,14 @@ public class show_historyMap extends AppCompatActivity implements DirectionFinde
     private GoogleMap googleMap1;
     private Polyline polyline;
     private MaterialDialog materialDialog;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_history_map);
+        toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         assert mapFragment != null;
         mapFragment.getMapAsync(new OnMapReadyCallback() {

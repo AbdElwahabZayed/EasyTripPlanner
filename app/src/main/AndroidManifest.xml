@@ -33,7 +33,10 @@
 
         <activity
             android:name=".home.history.show_historyMap"
-            android:screenOrientation="portrait" />
+            android:label="History Map"
+            android:parentActivityName=".home.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".About"
