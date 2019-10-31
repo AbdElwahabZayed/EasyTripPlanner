@@ -31,6 +31,7 @@ public class HistoryFragment extends Fragment {
     private DatabaseReference historyTripsDB_ref;
     private RecyclerView recyclerView;
     private TripViewModel tripViewModel;
+    private static boolean firstTime=false;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -48,7 +49,14 @@ public class HistoryFragment extends Fragment {
         historyTripsDB_ref = reference.child("History_Trips").getRef();
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         recyclerView = rootView.findViewById(R.id.rv);
+        tripViewModel = ViewModelProviders.of(this).get(TripViewModel.class);
+        tripViewModel.setContext(this.getContext());
+        if(firstTime) {
+            tripViewModel.uploadTOfirebaseThenputInroom();
+            firstTime=false;
+        }
         setupRecyclerView();
+        getHistoryTrips(mAuth.getUid());
         return rootView;
 
     }
