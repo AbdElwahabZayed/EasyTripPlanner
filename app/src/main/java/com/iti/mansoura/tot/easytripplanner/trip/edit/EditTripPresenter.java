@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.db.TripDB.TripRepository;
 import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
@@ -17,12 +18,14 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
     private FirebaseAuth mAuth;
     private EditTripActivity editTripActivity;
     private FirebaseUser currentUser;
+    private TripRepository tripRepository;
 
     EditTripPresenter(EditTripActivity editTripActivity)
     {
-        mAuth = FirebaseAuth.getInstance();
+        this.mAuth = FirebaseAuth.getInstance();
         this.editTripActivity = editTripActivity;
-        currentUser = mAuth.getCurrentUser();
+        this.currentUser = mAuth.getCurrentUser();
+        this.tripRepository = new TripRepository(editTripActivity);
     }
 
     /**
@@ -33,18 +36,18 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
      */
     @Override
     public void upcomingTripProcess(String[] data ,String [] source , String [] dest , String [] notes,String tripUID,String firebaseUID,boolean alarm) {
-        doSave(data, source, dest , notes, tripUID, firebaseUID,alarm);
+        doUpdateUpcomingTrip(data, source, dest , notes, tripUID, firebaseUID,alarm);
     }
 
     @Override
     public void historyTripProcess(String[] data, String[] source, String[] dest, String[] notes,boolean alarm) {
-        TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
-        tripViewModel.setContext(editTripActivity.getApplicationContext());
-        Trip trip=new Trip();
-        trip.setTripUID(data[4]);
-        trip.setStatus(3);
-        tripViewModel.updateTrip(trip);
-        doSave(data, source, dest , notes,alarm);
+//        TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
+//        tripViewModel.setContext(editTripActivity.getApplicationContext());
+//        Trip trip=new Trip();
+//        trip.setTripUID(data[4]);
+//        trip.setStatus(3);
+//        tripViewModel.updateTrip(trip);
+        doAddTripUsingHistory(data, source, dest , notes,alarm);
     }
 
     /**
@@ -55,8 +58,8 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
      * @param notes user trip notes
      *
      */
-    private void doSave(final String[] data, final String[] source, final String[] dest ,
-                        final String [] notes,String tripUID , String tripFireBaseUID,boolean alarm)
+    private void doUpdateUpcomingTrip(final String[] data, final String[] source, final String[] dest ,
+                                      final String [] notes, String tripUID , String tripFireBaseUID, boolean alarm)
     {
 
         if(currentUser !=null) {
@@ -87,8 +90,9 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
             tripViewModel.updateTripWithReminder(mTrip);
 
             if(data[3].equals("2") && !alarm) {
-                //TODO query trip firebase UID
-                updateRoundTrip(data,source, dest ,notes,tripUID);
+                // round trip to update
+                Trip trip = tripRepository.getRoundTrip(mTrip.getUserUID(), mTrip.getTripUID(), mTrip.getFirebaseUID());
+                updateRoundTrip(data,source, dest ,notes,tripUID,trip.getFirebaseUID());
             }
 
             editTripActivity.showMessage(editTripActivity.getResources().getString(R.string.trip_saved));
@@ -99,8 +103,8 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
         }
     }
 
-    private void doSave(final String[] data, final String[] source, final String[] dest ,
-                        final String [] notes,boolean alarm)
+    private void doAddTripUsingHistory(final String[] data, final String[] source, final String[] dest ,
+                                      final String [] notes, boolean alarm)
     {
 
         if(currentUser !=null) {
@@ -142,7 +146,7 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
         }
     }
 
-    private void updateRoundTrip(String[] data, String[] source, String[] dest , String [] notes , String tripUID)
+    private void updateRoundTrip(String[] data, String[] source, String[] dest , String [] notes , String tripUID,String firebaseUID)
     {
         // round
         Trip mTrip = new Trip();
@@ -165,8 +169,9 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
 
         mTrip.setStatus(0);
 
-        //TODO assign the quiried firebase UID
-        mTrip.setFirebaseUID("");
+        // round trip from history
+        Trip trip = tripRepository.getRoundHistoryTrip(mTrip.getUserUID(), mTrip.getTripUID(), mTrip.getFirebaseUID());
+        mTrip.setFirebaseUID(trip.getFirebaseUID());
         TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
         tripViewModel.setContext(editTripActivity.getApplicationContext());
         tripViewModel.updateRoundTrip(mTrip);
