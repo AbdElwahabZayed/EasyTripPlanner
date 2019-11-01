@@ -22,6 +22,12 @@ public interface TripDao {
     @Query("select * from Trip where userUID=:userID and tripUID=:tripUID and status=0")
     Trip getUpComingTrip(String userID , String tripUID);
 
+    @Query("select * from Trip where userUID=:userID and tripUID=:tripUID and firebaseUID!=:firebaseUID and status=0")
+    Trip getRoundTrip(String userID , String tripUID,String firebaseUID);
+
+    @Query("select * from Trip where userUID=:userID and tripUID=:tripUID and firebaseUID!=:firebaseUID and status=2")
+    Trip getRoundHistoryTrip(String userID , String tripUID,String firebaseUID);
+
     @Query("select * from Trip where userUID=:userID and tripUID=:tripUID and status=2")
     Trip getHistoryTrip(String userID , String tripUID);
 

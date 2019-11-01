@@ -98,6 +98,7 @@ public class AddTripPresenter implements AddTripContract.IAddTripPresenter {
         mTrip.setTripUID(tripUID);
         mTrip.setUserUID(currentUser.getUid());
         mTrip.setTripTitle(data[0]);
+        mTrip.setTripDate(data[1]);
         mTrip.setTripTime(data[2]);
         mTrip.setTripType(data[3]);
 

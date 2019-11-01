@@ -1,7 +1,6 @@
 package com.iti.mansoura.tot.easytripplanner.db.TripDB;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -30,7 +29,6 @@ import com.iti.mansoura.tot.easytripplanner.retorfit.direction.Direction;
 import com.iti.mansoura.tot.easytripplanner.retorfit.direction.Duration;
 import com.iti.mansoura.tot.easytripplanner.retorfit.direction.Leg;
 import com.iti.mansoura.tot.easytripplanner.retorfit.direction.Route;
-import com.iti.mansoura.tot.easytripplanner.trip.edit.EditTripActivity;
 import com.iti.mansoura.tot.easytripplanner.trip.workers.TripFinishedToHistoryRoomWorker;
 import com.iti.mansoura.tot.easytripplanner.trip.workers.TripSchedulingWorker;
 import com.iti.mansoura.tot.easytripplanner.trip.workers.TripToHistoryWorker;
@@ -196,7 +194,7 @@ public class TripRepository{
             tripDao.addTrip(trips[0]);
             // calculate duration
             tripDuration(new String[]{String.valueOf(trips[0].getSourceLat()),String.valueOf(trips[0].getSourceLong())} ,
-                    new String []{String.valueOf(trips[0].getDestinationLat()) , String.valueOf(trips[0].getDestinationLong())} , trips[0],false);
+                    new String []{String.valueOf(trips[0].getDestinationLat()) , String.valueOf(trips[0].getDestinationLong())} , trips[0],true);
             return null;
         }
     }
@@ -343,6 +341,50 @@ public class TripRepository{
         @Override
         protected Trip doInBackground(String... strings) {
             return tripDao.getUpComingTrip(strings[0],strings[1]);
+        }
+
+        @Override
+        protected void onPostExecute(Trip trip) {
+            super.onPostExecute(trip);
+        }
+    }
+
+    public Trip getRoundTrip(String userID , String tripUID,String firebaseUID){
+        try {
+            return new getRoundTrip().execute(userID,tripUID,firebaseUID).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private class getRoundTrip extends AsyncTask<String,Void,Trip> {
+
+        @Override
+        protected Trip doInBackground(String... strings) {
+            return tripDao.getRoundTrip(strings[0],strings[1],strings[2]);
+        }
+
+        @Override
+        protected void onPostExecute(Trip trip) {
+            super.onPostExecute(trip);
+        }
+    }
+
+    public Trip getRoundHistoryTrip(String userID , String tripUID,String firebaseUID){
+        try {
+            return new getRoundHistoryTrip().execute(userID,tripUID,firebaseUID).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private class getRoundHistoryTrip extends AsyncTask<String,Void,Trip> {
+
+        @Override
+        protected Trip doInBackground(String... strings) {
+            return tripDao.getRoundHistoryTrip(strings[0],strings[1],strings[2]);
         }
 
         @Override
@@ -506,7 +548,6 @@ public class TripRepository{
                         for (Leg leg: legs) {
                             Duration duration =leg.getDuration();
                             int durationValue = duration.getValue();
-                            //TODO add to history if one way && re-schadule time and date then add reminder if round
                             try {
                                 SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yy HH:mm", Locale.getDefault());
                                 Date mDate = sdfDate.parse(trip.getTripDate()+" "+trip.getTripTime());
@@ -521,9 +562,6 @@ public class TripRepository{
                                     } else {
                                         setOnewayTripToHistory(trip, mDate);
                                     }
-                                }
-                                else {
-                                    setRoundTrip(trip);
                                 }
                             } catch (ParseException e) {
                                 e.printStackTrace();
@@ -608,13 +646,5 @@ public class TripRepository{
                     .build();
             mWorkManager.enqueue(mWorkRequest);
         }
-    }
-
-    private void setRoundTrip(Trip trip)
-    {
-        myContext.startActivity(new Intent(myContext, EditTripActivity.class)
-                .putExtra("tripStatus", trip.getStatus())
-                .putExtra("tripUID", trip.getTripUID())
-                .putExtra("firebaseUID", trip.getFirebaseUID()));
     }
 }

@@ -2,6 +2,8 @@ package com.iti.mansoura.tot.easytripplanner.trip.edit;
 
 import android.text.TextUtils;
 
+import androidx.lifecycle.ViewModelProviders;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.iti.mansoura.tot.easytripplanner.R;
@@ -9,8 +11,6 @@ import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
 import java.util.UUID;
-
-import androidx.lifecycle.ViewModelProviders;
 
 public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
 
@@ -32,19 +32,19 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
      * @param notes user trip notes
      */
     @Override
-    public void upcomingTripProcess(String[] data ,String [] source , String [] dest , String [] notes,String tripUID,String firebaseUID) {
-        doSave(data, source, dest , notes, tripUID, firebaseUID);
+    public void upcomingTripProcess(String[] data ,String [] source , String [] dest , String [] notes,String tripUID,String firebaseUID,boolean alarm) {
+        doSave(data, source, dest , notes, tripUID, firebaseUID,alarm);
     }
 
     @Override
-    public void historyTripProcess(String[] data, String[] source, String[] dest, String[] notes) {
+    public void historyTripProcess(String[] data, String[] source, String[] dest, String[] notes,boolean alarm) {
         TripViewModel tripViewModel= ViewModelProviders.of(editTripActivity).get(TripViewModel.class);
         tripViewModel.setContext(editTripActivity.getApplicationContext());
         Trip trip=new Trip();
         trip.setTripUID(data[4]);
         trip.setStatus(3);
         tripViewModel.updateTrip(trip);
-        doSave(data, source, dest , notes);
+        doSave(data, source, dest , notes,alarm);
     }
 
     /**
@@ -56,7 +56,7 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
      *
      */
     private void doSave(final String[] data, final String[] source, final String[] dest ,
-                        final String [] notes,String tripUID , String tripFireBaseUID)
+                        final String [] notes,String tripUID , String tripFireBaseUID,boolean alarm)
     {
 
         if(currentUser !=null) {
@@ -86,7 +86,7 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
             tripViewModel.setContext(editTripActivity.getApplicationContext());
             tripViewModel.updateTripWithReminder(mTrip);
 
-            if(data[3].equals("2")) {
+            if(data[3].equals("2") && !alarm) {
                 //TODO query trip firebase UID
                 updateRoundTrip(data,source, dest ,notes,tripUID);
             }
@@ -100,7 +100,7 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
     }
 
     private void doSave(final String[] data, final String[] source, final String[] dest ,
-                        final String [] notes)
+                        final String [] notes,boolean alarm)
     {
 
         if(currentUser !=null) {
@@ -130,7 +130,7 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
             tripViewModel.setContext(editTripActivity.getApplicationContext());
             tripViewModel.addTripWithReminder(mTrip);
 
-            if(data[3].equals("2")) {
+            if(data[3].equals("2") && !alarm) {
                 addRoundTrip(data,source, dest ,notes,mTrip.getTripUID());
             }
 
@@ -149,6 +149,7 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
         mTrip.setTripUID(tripUID);
         mTrip.setUserUID(currentUser.getUid());
         mTrip.setTripTitle(data[0]);
+        mTrip.setTripDate(data[1]);
         mTrip.setTripTime(data[2]);
         mTrip.setTripType(data[3]);
 
@@ -181,6 +182,7 @@ public class EditTripPresenter implements EditTripContract.IEditTripPresenter {
         mTrip.setTripUID(tripUID);
         mTrip.setUserUID(currentUser.getUid());
         mTrip.setTripTitle(data[0]);
+        mTrip.setTripDate(data[1]);
         mTrip.setTripTime(data[2]);
         mTrip.setTripType(data[3]);
 

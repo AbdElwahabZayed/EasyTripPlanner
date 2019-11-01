@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,8 +25,6 @@ import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTimeStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTitleStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripTypeStep;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
 import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 
@@ -44,6 +45,7 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
     private Trip mTrip;
     private TripRepository tripRepository;
     private Toolbar toolbar;
+    private boolean fromAlarm = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,42 +55,61 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
         tripUID = getIntent().getExtras().getString("tripUID");
         firebaseUID = getIntent().getExtras().getString("firebaseUID");
         tripStatus = getIntent().getExtras().getInt("tripStatus");
+        if(getIntent().getExtras().containsKey("alarm"))
+            fromAlarm = true;
 
         mAuth = FirebaseAuth.getInstance();
         tripRepository = new TripRepository(this);
 
         if (new NetworkStatusAndType(this).NetworkStatus() == 2) {
-            // get from room
-            if(tripStatus == 0)
-                mTrip = tripRepository.getUpComingTrip(mAuth.getCurrentUser().getUid(), tripUID);
-            else
-                mTrip = tripRepository.getHistoryTrip(mAuth.getCurrentUser().getUid(), tripUID);
+            if(!fromAlarm) {
+                // get from room
+                if (tripStatus == 0)
+                    mTrip = tripRepository.getUpComingTrip(mAuth.getCurrentUser().getUid(), tripUID);
+                else
+                    mTrip = tripRepository.getHistoryTrip(mAuth.getCurrentUser().getUid(), tripUID);
 
-            // try to get from firebase
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getChildrenCount() > 0)
-                    {
-                        Trip mTrip = dataSnapshot.getValue(Trip.class);
-                        if(mTrip.getTripUID().equals(tripUID) && mTrip.getUserUID().equals(mAuth.getCurrentUser().getUid())) {
-                            EditTripActivity.this.mTrip = mTrip;
+                // try to get from firebase
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                reference.child("Trips").child(firebaseUID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() > 0) {
+                            Trip mTrip = dataSnapshot.getValue(Trip.class);
+                            if (mTrip.getTripUID().equals(tripUID) && mTrip.getUserUID().equals(mAuth.getCurrentUser().getUid())) {
+                                EditTripActivity.this.mTrip = mTrip;
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e("trip edit f " , "error"+databaseError.getMessage());
-                }
-            });
-        }else {
-            if(tripStatus == 0)
-                mTrip = tripRepository.getUpComingTrip(mAuth.getCurrentUser().getUid(), tripUID);
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e("trip edit f ", "error" + databaseError.getMessage());
+                    }
+                });
+            }
             else
-                mTrip = tripRepository.getHistoryTrip(mAuth.getCurrentUser().getUid(), tripUID);
-            Log.e("trip edit l " , "local");
+            {
+                if (tripStatus == 0)
+                    mTrip = tripRepository.getRoundTrip(mAuth.getUid(), tripUID,firebaseUID);
+                else
+                    mTrip = tripRepository.getRoundHistoryTrip(mAuth.getUid(), tripUID,firebaseUID);
+            }
+        }else {
+            if(!fromAlarm) {
+                if (tripStatus == 0)
+                    mTrip = tripRepository.getUpComingTrip(mAuth.getUid(), tripUID);
+                else
+                    mTrip = tripRepository.getHistoryTrip(mAuth.getUid(), tripUID);
+                Log.e("trip edit l ", "local");
+            }
+            else
+            {
+                if (tripStatus == 0)
+                    mTrip = tripRepository.getRoundTrip(mAuth.getUid(), tripUID,firebaseUID);
+                else
+                    mTrip = tripRepository.getRoundHistoryTrip(mAuth.getUid(), tripUID,firebaseUID);
+            }
         }
 
         initComponent();
@@ -176,10 +197,9 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
             notes = new String[]{""};
 
         if(tripStatus == 0)
-            editTripPresenter.upcomingTripProcess(data, sourceData, destData, notes,mTrip.getTripUID(),mTrip.getFirebaseUID());
+            editTripPresenter.upcomingTripProcess(data, sourceData, destData, notes,mTrip.getTripUID(),mTrip.getFirebaseUID(),fromAlarm);
         else {
-
-            editTripPresenter.historyTripProcess(data, sourceData, destData, notes);
+            editTripPresenter.historyTripProcess(data, sourceData, destData, notes,fromAlarm);
         }
     }
 
