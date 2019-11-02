@@ -73,6 +73,7 @@ public class HomeActivity extends AppCompatActivity  {
 
     private void initComponent() {
         mAddTrip = findViewById(R.id.add);
+
         mAddTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +106,7 @@ public class HomeActivity extends AppCompatActivity  {
                         mAddTrip.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                startActivity(new Intent(HomeActivity.this, AddTripActivity.class));
+                                startActivity(new Intent(HomeActivity.this, AddTripActivity.class).putExtra("adapter",upComingFragment.getReAdapter()));
                             }
                         });
                         break;

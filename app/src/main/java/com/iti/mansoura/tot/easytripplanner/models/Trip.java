@@ -12,8 +12,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Trip implements Parcelable
 {
-    @NonNull
-    @PrimaryKey
+    @ColumnInfo
     private String tripUID;
     @ColumnInfo
     private String tripTitle;
@@ -41,7 +40,8 @@ public class Trip implements Parcelable
     private double destinationLong;
     @ColumnInfo
     private int status; // 0 not-started (upcoming) , 1 started , 2 history(finished) , 3 soft deleted (hidden from user)
-    @ColumnInfo
+    @NonNull
+    @PrimaryKey
     private String firebaseUID;
 
     @Ignore

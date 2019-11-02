@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import com.iti.mansoura.tot.easytripplanner.R;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class TripsRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> implements Serializable {
 
     private static final int VIEW_TYPE_NORMAL = 1;
     private static final int VIEW_TYPE_EMPTY = 2;

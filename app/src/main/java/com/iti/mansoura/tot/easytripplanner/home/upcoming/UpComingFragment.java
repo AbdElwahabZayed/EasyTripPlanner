@@ -19,6 +19,7 @@ import com.iti.mansoura.tot.easytripplanner.home.viewmodel.TripViewModel;
 import com.iti.mansoura.tot.easytripplanner.models.Trip;
 import com.iti.mansoura.tot.easytripplanner.trip.show.ShowTripActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapter.Callback {
+public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapter.Callback , Serializable {
 
     private RecyclerView mRecyclerView;
     private ArrayList<Trip> dataSet;
@@ -92,6 +93,9 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
             }
         });
     }
+    public TripsRecyclerViewAdapter getReAdapter(){
+        return recyclerViewAdapter;
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -105,6 +109,13 @@ public class UpComingFragment extends Fragment implements TripsRecyclerViewAdapt
         recyclerViewAdapter.notifyDataSetChanged();
         //recyclerViewAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        recyclerViewAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onStart() {

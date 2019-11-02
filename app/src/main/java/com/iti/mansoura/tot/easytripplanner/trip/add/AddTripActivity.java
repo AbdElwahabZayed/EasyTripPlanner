@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.iti.mansoura.tot.easytripplanner.R;
+import com.iti.mansoura.tot.easytripplanner.home.upcoming.TripsRecyclerViewAdapter;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripDateStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripDestinationStep;
 import com.iti.mansoura.tot.easytripplanner.trip.steps.TripNotesStep;
@@ -33,12 +34,15 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
     private TripNotesStep tripNotesStep;
     private VerticalStepperFormView verticalStepperFormView;
     private Toolbar toolbar;
+    private TripsRecyclerViewAdapter tripsRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
-
+        if(getIntent()!=null){
+            tripsRecyclerViewAdapter=(TripsRecyclerViewAdapter) getIntent().getSerializableExtra("adapter");
+        }
         initComponent();
     }
 
@@ -122,6 +126,7 @@ public class AddTripActivity extends AppCompatActivity implements AddTripContrac
      */
     @Override
     public void onCancelledForm() {
+        tripsRecyclerViewAdapter.notifyDataSetChanged();
         verticalStepperFormView.cancelFormCompletionOrCancellationAttempt();
         AddTripActivity.this.finish();
     }

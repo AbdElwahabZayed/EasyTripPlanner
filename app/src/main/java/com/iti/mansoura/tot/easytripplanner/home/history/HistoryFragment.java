@@ -1,6 +1,7 @@
 package com.iti.mansoura.tot.easytripplanner.home.history;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,7 +79,11 @@ public class HistoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
     }
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        adapter.notifyDataSetChanged();
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -109,7 +114,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         getHistoryTrips(mAuth.getUid());
     }
 
