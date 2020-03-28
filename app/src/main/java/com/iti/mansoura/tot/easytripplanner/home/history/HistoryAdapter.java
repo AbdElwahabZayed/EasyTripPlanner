@@ -87,8 +87,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
 
     @Override
     public int getItemCount() {
-        if (historytrips!=null)
-            System.out.println(""+historytrips.size());
+
         return historytrips != null ? historytrips.size() : 0;
     }
 
@@ -96,7 +95,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyHolder
         //this.historytrips.clear();
         for(Trip t:historytrips) {
             if(t.getStatus()==2 && !this.historytrips.contains(t)) {
-                System.out.println(""+t.getStatus());
                 this.historytrips.add(t);
             }
         }

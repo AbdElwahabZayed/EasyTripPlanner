@@ -94,10 +94,7 @@ public class HomeActivity extends AppCompatActivity  {
         tabs.addTab(tabs.newTab().setText("Second"));
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
             @Override
             public void onPageSelected(int position) {
                 switch (position){

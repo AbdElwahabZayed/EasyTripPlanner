@@ -34,6 +34,7 @@ public class TripToDeleteWorker extends Worker {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Trip mTrip = dataSnapshot.getValue(Trip.class);
+                if(mTrip!=null)
                 mTrip.setStatus(3);
                 reference.child("Trips").child(firebaseUID).removeValue();
                 reference.child("Trips").child(firebaseUID).setValue(mTrip);

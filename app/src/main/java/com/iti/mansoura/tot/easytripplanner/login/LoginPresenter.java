@@ -30,7 +30,7 @@ public class LoginPresenter implements LoginContract.ILoginPresenter {
     public void loginProcess(String mail, String password) {
         if(!TextUtils.isEmpty(mail) && !TextUtils.isEmpty(password)) {
             mAuth.signInWithEmailAndPassword(mail,password)
-                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             loginActivity.startActivity(new Intent(loginActivity.getApplicationContext(), HomeActivity.class));

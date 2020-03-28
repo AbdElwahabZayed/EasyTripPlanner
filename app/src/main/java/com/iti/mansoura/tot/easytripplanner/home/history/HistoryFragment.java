@@ -50,8 +50,6 @@ public class HistoryFragment extends Fragment {
         historyTripsDB_ref = reference.child("History_Trips").getRef();
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         recyclerView = rootView.findViewById(R.id.rv);
-        tripViewModel = ViewModelProviders.of(this).get(TripViewModel.class);
-        tripViewModel.setContext(this.getContext());
         if(firstTime) {
             tripViewModel.uploadTOfirebaseThenputInroom();
             firstTime=false;
@@ -67,7 +65,6 @@ public class HistoryFragment extends Fragment {
         tripViewModel.getAllHistoryTrips(id).observe(this, new Observer<List<Trip>>() {
             @Override
             public void onChanged(List<Trip> trips) {
-                System.out.println("getAllHistoryTrips(id).observe(getActivity(),");
                 adapter.setDataSource(trips);
 
             }

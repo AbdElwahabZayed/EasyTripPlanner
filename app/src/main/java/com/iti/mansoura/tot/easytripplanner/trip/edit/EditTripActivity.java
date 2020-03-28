@@ -215,5 +215,5 @@ public class EditTripActivity extends AppCompatActivity implements EditTripContr
     public void onCancelledForm() {
         verticalStepperFormView.cancelFormCompletionOrCancellationAttempt();
         EditTripActivity.this.finish();
-    }
+     }
 }

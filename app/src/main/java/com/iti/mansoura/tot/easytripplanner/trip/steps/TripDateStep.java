@@ -197,6 +197,7 @@ public class TripDateStep extends Step<String> {
     private void updateDateValue(Calendar myCalendar) {
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+
         tripDate.setText(sdf.format(myCalendar.getTime()));
     }
 }

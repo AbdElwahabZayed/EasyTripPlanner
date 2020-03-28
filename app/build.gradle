@@ -4,23 +4,14 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
-    signingConfigs {
-        release {
-            storeFile file("easyTripKey.jks")
-            storePassword "ToT!!arf16@iti"
-            keyAlias "key0"
-            keyPassword "iti@ToT!!arf16"
-            v2SigningEnabled true
-        }
-    }
+
     defaultConfig {
         applicationId "com.iti.mansoura.tot.easytripplanner"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        signingConfigs.release
     }
     buildTypes {
         release {
